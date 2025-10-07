@@ -1,49 +1,129 @@
+/* Adjustable design tokens */
+:root {
+    --sidebar-width: 230px;
+    --sidebar-bg: #fff;
+    --sidebar-shadow: 6px 0 18px -6px rgba(34,34,34,0.16);
+    --active-pill-bg: #C3A3F6;
+    --active-pill-shadow: 0 2px 10px rgba(160,118,249,0.25);
+    --active-bar-width: 6px;
+    --active-bar-height: 80%;     /* default height of indicator */
+    --active-bar-height-hover: 90%;
+    --active-bar-offset: -23px;   /* how far outside the pill (negative moves left) */
+    --active-bar-color-top: #A076F9;
+    --active-bar-color-bottom: #8754F5;
+    --link-width: 170px;          /* pill width */
+    --link-font-color: #463c36;
+}
+
 .admin-sidebar {
-    width: 200px; /* Decreased from 300px */
-    background-color: #fff;
-    height: 100vh;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    width: var(--sidebar-width);
+    min-height: 100vh;
+    background-color: var(--sidebar-bg);
+    padding: 36px 0 0 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    box-shadow: var(--sidebar-shadow); /* Right side shadow */
 }
 
 .logo {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 34px;
 }
 
 .logo-img {
-    width: 150px;
+    width: 120px;
+    margin-bottom: 8px;
+    display: block;
 }
 
+/* Navigation */
 .admin-sidebar nav ul {
-    list-style-type: none;
-    padding: 0;
+    list-style: none;
     margin: 0;
+    padding: 0;
 }
 
 .admin-sidebar nav ul li {
-    margin-bottom: 20px;
+    margin-bottom: 34px;
+    position: relative;
 }
 
 .admin-sidebar nav ul li a {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-decoration: none;
-    color: #555;
-    display: block;
-    padding: 15px 20px;
-    border-radius: 8px;
-    font-weight: 500;
-    text-align: center;
-}
-
-.admin-sidebar nav ul li.active a {
-    background-color: #8A2BE2;
-    color: #fff;
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+    color: var(--link-font-color);
+    padding: 10px 0;
+    width: var(--link-width);
+    border-radius: 16px;
+    background: none;
+    transition: background .18s, color .18s, box-shadow .18s;
+    box-shadow: none;
 }
 
 .admin-sidebar nav ul li a:hover {
-    background-color: #f0e6ff;
+    background: #f0e6ff;
+    color: var(--link-font-color);
 }
 
+/* Active state */
+.admin-sidebar nav ul li.active a {
+    background: var(--active-pill-bg);
+    color: #fff;
+    box-shadow: var(--active-pill-shadow);
+}
+
+/* Active indicator bar (outside variant) */
+.admin-sidebar nav ul li.active a::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: var(--active-bar-offset);
+    transform: translateY(-50%);
+    width: var(--active-bar-width);
+    height: var(--active-bar-height);
+    border-radius: 3px;
+    background: linear-gradient(180deg, var(--active-bar-color-top), var(--active-bar-color-bottom));
+    box-shadow: 0 0 8px rgba(160,118,249,0.55);
+    pointer-events: none;
+    transition: height .22s ease, box-shadow .22s ease;
+}
+
+.admin-sidebar nav ul li.active a:hover::before {
+    height: var(--active-bar-height-hover);
+    box-shadow: 0 0 10px rgba(160,118,249,0.7);
+}
+
+/* Keep active style on hover */
 .admin-sidebar nav ul li.active a:hover {
-    background-color: #7b24cc;
+    background: var(--active-pill-bg);
+    color: #fff;
+}
+
+@media (max-width: 640px) {
+    :root {
+        --sidebar-width: 100%;
+        --link-width: 200px;
+        --active-bar-offset: -12px;
+    }
+    .admin-sidebar {
+        min-height: unset;
+        padding: 22px 0 10px 0;
+        flex-direction: column;
+        box-shadow: 0 6px 18px -6px rgba(34,34,34,0.16); /* change to bottom shadow when stacked */
+    }
+    .admin-sidebar nav ul li {
+        margin-bottom: 24px;
+    }
+    .logo-img {
+        width: 96px;
+    }
 }

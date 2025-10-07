@@ -1,0 +1,157 @@
+/* Root card adjustments (no blue outline, subtle border) */
+.sales-chart-card.sales-chart--no-outline {
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 18px 22px 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  background: #fff;
+  outline: none;
+}
+
+/* Header */
+.sales-chart-card .chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 0 4px 0;
+}
+.sales-chart-card .chart-header h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: .5px;
+  color: #333;
+}
+.sales-chart-card .chart-header select {
+  font-size: 0.75rem;
+  border: 0;
+  padding: 6px 10px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  color: #333;
+  cursor: pointer;
+  appearance: none;
+  outline: none;
+}
+
+/* Divider */
+.chart-divider {
+  width: 100%;
+  height: 1px;
+  background: #ececef;
+  margin: 0 0 8px 0;
+}
+
+/* Shell (axis + plot) */
+.chart-shell {
+  display: flex;
+  position: relative;
+  height: var(--chart-height, 260px);
+  gap: 5px;
+  user-select: none;
+}
+
+/* Y Axis */
+.chart-y-axis {
+    margin-top: 0px;
+    margin-bottom: 20px;
+  position: relative;
+  width: 46px;
+  flex: 0 0 20px;
+  font-size: 0.56rem;
+  font-weight: 500;
+  color: #6b6f76;
+}
+.chart-y-tick {
+  position: absolute;
+  left: 0;
+  transform: translateY(50%);
+  width: 100%;
+}
+.chart-y-tick span {
+  position: absolute;
+  left: 0;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+
+/* Plot area */
+.chart-plot {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  overflow: visible;
+  padding: 0 4px;
+  box-sizing: border-box;
+}
+
+
+
+/* Bars container */
+.chart-bars-row {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  height: 100%;
+  gap: 22px;
+  z-index: 2;
+  padding: 0 4px;
+}
+
+/* Bar group – FIX: add height:100% */
+.chart-bar-group {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%; /* critical so the track inherits a real height */
+}
+
+/* Track */
+.chart-bar-track {
+  position: relative;
+  width: 10px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(91,47,207,0.08), rgba(91,47,207,0.03));
+  border-radius: 12px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+/* Fill */
+.chart-bar-fill {
+  width: 100%;
+  background: linear-gradient(180deg, var(--bar-color-from, #C9BBFF), var(--bar-color-to, #5B2FCF));
+  border-radius: 12px 12px 10px 10px;
+  box-shadow: 0 2px 4px rgba(91,47,207,0.25);
+  transform-origin: bottom;
+  animation: barGrow .6s cubic-bezier(.42,.65,.34,1.15);
+  transition: height .35s ease, transform .25s ease, box-shadow .25s ease;
+}
+
+.chart-bar-fill:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 10px rgba(91,47,207,0.35);
+}
+
+/* Labels */
+.chart-bar-label {
+  margin-top: 6px;
+  font-size: 0.58rem;
+  letter-spacing: .4px;
+  color: #5d6268;
+}
+
+
+/* Animation */
+@keyframes barGrow {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}

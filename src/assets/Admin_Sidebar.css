@@ -1,6 +1,6 @@
 /* Adjustable design tokens */
 :root {
-    --sidebar-width: 230px;
+    --sidebar-width: 200px;
     --sidebar-bg: #fff;
     --sidebar-shadow: 6px 0 18px -6px rgba(34,34,34,0.16);
     --active-pill-bg: #C3A3F6;

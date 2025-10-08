@@ -4,7 +4,9 @@ import AdminDashboard from './Admin_Dashboard';
 import AdminProducts from './Admin_Products';
 import Admin_Customers from './Admin_Customers';
 import Admin_Orders from './Admin_Orders';
+import Finance from './Finance';
 import './Admin_Panel.css';
+
 
 function AdminPanel() {
   const [activeView, setActiveView] = useState('dashboard');
@@ -17,6 +19,7 @@ function AdminPanel() {
         {activeView === 'products' && <AdminProducts />}
         {activeView === 'customers' && <Admin_Customers />}
         {activeView === 'orders' && <Admin_Orders />}
+        {activeView === 'finance' && <Finance />}
       </div>
     </div>
   );

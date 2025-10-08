@@ -48,6 +48,151 @@ const initialCustomers = [
     orders: 7,
     address: '20 Ingram Street, Queens, NY',
     status: 'Basic'
+  },
+  {
+    customerId: 'CUST_10005',
+    name: 'Peter Parker',
+    email: 'peter@dailybugle.net',
+    phone: '+1 555-1004',
+    orders: 7,
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
+  },
+  {
+    customerId: 'CUST_10005',
+    name: 'Peter Parker',
+    email: 'peter@dailybugle.net',
+    phone: '+1 555-1004',
+    orders: 7,
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
+  },
+  {
+    customerId: 'CUST_10005',
+    name: 'Peter Parker',
+    email: 'peter@dailybugle.net',
+    phone: '+1 555-1004',
+    orders: 7,
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
+  },
+  {
+    customerId: 'CUST_10005',
+    name: 'Peter Parker',
+    email: 'peter@dailybugle.net',
+    phone: '+1 555-1004',
+    orders: 7,
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
+  },
+  {
+    customerId: 'CUST_10005',
+    name: 'Peter Parker',
+    email: 'peter@dailybugle.net',
+    phone: '+1 555-1004',
+    orders: 7,
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
+  },
+  {
+    customerId: 'CUST_10005',
+    name: 'Peter Parker',
+    email: 'peter@dailybugle.net',
+    phone: '+1 555-1004',
+    orders: 7,
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
+  },
+
+  {
+    customerId: 'CUST_10005',
+    name: 'Peter Parker',
+    email: 'peter@dailybugle.net',
+    phone: '+1 555-1004',
+    orders: 7,
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
+  },
+  {
+    customerId: 'CUST_10005',
+    name: 'Peter Parker',
+    email: 'peter@dailybugle.net',
+    phone: '+1 555-1004',
+    orders: 7,
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
+  },
+  {
+    customerId: 'CUST_10005',
+    name: 'Peter Parker',
+    email: 'peter@dailybugle.net',
+    phone: '+1 555-1004',
+    orders: 7,
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
+  },
+  {
+    customerId: 'CUST_10005',
+    name: 'Peter Parker',
+    email: 'peter@dailybugle.net',
+    phone: '+1 555-1004',
+    orders: 7,
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
+  },
+  {
+    customerId: 'CUST_10005',
+    name: 'Peter Parker',
+    email: 'peter@dailybugle.net',
+    phone: '+1 555-1004',
+    orders: 7,
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
+  },
+  {
+    customerId: 'CUST_10005',
+    name: 'Peter Parker',
+    email: 'peter@dailybugle.net',
+    phone: '+1 555-1004',
+    orders: 7,
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
+  },
+   {
+    customerId: 'CUST_10005',
+    name: 'Peter Parker',
+    email: 'peter@dailybugle.net',
+    phone: '+1 555-1004',
+    orders: 7,
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
+  },
+   {
+    customerId: 'CUST_10005',
+    name: 'Peter Parker',
+    email: 'peter@dailybugle.net',
+    phone: '+1 555-1004',
+    orders: 7,
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
+  },
+   {
+    customerId: 'CUST_10005',
+    name: 'Peter Parker',
+    email: 'peter@dailybugle.net',
+    phone: '+1 555-1004',
+    orders: 7,
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
+  },
+   {
+    customerId: 'CUST_10006',
+    name: 'Peter Parker',
+    email: 'peter@dailybugle.net',
+    phone: '+1 555-1004',
+    orders: 7,
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
   }
 ];
 

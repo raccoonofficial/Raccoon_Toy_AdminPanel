@@ -49,6 +49,15 @@ function AdminSidebar({ activeView, setActiveView }) {
               Orders List
             </button>
           </li>
+          <li className={activeView === 'finance' ? 'active' : ''}>
+            <button
+              type="button"
+              onClick={() => setActiveView('finance')}
+              aria-current={activeView === 'finance' ? 'page' : undefined}
+            >
+              Finance
+            </button>
+          </li>
         </ul>
       </nav>
     </aside>

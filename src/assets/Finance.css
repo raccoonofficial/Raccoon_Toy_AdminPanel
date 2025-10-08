@@ -1,0 +1,337 @@
+/* ------------ Base Layout ------------- */
+.finance-page {
+  font-family: system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  color:#2a2d33;
+  padding:6px 4px 50px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+.finance-title {
+  font-size:1.55rem;
+  margin:0 0 4px;
+  font-weight:700;
+  letter-spacing:.03em;
+  color:#4b2d8f;
+}
+
+/* Row holding Total Money + Cost Counter side by side */
+.finance-summary-row {
+  display:flex;
+  flex-wrap:wrap;
+  gap:18px;
+  align-items:flex-start;
+}
+
+/* ------------ Total Money (Merged Header) ------------- */
+.tm-card.merged {
+  background:#ffffff;
+  border:1px solid #d8ddec;
+  border-radius:10px;
+  padding:6px 10px 10px;
+  box-shadow:0 2px 10px -5px rgba(80,40,140,.15);
+  width:520px;
+  flex:0 0 auto;
+}
+
+.tm-table.merged {
+  border-collapse:collapse;
+  min-width:520px;
+  width:520px;
+  font-size:.62rem;
+  table-layout:fixed;
+}
+
+.tm-table.merged th,
+.tm-table.merged td {
+  border:1px solid #cfd5e6;
+  padding:4px 6px;
+  text-align:left;
+  background:#fff;
+  font-weight:600;
+  position:relative;
+}
+
+.tm-title-single {
+  background:#dfeaf0;
+  font-size:.78rem;
+  font-weight:700;
+  letter-spacing:.05em;
+  color:#23344a;
+  text-align:center;
+  border-bottom:2px solid #b9c8d2;
+}
+
+.tm-group-row td.tm-section-head {
+  font-size:.66rem;
+  font-weight:700;
+  letter-spacing:.05em;
+  text-align:center;
+  padding:6px 4px;
+}
+.tm-section-head.tm-main-head {
+  background:#bcd5f9;
+  color:#1e3557;
+  border-right:2px solid #6b7faa;
+}
+.tm-section-head.tm-sells-head {
+  background:#cdbded;
+  color:#362154;
+}
+
+.tm-left-label,
+.tm-left-val {
+  background:#e6f1ff;
+  color:#1f314a;
+}
+.tm-left-label { width:110px; }
+.tm-left-val { text-align:right; }
+
+.tm-right-label,
+.tm-right-val {
+  background:#eee7fb;
+  color:#33204e;
+}
+.tm-right-label { width:110px; }
+.tm-right-val { text-align:right; }
+
+.tm-total-row td {
+  background:#e3eaf6;
+  font-weight:700;
+}
+.tm-total-row td:nth-child(3),
+.tm-total-row td:nth-child(4) {
+  background:#e6def6;
+}
+
+.tm-table.merged tbody tr:hover td {
+  background:#f3efff;
+}
+.tm-table.merged tbody tr:hover td.tm-left-label,
+.tm-table.merged tbody tr:hover td.tm-left-val {
+  background:#dceaff;
+}
+.tm-table.merged tbody tr:hover td.tm-right-label,
+.tm-table.merged tbody tr:hover td.tm-right-val {
+  background:#e5dbf7;
+}
+.tm-table.merged tbody tr.tm-total-row:hover td {
+  background:#d7e2f2;
+}
+.tm-table.merged tbody tr.tm-total-row:hover td:nth-child(3),
+.tm-table.merged tbody tr.tm-total-row:hover td:nth-child(4) {
+  background:#d9d0ef;
+}
+
+/* ------------ Cost Counter ------------- */
+.cc-card {
+  background:#ffffff;
+  border:1px solid #d8ddec;
+  border-radius:10px;
+  padding:6px 10px 10px;
+  box-shadow:0 2px 10px -5px rgba(80,40,140,.15);
+  flex:1 1 560px;
+  min-width:560px;
+  overflow:auto;
+}
+
+.cc-table {
+  border-collapse:collapse;
+  width:100%;
+  min-width:840px; /* each category 2 cols; adjust as needed */
+  font-size:.6rem;
+  table-layout:fixed;
+}
+
+.cc-table th,
+.cc-table td {
+  border:1px solid #cfd2e4;
+  padding:4px 6px;
+  background:#fff;
+  font-weight:600;
+  position:relative;
+}
+
+.cc-title-head {
+  background:#d9d9dd;
+  font-size:.78rem;
+  font-weight:700;
+  letter-spacing:.05em;
+  color:#262b33;
+  text-align:center;
+  border-bottom:2px solid #b0b2bc;
+}
+
+.cc-cat-row .cc-cat-head {
+  font-size:.62rem;
+  font-weight:700;
+  letter-spacing:.04em;
+  text-align:center;
+  padding:6px 4px;
+  color:#252a32;
+}
+
+/* Category color bands (header & cells share theme) */
+.cat-marketing  { background:#fde3a8; }
+.cat-product    { background:#dcf2d4; }
+.cat-packaging  { background:#dcecff; }
+.cat-studio     { background:#e6dbf7; }
+.cat-others     { background:#ffd3a9; }
+
+.cc-item-cell.cat-marketing,
+.cc-amt-cell.cat-marketing { background:#fff7e1; }
+.cc-item-cell.cat-product,
+.cc-amt-cell.cat-product { background:#edf9e8; }
+.cc-item-cell.cat-packaging,
+.cc-amt-cell.cat-packaging { background:#eef6ff; }
+.cc-item-cell.cat-studio,
+.cc-amt-cell.cat-studio { background:#f4edfd; }
+.cc-item-cell.cat-others,
+.cc-amt-cell.cat-others { background:#ffefd9; }
+
+.cc-item-cell { font-weight:600; }
+.cc-amt-cell  { text-align:right; font-weight:600; }
+
+.cc-total-row td {
+  font-weight:700;
+  background:#e6eaf1;
+}
+.cc-total-row td.cat-marketing { background:#f6e8c2; }
+.cc-total-row td.cat-product   { background:#d9efcf; }
+.cc-total-row td.cat-packaging { background:#d7ebff; }
+.cc-total-row td.cat-studio    { background:#e0d4f3; }
+.cc-total-row td.cat-others    { background:#ffdcbf; }
+
+/* Hover */
+.cc-table tbody tr:not(.cc-total-row):hover td {
+  filter:brightness(0.95);
+}
+
+/* ------------ Controls ------------- */
+.finance-controls {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:2px 2px;
+}
+.member-filter {
+  font-size:.7rem;
+  padding:5px 10px;
+  border:1px solid #d5d7e2;
+  border-radius:8px;
+  outline:none;
+  width:200px;
+  background:#fff;
+  transition:border-color .15s, box-shadow .15s;
+}
+.member-filter:focus {
+  border-color:#7c4dff;
+  box-shadow:0 0 0 2px rgba(124,77,255,0.25);
+}
+
+/* ------------ Money Tracker (same as before, no totals col) ------------- */
+.finance-matrix-card.slim-version {
+  background:#fff;
+  border:1px solid #ececef;
+  border-radius:12px;
+  padding:14px 14px 18px;
+  box-shadow:0 3px 12px -6px rgba(60,40,120,.12);
+}
+.matrix-title {
+  margin:0 0 8px;
+  font-size:1.0rem;
+  font-weight:700;
+  letter-spacing:.04em;
+  color:#5834a8;
+}
+.mt-scroll {
+  overflow-x:auto;
+  scrollbar-width:thin;
+  scrollbar-color:#c3a3f6 #f7f5ff;
+}
+.mt-scroll::-webkit-scrollbar { height:6px; }
+.mt-scroll::-webkit-scrollbar-track { background:#f7f5ff; }
+.mt-scroll::-webkit-scrollbar-thumb {
+  background:linear-gradient(180deg,#c3a3f6 0%,#a076f9 100%);
+  border-radius:6px;
+}
+.mt-table {
+  border-collapse:separate;
+  border-spacing:0;
+  min-width:640px;
+  font-size:.6rem;
+}
+.mt-table th,
+.mt-table td {
+  border:1px solid #ded9f0;
+  padding:4px 6px;
+  background:#fff;
+  text-align:center;
+  font-weight:600;
+  position:relative;
+  white-space:nowrap;
+}
+.mt-row.tier-1 th {
+  background:#d8cff5;
+  font-weight:700;
+  font-size:.6rem;
+  color:#39245f;
+}
+.mt-row.tier-2 th {
+  background:#bfa9f6;
+  font-weight:600;
+  font-size:.55rem;
+  color:#2d2259;
+}
+.mt-member-group {
+  background:#b39ef4;
+  color:#281f57;
+  font-weight:700;
+}
+.mt-source-col {
+  background:#6f41d8 !important;
+  color:#fff !important;
+  width:110px;
+  min-width:110px;
+}
+.mt-source-label {
+  text-align:left;
+  font-weight:600;
+  background:#f5f2ff;
+  color:#3d2b64;
+  padding-left:8px;
+}
+.mt-row:nth-of-type(even) .mt-source-label { background:#ede8fc; }
+.mt-sub.sales { background:#fbdede; }
+.mt-sub.main  { background:#e2ecff; }
+.mt-cell.sales { background:#fff4f4; color:#333741; }
+.mt-cell.main  { background:#f4f8ff; color:#333741; }
+.mt-row:hover td:not(.mt-source-label):not(.sticky-col) {
+  background:#efe5ff;
+}
+.sticky-col {
+  position:sticky;
+  left:0;
+  z-index:2;
+  background:#f5f2ff;
+}
+
+/* ------------ Responsive ------------- */
+@media (max-width: 1180px) {
+  .finance-summary-row {
+    flex-direction:column;
+  }
+  .cc-card { flex:1 1 auto; min-width:520px; }
+}
+@media (max-width: 860px) {
+  .finance-title { font-size:1.3rem; }
+  .tm-table.merged { font-size:.56rem; }
+  .cc-table { font-size:.56rem; }
+  .mt-table { font-size:.55rem; }
+}
+@media (max-width: 560px) {
+  .member-filter { width:160px; }
+  .tm-table.merged { min-width:520px; }
+  .cc-table { min-width:640px; }
+  .mt-table { min-width:700px; }
+}

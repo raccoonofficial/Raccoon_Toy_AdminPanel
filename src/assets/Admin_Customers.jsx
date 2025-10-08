@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { FiSearch } from 'react-icons/fi';
 import './Admin_Customers.css';
 
-/* ------------------ Sample Data ------------------ */
+/* ------------------ Sample Data (Updated: added address, removed joined & totalSpent) ------------------ */
 const initialCustomers = [
   {
     customerId: 'CUST_10001',
@@ -10,9 +10,8 @@ const initialCustomers = [
     email: 'tony@starkindustries.com',
     phone: '+1 555-1000',
     orders: 12,
-    totalSpent: 12500,
-    status: 'Active',
-    joined: '2024-11-02'
+    address: '10880 Malibu Point, CA',
+    status: 'Loyal'
   },
   {
     customerId: 'CUST_10002',
@@ -20,9 +19,8 @@ const initialCustomers = [
     email: 'steve@avengers.com',
     phone: '+1 555-1001',
     orders: 5,
-    totalSpent: 2450,
-    status: 'Inactive',
-    joined: '2025-01-14'
+    address: '569 Leaman Place, Brooklyn, NY',
+    status: 'Basic'
   },
   {
     customerId: 'CUST_10003',
@@ -30,9 +28,8 @@ const initialCustomers = [
     email: 'natasha@shield.gov',
     phone: '+1 555-1002',
     orders: 19,
-    totalSpent: 8900,
-    status: 'Active',
-    joined: '2024-08-22'
+    address: 'Unknown (Classified)',
+    status: 'Loyal'
   },
   {
     customerId: 'CUST_10004',
@@ -40,9 +37,8 @@ const initialCustomers = [
     email: 'bruce@science.org',
     phone: '+1 555-1003',
     orders: 2,
-    totalSpent: 380,
-    status: 'Suspended',
-    joined: '2025-03-03'
+    address: 'Culver University Labs, VA',
+    status: 'Basic'
   },
   {
     customerId: 'CUST_10005',
@@ -50,19 +46,27 @@ const initialCustomers = [
     email: 'peter@dailybugle.net',
     phone: '+1 555-1004',
     orders: 7,
-    totalSpent: 1510,
-    status: 'Active',
-    joined: '2025-02-10'
+    address: '20 Ingram Street, Queens, NY',
+    status: 'Basic'
   }
 ];
 
-/* ------------------ Status Theming ------------------ */
-const CUSTOMER_STATUS_OPTIONS = ['Active', 'Inactive', 'Suspended'];
+/* ------------------ Status Theming (Now only Basic & Loyal) ------------------ */
+const CUSTOMER_STATUS_OPTIONS = ['Basic', 'Loyal'];
 
 const statusTheme = {
-  'Active':    { class: 'active',    bg: '#e8fff3', color: '#1d9b68', border: '#b4f5d4' },
-  'Inactive':  { class: 'inactive',  bg: '#f2f3f7', color: '#555c69', border: '#d4d9e2' },
-  'Suspended': { class: 'suspended', bg: '#ffeaea', color: '#d7261d', border: '#ffd6d6' }
+  'Basic': {
+    class: 'basic',
+    bg: '#f2f3f5',
+    color: '#5d6470',
+    border: '#d4d7dd'
+  },
+  'Loyal': {
+    class: 'loyal',
+    bg: '#fff7df',
+    color: '#a06b00',
+    border: '#f1dc98'
+  }
 };
 
 /* ------------------ Custom Status Dropdown ------------------ */
@@ -221,7 +225,8 @@ function Admin_Customers() {
       c.name.toLowerCase().includes(term) ||
       c.email.toLowerCase().includes(term) ||
       c.customerId.toLowerCase().includes(term) ||
-      c.phone.toLowerCase().includes(term)
+      c.phone.toLowerCase().includes(term) ||
+      c.address.toLowerCase().includes(term)
     );
   }, [customers, searchTerm]);
 
@@ -255,8 +260,7 @@ function Admin_Customers() {
                 <th className="cust-col-email">Email</th>
                 <th className="cust-col-phone">Phone</th>
                 <th className="cust-col-orders">Orders</th>
-                <th className="cust-col-spent">Total Spent</th>
-                <th className="cust-col-joined">Joined</th>
+                <th className="cust-col-address">Address</th>
                 <th className="cust-col-status">Status</th>
                 <th className="cust-col-action">Action</th>
               </tr>
@@ -264,7 +268,7 @@ function Admin_Customers() {
             <tbody>
               {noResults && (
                 <tr className="no-results-row">
-                  <td colSpan={9} style={{ textAlign: 'center', padding: '14px 8px', fontWeight: 600, color: '#6a39ff' }}>
+                  <td colSpan={8} style={{ textAlign: 'center', padding: '14px 8px', fontWeight: 600, color: '#6a39ff' }}>
                     No customers match your search.
                   </td>
                 </tr>
@@ -277,8 +281,7 @@ function Admin_Customers() {
                   <td className="cust-col-email">{c.email}</td>
                   <td className="cust-col-phone">{c.phone}</td>
                   <td className="cust-col-orders">{c.orders}</td>
-                  <td className="cust-col-spent">{c.totalSpent.toLocaleString()}</td>
-                  <td className="cust-col-joined">{c.joined}</td>
+                  <td className="cust-col-address">{c.address}</td>
                   <td className="cust-col-status">
                     <StatusDropdown
                       value={c.status}

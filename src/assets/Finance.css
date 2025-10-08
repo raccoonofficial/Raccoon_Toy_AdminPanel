@@ -42,7 +42,16 @@
   table-layout:fixed;
 }
 
-.tm-table.merged th,
+
+.tm-table.merged th {
+  border:1px solid #cfd5e6;
+  padding:4px 6px;
+  text-align:left;
+  background:#d3b2ff;
+  font-weight:600;
+  position:relative;
+}
+
 .tm-table.merged td {
   border:1px solid #cfd5e6;
   padding:4px 6px;
@@ -57,7 +66,7 @@
   font-size:.78rem;
   font-weight:700;
   letter-spacing:.05em;
-  color:#23344a;
+  color:#000000;
   text-align:center;
   border-bottom:2px solid #b9c8d2;
 }
@@ -70,13 +79,13 @@
   padding:6px 4px;
 }
 .tm-section-head.tm-main-head {
-  background:#bcd5f9;
-  color:#1e3557;
+  background:#8dbdff;
+  color:#070707;
   border-right:2px solid #6b7faa;
 }
 .tm-section-head.tm-sells-head {
   background:#cdbded;
-  color:#362154;
+  color:#000000;
 }
 
 .tm-left-label,
@@ -90,7 +99,7 @@
 .tm-right-label,
 .tm-right-val {
   background:#eee7fb;
-  color:#33204e;
+  color:#000000;
 }
 .tm-right-label { width:110px; }
 .tm-right-val { text-align:right; }
@@ -99,6 +108,12 @@
   background:#e3eaf6;
   font-weight:700;
 }
+
+.tm-total-row td:nth-child(1),
+.tm-total-row td:nth-child(2) {
+  background:#f6dee2;
+}
+
 .tm-total-row td:nth-child(3),
 .tm-total-row td:nth-child(4) {
   background:#e6def6;
@@ -146,22 +161,26 @@
 .cc-table td {
   border:1px solid #cfd2e4;
   padding:4px 6px;
-  background:#fff;
+
   font-weight:600;
   position:relative;
 }
 
 .cc-title-head {
-  background:#d9d9dd;
-  font-size:.78rem;
+  margin:0 0 8px;
+  font-size:1.0rem;
+
+  letter-spacing:.04em;
+  color:#000000;
+  font-size:.98rem;
   font-weight:700;
   letter-spacing:.05em;
-  color:#262b33;
-  text-align:center;
+  text-align: left;
   border-bottom:2px solid #b0b2bc;
 }
 
 .cc-cat-row .cc-cat-head {
+    background-color: #bfd8ff;
   font-size:.62rem;
   font-weight:700;
   letter-spacing:.04em;
@@ -230,6 +249,7 @@
 
 /* ------------ Money Tracker (same as before, no totals col) ------------- */
 .finance-matrix-card.slim-version {
+     margin-top: 20px;
   background:#fff;
   border:1px solid #ececef;
   border-radius:12px;
@@ -240,9 +260,9 @@
 .matrix-title {
   margin:0 0 8px;
   font-size:1.0rem;
-  font-weight:700;
+
   letter-spacing:.04em;
-  color:#5834a8;
+  color:#000000;
 }
 .mt-scroll {
   overflow-x:auto;
@@ -316,22 +336,3 @@
   background:#f5f2ff;
 }
 
-/* ------------ Responsive ------------- */
-@media (max-width: 1180px) {
-  .finance-summary-row {
-    flex-direction:column;
-  }
-  .cc-card { flex:1 1 auto; min-width:520px; }
-}
-@media (max-width: 860px) {
-  .finance-title { font-size:1.3rem; }
-  .tm-table.merged { font-size:.56rem; }
-  .cc-table { font-size:.56rem; }
-  .mt-table { font-size:.55rem; }
-}
-@media (max-width: 560px) {
-  .member-filter { width:160px; }
-  .tm-table.merged { min-width:520px; }
-  .cc-table { min-width:640px; }
-  .mt-table { min-width:700px; }
-}

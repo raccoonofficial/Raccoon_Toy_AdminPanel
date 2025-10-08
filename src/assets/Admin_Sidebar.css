@@ -22,7 +22,7 @@
     max-width: var(--sidebar-width);
     min-height: 100vh;
     background-color: var(--sidebar-bg);
-    padding: 36px 0 0 0;
+    padding: 20px 0 0 0;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;

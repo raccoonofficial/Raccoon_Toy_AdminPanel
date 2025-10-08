@@ -1,4 +1,4 @@
-/* ====== Admin Orders Module ====== */
+/* ====== Admin Orders Module (Grouped Multi-Row Structure) ====== */
 
 .admin-orders {
   padding: 18px 8px 0 8px;
@@ -35,9 +35,7 @@
 }
 
 /* Search */
-.search-box {
-  position: relative;
-}
+.search-box { position: relative; }
 .search-box input[type="search"] {
   font-size: .9rem;
   padding: 6px 36px 6px 12px;
@@ -99,7 +97,7 @@
   background: linear-gradient(180deg,#b894ff 0%,#8f63f0 100%);
 }
 
-/* Table */
+/* Table Core */
 .orders-table.alt-structure {
   width: 100%;
   border-collapse: separate;
@@ -124,15 +122,16 @@
   user-select: none;
 }
 
-.orders-table.alt-structure thead th.col-items,
-.orders-table.alt-structure thead th.col-total,
-.orders-table.alt-structure thead th.col-pay,
-.orders-table.alt-structure thead th.col-fulfill,
-.orders-table.alt-structure thead th.col-action {
+.orders-group-structure thead th.ord-col-qty,
+.orders-group-structure thead th.ord-col-line,
+.orders-group-structure thead th.ord-col-total,
+.orders-group-structure thead th.ord-col-payment,
+.orders-group-structure thead th.ord-col-fulfill,
+.orders-group-structure thead th.ord-col-action {
   text-align: center;
 }
 
-/* Cells */
+/* Data Cells */
 .orders-table.alt-structure tbody td {
   padding: 4px 6px;
   border-bottom: 1px solid #ececf5;
@@ -144,42 +143,68 @@
   transition: background .15s ease;
 }
 
+/* Group Cell (order-level) */
+.group-cell {
+  background: #ffffff;
+  font-weight: 600;
+  vertical-align: top;
+}
+
+/* Column Widths (namespaced ord-col-*) */
+.ord-col-id { min-width: 110px; width: 110px; }
+.ord-col-customer { min-width: 150px; width: 150px; }
+.ord-col-date { min-width: 100px; width: 100px; }
+.ord-col-item { min-width: 160px; width: 200px; }
+.ord-col-sku { min-width: 90px; width: 95px; }
+.ord-col-qty { min-width: 48px; width: 52px; text-align: center; }
+.ord-col-line { min-width: 90px; width: 90px; text-align: right; }
+.ord-col-total { min-width: 105px; width: 110px; text-align: right; }
+.ord-col-payment { min-width: 90px; width: 90px; text-align: center; }
+.ord-col-fulfill { min-width: 120px; width: 120px; text-align: center; }
+.ord-col-action { min-width: 70px; width: 70px; text-align: center; }
+
+/* Amount Cells */
 .amount-cell {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  text-align: right;
-  padding-right: 10px;
+  padding-right: 6px;
 }
 
-/* Column widths */
-.col-id { min-width: 110px; width: 110px; }
-.col-customer { min-width: 150px; width: 150px; }
-.col-date { min-width: 100px; width: 100px; }
-.col-items { min-width: 60px; width: 60px; }
-.col-total { min-width: 90px; width: 90px; }
-.col-pay { min-width: 100px; width: 100px; }
-.col-fulfill { min-width: 130px; width: 130px; }
-.col-action { min-width: 72px; width: 72px; text-align: center; }
+/* Order Total emphasis */
+.order-total-cell {
+  background: #faf7ff;
+  font-weight: 700;
+  border-left: 1px solid #ececf5;
+  border-right: 1px solid #ececf5;
+}
 
-/* Zebra */
-.orders-table.alt-structure tbody tr.data-row:nth-of-type(odd) td {
+/* Zebra (applies per row) */
+.orders-table.alt-structure tbody tr.grouped-row:nth-of-type(odd) td {
   background: #ffffff;
 }
-.orders-table.alt-structure tbody tr.data-row:nth-of-type(even) td {
-  background: #f5f0ff;
+.orders-table.alt-structure tbody tr.grouped-row:nth-of-type(even) td {
+  background: #f9f5ff;
 }
 
-/* Hover */
-.orders-table.alt-structure tbody tr.data-row:hover td {
+/* Hover entire group row */
+.orders-table.alt-structure tbody tr.grouped-row:hover td {
   background: #efe5ff;
 }
 
-/* Cancelled row highlight */
-.row-cancelled td {
+/* Highlight for cancelled order group */
+.order-cancelled td {
   background: #ffefef !important;
 }
+.order-cancelled:hover td {
+  background: #ffe5e5 !important;
+}
 
-/* Payment badges */
+/* Bottom border for last row in group (visual separator) */
+.orders-table.alt-structure tbody tr.order-last td {
+  border-bottom: 1px solid #d5c8f5;
+}
+
+/* Payment badges (unchanged theme) */
 .payment-badge {
   display: inline-block;
   padding: 2px 8px 3px;
@@ -206,7 +231,7 @@
   border-color: #b6defc;
 }
 
-/* Fulfillment select */
+/* Fulfillment select (retained theme) */
 .fulfill-select {
   font-size: .58rem;
   font-weight: 600;
@@ -226,16 +251,14 @@
   text-align: left;
   background-image: url("data:image/svg+xml;utf8,<svg width='12' height='12' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M6 9l6 6 6-6' stroke='%237c4dff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
 }
-.fulfill-select:hover {
-  border-color: #b9b9c6;
-}
+.fulfill-select:hover { border-color: #b9b9c6; }
 .fulfill-select:focus {
   border-color: #7c4dff;
   box-shadow: 0 0 0 2px rgba(124,77,255,0.25);
   background-image: url("data:image/svg+xml;utf8,<svg width='12' height='12' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M6 9l6 6 6-6' stroke='%235b2ee0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
 }
 
-/* Fulfillment theme variants */
+/* Fulfillment variants */
 .fulfill-select.pending {
   background-color: #f2f2ff;
   color: #5551b8;
@@ -325,8 +348,8 @@
     padding: 8px 16px;
   }
   .search-box input[type="search"] { width: 250px; }
-  .col-customer { min-width: 140px; width: 140px; }
-  .col-id { min-width: 100px; width: 100px; }
+  .ord-col-item { min-width: 150px; width: 170px; }
+  .ord-col-customer { min-width: 140px; width: 140px; }
 }
 @media (max-width: 640px) {
   .orders-controls { width: 100%; justify-content: flex-start; }
@@ -334,4 +357,5 @@
   .orders-table.alt-structure { font-size: .64rem; }
   .search-box input[type="search"] { width: 180px; }
   .fulfill-select { font-size: .54rem; }
+  .ord-col-item { min-width: 140px; width: 160px; }
 }

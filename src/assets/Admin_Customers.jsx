@@ -51,7 +51,9 @@ const initialCustomers = [
   }
 ];
 
-/* ------------------ Status Theming (Premium Yellow for Loyal) ------------------ */
+/* ------------------ Status Theming (Light Premium Yellow for Loyal) ------------------
+   Using a simple object; Loyal variant can be upgraded later to gradient or sheen if desired.
+*/
 const CUSTOMER_STATUS_OPTIONS = ['Basic', 'Loyal'];
 
 const statusTheme = {
@@ -63,9 +65,9 @@ const statusTheme = {
   },
   Loyal: {
     class: 'loyal',
-    bg: '#fff4c2',          // updated premium yellow background
-    color: '#e7aa01ff',       // richer gold text
-    border: '#cc9c00ff'       // defined border
+    bg: '#fff9e6',      // light premium yellow background
+    color: '#b48900',   // rich but readable gold tone
+    border: '#f2df9f'   // soft golden border
   }
 };
 
@@ -148,8 +150,8 @@ function StatusDropdown({ value, onChange }) {
         onKeyDown={onButtonKeyDown}
         style={{
           background: statusTheme[value].bg,
-          color: statusTheme[value].color,
-          borderColor: statusTheme[value].border
+            color: statusTheme[value].color,
+            borderColor: statusTheme[value].border
         }}
       >
         <span
@@ -191,9 +193,7 @@ function StatusDropdown({ value, onChange }) {
                   close();
                   btnRef.current?.focus();
                 }}
-                style={{
-                  color: theme.color
-                }}
+                style={{ color: theme.color }}
               >
                 <span
                   className="cust-option-accent"

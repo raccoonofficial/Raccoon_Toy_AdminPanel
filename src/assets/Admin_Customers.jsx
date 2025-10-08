@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { FiSearch } from 'react-icons/fi';
 import './Admin_Customers.css';
 
-/* ------------------ Sample Data (Updated: added address, removed joined & totalSpent) ------------------ */
+/* ------------------ Sample Data (Address + Basic/Loyal) ------------------ */
 const initialCustomers = [
   {
     customerId: 'CUST_10001',
@@ -51,21 +51,21 @@ const initialCustomers = [
   }
 ];
 
-/* ------------------ Status Theming (Now only Basic & Loyal) ------------------ */
+/* ------------------ Status Theming (Premium Yellow for Loyal) ------------------ */
 const CUSTOMER_STATUS_OPTIONS = ['Basic', 'Loyal'];
 
 const statusTheme = {
-  'Basic': {
+  Basic: {
     class: 'basic',
     bg: '#f2f3f5',
     color: '#5d6470',
     border: '#d4d7dd'
   },
-  'Loyal': {
+  Loyal: {
     class: 'loyal',
-    bg: '#fff7df',
-    color: '#a06b00',
-    border: '#f1dc98'
+    bg: '#fff4c2',          // updated premium yellow background
+    color: '#e7aa01ff',       // richer gold text
+    border: '#cc9c00ff'       // defined border
   }
 };
 
@@ -83,10 +83,7 @@ function StatusDropdown({ value, onChange }) {
   useEffect(() => {
     if (!open) return;
     const handler = (e) => {
-      if (
-        !btnRef.current?.contains(e.target) &&
-        !listRef.current?.contains(e.target)
-      ) {
+      if (!btnRef.current?.contains(e.target) && !listRef.current?.contains(e.target)) {
         close();
       }
     };
@@ -149,6 +146,11 @@ function StatusDropdown({ value, onChange }) {
         aria-label="Change customer status"
         onClick={() => setOpen(o => !o)}
         onKeyDown={onButtonKeyDown}
+        style={{
+          background: statusTheme[value].bg,
+          color: statusTheme[value].color,
+          borderColor: statusTheme[value].border
+        }}
       >
         <span
           className="cust-status-swatch"
@@ -189,6 +191,9 @@ function StatusDropdown({ value, onChange }) {
                   close();
                   btnRef.current?.focus();
                 }}
+                style={{
+                  color: theme.color
+                }}
               >
                 <span
                   className="cust-option-accent"
@@ -212,9 +217,7 @@ function Admin_Customers() {
 
   const handleStatusChange = (customerId, newStatus) => {
     setCustomers(prev =>
-      prev.map(c =>
-        c.customerId === customerId ? { ...c, status: newStatus } : c
-      )
+      prev.map(c => (c.customerId === customerId ? { ...c, status: newStatus } : c))
     );
   };
 

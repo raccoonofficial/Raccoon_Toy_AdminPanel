@@ -1,26 +1,21 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import './Finance.css';
 
 /**
  * Finance Page
- * Updates in this revision:
- * 1. Total Money table header rows combined into a SINGLE header row (just "Total Money").
- *    The section labels "Main" and "Sells" now appear as the first body row (group-row) with colSpan.
- * 2. Added a Cost Counter table placed to the RIGHT of the Total Money table (flex row layout).
- *    Structure matches your screenshot: one top header "Cost Counter", second header row with each
- *    category spanning two columns (Item | Amount). Dynamic rows fill down to the max height across categories.
- * 3. Each category displays its own "Total :" in the bottom row (aligned).
  *
- * Adjust:
- * - Edit leftRows (main section) ordering inside buildTotalMoneyRows().
- * - Edit costCategories data for real values / additional categories.
- * - Change SALES_PROFIT_FACTOR if profit formula changes.
+ * Update in this revision:
+ * - Removed the member filter input (always shows all members).
+ * - Added an overall "Total Cost" grand row at the bottom of the Cost Counter table
+ *   which sums every category total and displays a single grand total value.
+ * - No other functional changes.
  */
 
 const BASE_CURRENCY = 'BDT';
 const FX_RATES = { USD: 110 };
 const SALES_PROFIT_FACTOR = 0.54;
 
+/* Money Tracker sources + buckets */
 const TRACKER_SOURCE_ROWS = [
   { key: 'bkash',     label: 'Bkash' },
   { key: 'cash',      label: 'Cash' },
@@ -30,6 +25,7 @@ const TRACKER_SOURCE_ROWS = [
 ];
 const BUCKETS = ['sales','main'];
 
+/* Demo transactions */
 const transactions = [
   { member:'Badhon',  source:'cash',      bucket:'main',  currency:'BDT', amount:16000 },
   { member:'Badhon',  source:'card',      bucket:'main',  currency:'BDT', amount:200 },
@@ -56,7 +52,7 @@ const transactions = [
   { member:'Shamim',  source:'moveon',    bucket:'main',  currency:'BDT', amount:60 },
 ];
 
-/* Cost Counter categories (edit freely) */
+/* Cost Counter categories */
 const costCategories = [
   {
     key: 'marketing',
@@ -81,9 +77,9 @@ const costCategories = [
     key: 'packaging',
     label: 'Packaging',
     rows: [
-      { item: 'Card',   amount: 2400 },
-      { item: 'Sticker',amount: 2300 },
-      { item: 'Packet', amount: 1500 }
+      { item: 'Card',    amount: 2400 },
+      { item: 'Sticker', amount: 2300 },
+      { item: 'Packet',  amount: 1500 }
     ]
   },
   {
@@ -137,7 +133,6 @@ function aggregate(list){
 }
 
 export default function Finance() {
-  const [filter, setFilter] = useState('');
 
   const { pivot, memberBucketTotals, bucketTotals } = useMemo(
     ()=>aggregate(transactions),
@@ -148,12 +143,9 @@ export default function Finance() {
     ()=> Object.keys(pivot).sort((a,b)=>a.localeCompare(b)),
     [pivot]
   );
+  const filteredMembers = members; // no filter (show all)
 
-  const filteredMembers = members.filter(m =>
-    m.toLowerCase().includes(filter.toLowerCase())
-  );
-
-  /* Total Money table computations */
+  /* Total Money logic */
   const memberMainBase = (member) => {
     const mainObj = memberBucketTotals[member]?.main || {};
     return Object.entries(mainObj).reduce(
@@ -185,10 +177,14 @@ export default function Finance() {
   ];
   const sellsTotal = sellsRows.reduce((s,r)=>s + r.value, 0);
 
-  /* Cost Counter table dynamic row count */
+  /* Cost Counter dynamic rows & totals */
   const costRowCount = Math.max(...costCategories.map(c => c.rows.length));
+  const categoryTotals = costCategories.map(c =>
+    c.rows.reduce((s,r)=> s + (r.amount||0), 0)
+  );
+  const grandCost = categoryTotals.reduce((a,b)=>a+b,0);
 
-  /* Money Tracker */
+  /* Money Tracker amounts */
   function getAmount(member, sourceKey, bucketKey){
     const obj = pivot[member]?.[sourceKey]?.[bucketKey] || {};
     return Object.entries(obj).reduce(
@@ -200,21 +196,19 @@ export default function Finance() {
     <section className="finance-page">
       <h1 className="finance-title">Finance</h1>
 
-      {/* Top row: Total Money (left) + Cost Counter (right) */}
-      <div className="finance-summary-row">
-        {/* Total Money Table */}
-        <div className="tm-card merged">
-          <table className="tm-table merged">
+      {/* Row: Total Money (narrow) + Money Tracker */}
+      <div className="finance-top-row">
+        <div className="tm-card merged narrow">
+          <table className="tm-table merged narrow">
             <thead>
               <tr>
                 <th colSpan={4} className="tm-title-single">Total Money</th>
               </tr>
             </thead>
             <tbody>
-              {/* Group header row for sections (replaces second header row) */}
               <tr className="tm-group-row">
                 <td colSpan={2} className="tm-section-head tm-main-head">Main</td>
-                <td colSpan={2} className="tm-section-head tm-sells-head">Sells</td>
+                <td colSpan={2} className="tm-section-head tm-sells-head">Sales</td>
               </tr>
               {Array.from({length: Math.max(mainRows.length, sellsRows.length)}).map((_,i)=>{
                 const L = mainRows[i];
@@ -238,106 +232,105 @@ export default function Finance() {
           </table>
         </div>
 
-        {/* Cost Counter Table */}
-        <div className="cc-card">
-          <table className="cc-table">
-            <thead>
-              <tr>
-                <th colSpan={costCategories.length * 2} className="cc-title-head">Cost Counter</th>
-              </tr>
-              <tr className="cc-cat-row">
-                {costCategories.map(cat => (
-                  <th key={cat.key} colSpan={2} className={`cc-cat-head cat-${cat.key}`}>
-                    {cat.label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {Array.from({length: costRowCount}).map((_,rowIdx)=>(
-                <tr key={rowIdx}>
-                  {costCategories.map(cat => {
-                    const entry = cat.rows[rowIdx];
-                    return (
-                      <React.Fragment key={cat.key + '-' + rowIdx}>
-                        <td className={`cc-item-cell cat-${cat.key}`}>
-                          {entry?.item || ''}
-                        </td>
-                        <td className={`cc-amt-cell cat-${cat.key}`}>
-                          {entry ? formatMoney(entry.amount) : ''}
-                        </td>
-                      </React.Fragment>
-                    );
-                  })}
+        <div className="finance-matrix-card slim-version inline">
+          <h2 className="matrix-title small">Money Tracker</h2>
+          <div className="mt-scroll">
+            <table className="mt-table no-totals compact">
+              <thead>
+                <tr className="mt-row tier-1">
+                  <th rowSpan={2} className="mt-source-col sticky-col">Source</th>
+                  {filteredMembers.map(m => (
+                    <th key={m} colSpan={2} className="mt-member-group">{m}</th>
+                  ))}
                 </tr>
+                <tr className="mt-row tier-2">
+                  {filteredMembers.map(m=>(
+                    <React.Fragment key={'sub-'+m}>
+                      <th className="mt-sub sales">Sales</th>
+                      <th className="mt-sub main">Main</th>
+                    </React.Fragment>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {TRACKER_SOURCE_ROWS.map(src => (
+                  <tr key={src.key} className="mt-row">
+                    <td className="mt-source-label sticky-col">{src.label}</td>
+                    {filteredMembers.map(m=>{
+                      const salesAmt = getAmount(m, src.key, 'sales');
+                      const mainAmt  = getAmount(m, src.key, 'main');
+                      return (
+                        <React.Fragment key={`${src.key}-${m}`}>
+                          <td className="mt-cell sales">{formatMoney(salesAmt)}</td>
+                          <td className="mt-cell main">{formatMoney(mainAmt)}</td>
+                        </React.Fragment>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* Cost Counter below full width */}
+      <div className="cc-card full-width">
+        <table className="cc-table">
+          <thead>
+            <tr>
+              <th colSpan={costCategories.length * 2} className="cc-title-head">Cost Counter</th>
+            </tr>
+            <tr className="cc-cat-row">
+              {costCategories.map(cat => (
+                <th key={cat.key} colSpan={2} className={`cc-cat-head cat-${cat.key}`}>
+                  {cat.label}
+                </th>
               ))}
-              <tr className="cc-total-row">
+            </tr>
+          </thead>
+          <tbody>
+            {Array.from({length: costRowCount}).map((_,rowIdx)=>(
+              <tr key={rowIdx}>
                 {costCategories.map(cat => {
-                  const total = cat.rows.reduce((s,r)=> s + (r.amount||0), 0);
+                  const entry = cat.rows[rowIdx];
                   return (
-                    <React.Fragment key={cat.key + '-total'}>
-                      <td className={`cc-item-cell total cat-${cat.key}`}>Total :</td>
-                      <td className={`cc-amt-cell total cat-${cat.key}`}>{formatMoney(total)}</td>
+                    <React.Fragment key={cat.key + '-' + rowIdx}>
+                      <td className={`cc-item-cell cat-${cat.key}`}>
+                        {entry?.item || ''}
+                      </td>
+                      <td className={`cc-amt-cell cat-${cat.key}`}>
+                        {entry ? formatMoney(entry.amount) : ''}
+                      </td>
                     </React.Fragment>
                   );
                 })}
               </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Filter for tracker */}
-      <div className="finance-controls">
-        <input
-          type="search"
-          placeholder="Filter member"
-            value={filter}
-          onChange={e=>setFilter(e.target.value)}
-          className="member-filter"
-        />
-      </div>
-
-      {/* Money Tracker */}
-      <div className="finance-matrix-card slim-version">
-        <h2 className="matrix-title">Money Tracker</h2>
-        <div className="mt-scroll">
-          <table className="mt-table no-totals">
-            <thead>
-              <tr className="mt-row tier-1">
-                <th rowSpan={2} className="mt-source-col sticky-col">Source</th>
-                {filteredMembers.map(m => (
-                  <th key={m} colSpan={2} className="mt-member-group">{m}</th>
-                ))}
-              </tr>
-              <tr className="mt-row tier-2">
-                {filteredMembers.map(m=>(
-                  <React.Fragment key={'sub-'+m}>
-                    <th className="mt-sub sales">Sales</th>
-                    <th className="mt-sub main">Main</th>
+            ))}
+            {/* Per-category totals */}
+            <tr className="cc-total-row">
+              {costCategories.map((cat, i) => {
+                const total = categoryTotals[i];
+                return (
+                  <React.Fragment key={cat.key + '-total'}>
+                    <td className={`cc-item-cell total cat-${cat.key}`}>Total :</td>
+                    <td className={`cc-amt-cell total cat-${cat.key}`}>{formatMoney(total)}</td>
                   </React.Fragment>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {TRACKER_SOURCE_ROWS.map(src => (
-                <tr key={src.key} className="mt-row">
-                  <td className="mt-source-label sticky-col">{src.label}</td>
-                  {filteredMembers.map(m=>{
-                    const salesAmt = getAmount(m, src.key, 'sales');
-                    const mainAmt  = getAmount(m, src.key, 'main');
-                    return (
-                      <React.Fragment key={`${src.key}-${m}`}>
-                        <td className="mt-cell sales">{formatMoney(salesAmt)}</td>
-                        <td className="mt-cell main">{formatMoney(mainAmt)}</td>
-                      </React.Fragment>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                );
+              })}
+            </tr>
+            {/* Grand Total Cost Row */}
+            <tr className="cc-grand-row">
+              <td
+                className="cc-grand-label"
+                colSpan={costCategories.length * 2 - 1}
+              >
+                Total Cost :
+              </td>
+              <td className="cc-grand-value">{formatMoney(grandCost)}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
   );

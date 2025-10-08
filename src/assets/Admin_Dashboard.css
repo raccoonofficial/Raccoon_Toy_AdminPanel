@@ -74,6 +74,7 @@
   padding: 18px;
 }
 .orders-today-card h3 {
+  color: #222;
   font-size: 1.05rem;
   margin: 0 0 12px 0;
 }

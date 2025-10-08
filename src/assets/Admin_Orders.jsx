@@ -3,27 +3,22 @@ import { FiSearch } from 'react-icons/fi';
 import './Admin_Orders.css';
 
 /**
- * ORDERS TABLE (Order-level hover highlight)
- * Each order is its own <tbody class="order-block"> so CSS hover highlights all its line rows.
- * Columns: Date | Order Number | Customer Name | Customer ID | Address | Phone | Product Name | Qty | Delivery | Price | Total Price | Cost After Sell | Total Sold Price | Profit | Payment | Status | Action
- *
- * Data model (simplified from earlier):
- *  {
- *    date: 'YYYY-MM-DD',
- *    orderNumber: string,
- *    customer: { name, id, address, phone },
- *    paymentStatus: 'Paid'|'Unpaid'|'Refunded',
- *    status: 'Delivered'|'Shipped'|'Send'|'Packed'|'Pending'|'Cancelled',
- *    costAfterSell?: number,
- *    totalSoldPrice?: number,
- *    profit?: number,
- *    items: [{ productName, qty, deliveryCharge, unitPrice }]
- *  }
+ * Changes in this update:
+ * 1. Added new column "STD ID" immediately after Date.
+ * 2. Added demo stdId values (e.g., '0231232', etc.).
+ * 3. Ensured at least two orders share the same date for demo (already present; kept & adjusted).
+ * 4. Hover still excludes only the Date cell (STD ID will highlight with rest of order).
+ * 5. Payment dropdown (Paid, DC Paid, Unpaid) and Status dropdown (Delivered, Pending, Packed, Shipped, Cancelled) retained.
+ * 6. Added stdId to search logic.
  */
+
+const PAYMENT_OPTIONS = ['Paid', 'DC Paid', 'Unpaid'];
+const STATUS_OPTIONS = ['Delivered', 'Pending', 'Packed', 'Shipped', 'Cancelled'];
 
 const initialOrders = [
   {
     date: '2025-09-23',
+    stdId: '0231232',
     orderNumber: '202509001',
     customer: { name: 'Noor Zahan', id: 'C_2025001', address: '', phone: '' },
     paymentStatus: 'Paid',
@@ -38,6 +33,22 @@ const initialOrders = [
   },
   {
     date: '2025-09-23',
+    stdId: '0231233',
+    orderNumber: '202509001B',
+    customer: { name: 'Demo Same Day', id: 'C_2025X01', address: 'Same-Day Lane', phone: '' },
+    paymentStatus: 'DC Paid',
+    status: 'Pending',
+    costAfterSell: 300,
+    totalSoldPrice: 520,
+    profit: 220,
+    items: [
+      { productName: 'Sample Product A', qty: 1, deliveryCharge: 0, unitPrice: 200 },
+      { productName: 'Sample Product B', qty: 2, deliveryCharge: 0, unitPrice: 160 }
+    ]
+  },
+  {
+    date: '2025-09-23',
+    stdId: '0231234',
     orderNumber: '202509002',
     customer: { name: 'Sarada Ater Mnn', id: 'C_2025002', address: '', phone: '' },
     paymentStatus: 'Paid',
@@ -55,6 +66,7 @@ const initialOrders = [
   },
   {
     date: '2025-09-24',
+    stdId: '0231235',
     orderNumber: '202509005',
     customer: { name: 'Ubor Moni', id: 'C_2025004', address: '', phone: '' },
     paymentStatus: 'Paid',
@@ -70,6 +82,7 @@ const initialOrders = [
   },
   {
     date: '2025-09-27',
+    stdId: '0231236',
     orderNumber: '202509006',
     customer: { name: 'Sabbir Hasan Saik', id: 'C_2025005', address: '19-e lower, Chandina CN.', phone: '8801769592256' },
     paymentStatus: 'Paid',
@@ -85,20 +98,22 @@ const initialOrders = [
   },
   {
     date: '2025-09-27',
-    orderNumber: '202509007',
-    customer: { name: 'Kodija Atlar Harimoni', id: 'C_2025006', address: '', phone: '' },
-    paymentStatus: 'Paid',
-    status: 'Delivered',
-    costAfterSell: 0,
-    totalSoldPrice: 210,
-    profit: 80,
+    stdId: '0231237',
+    orderNumber: '202509006B',
+    customer: { name: 'Repeat Date Demo', id: 'C_2025X02', address: 'Second Same Date', phone: '' },
+    paymentStatus: 'Unpaid',
+    status: 'Packed',
+    costAfterSell: 150,
+    totalSoldPrice: 320,
+    profit: 170,
     items: [
-      { productName: 'Hello Kitty Doll (2)', qty: 1, deliveryCharge: 0, unitPrice: 110 },
-      { productName: 'Hello Kitty Doll', qty: 1, deliveryCharge: 0, unitPrice: 100 }
+      { productName: 'Demo Figure', qty: 1, deliveryCharge: 0, unitPrice: 120 },
+      { productName: 'Demo Accessory', qty: 2, deliveryCharge: 0, unitPrice: 100 }
     ]
   },
   {
     date: '2025-10-01',
+    stdId: '0231238',
     orderNumber: '202509012',
     customer: { name: 'Sarada Ater Mnn', id: 'C_2025002', address: '', phone: '' },
     paymentStatus: 'Unpaid',
@@ -112,21 +127,20 @@ const initialOrders = [
   }
 ];
 
-const paymentBadgeClass = {
-  Paid: 'paid',
-  Unpaid: 'unpaid',
-  Refunded: 'refunded'
+/* Class maps for coloring */
+const paymentSelectClass = {
+  'Paid': 'paid',
+  'DC Paid': 'dcpaid',
+  'Unpaid': 'unpaid'
 };
 
-const statusClass = {
-  Delivered: 'delivered',
-  Shipped: 'shipped',
-  Send: 'send',
-  Packed: 'packed',
-  Pending: 'pending',
-  Cancelled: 'cancelled'
+const statusSelectClass = {
+  'Delivered': 'delivered',
+  'Pending': 'pending',
+  'Packed': 'packed',
+  'Shipped': 'shipped',
+  'Cancelled': 'cancelled'
 };
-const STATUS_OPTIONS = Object.keys(statusClass);
 
 function Admin_Orders() {
   const [orders, setOrders] = useState(initialOrders);
@@ -144,12 +158,7 @@ function Admin_Orders() {
       const profit = o.profit != null
         ? o.profit
         : (o.costAfterSell != null ? sold - o.costAfterSell : null);
-      return {
-        ...o,
-        computedTotalPrice: computedTotal,
-        resolvedSold: sold,
-        resolvedProfit: profit
-      };
+      return { ...o, computedTotalPrice: computedTotal, resolvedSold: sold, resolvedProfit: profit };
     });
   }, [orders]);
 
@@ -158,6 +167,7 @@ function Admin_Orders() {
     if (!term) return enriched;
     return enriched.filter(o =>
       o.orderNumber.toLowerCase().includes(term) ||
+      o.stdId.toLowerCase().includes(term) ||
       o.date.toLowerCase().includes(term) ||
       o.customer.name.toLowerCase().includes(term) ||
       o.customer.id.toLowerCase().includes(term) ||
@@ -171,6 +181,10 @@ function Admin_Orders() {
     setOrders(prev => prev.map(o => o.orderNumber === orderNumber ? { ...o, status: newStatus } : o));
   };
 
+  const handlePaymentChange = (orderNumber, newPayment) => {
+    setOrders(prev => prev.map(o => o.orderNumber === orderNumber ? { ...o, paymentStatus: newPayment } : o));
+  };
+
   return (
     <section className="admin-orders full-structure">
       <div className="orders-header">
@@ -179,7 +193,7 @@ function Admin_Orders() {
           <div className="search-box">
             <input
               type="search"
-              placeholder="Search order / customer / product"
+              placeholder="Search date / std id / order / customer / product"
               aria-label="Search orders"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -195,6 +209,7 @@ function Admin_Orders() {
             <thead>
               <tr>
                 <th className="ordf-col-date">Date</th>
+                <th className="ordf-col-stdid">STD ID</th>
                 <th className="ordf-col-order">Order Number</th>
                 <th className="ordf-col-custname">Customer Name</th>
                 <th className="ordf-col-custid">Customer ID</th>
@@ -217,7 +232,7 @@ function Admin_Orders() {
             {filtered.length === 0 && (
               <tbody>
                 <tr className="no-results-row">
-                  <td colSpan={17} style={{ textAlign: 'center', padding: '14px 8px', fontWeight: 600, color: '#6a39ff' }}>
+                  <td colSpan={18} style={{ textAlign: 'center', padding: '14px 8px', fontWeight: 600, color: '#6a39ff' }}>
                     No matching orders or items.
                   </td>
                 </tr>
@@ -242,7 +257,8 @@ function Admin_Orders() {
                       >
                         {first && (
                           <>
-                            <td rowSpan={rowSpan} className="ordf-col-date group-cell">{order.date}</td>
+                            <td rowSpan={rowSpan} className="ordf-col-date group-cell date-cell">{order.date}</td>
+                            <td rowSpan={rowSpan} className="ordf-col-stdid group-cell">{order.stdId}</td>
                             <td rowSpan={rowSpan} className="ordf-col-order group-cell">{order.orderNumber}</td>
                             <td rowSpan={rowSpan} className="ordf-col-custname group-cell">{order.customer.name}</td>
                             <td rowSpan={rowSpan} className="ordf-col-custid group-cell">{order.customer.id}</td>
@@ -270,14 +286,23 @@ function Admin_Orders() {
                             <td rowSpan={rowSpan} className="ordf-col-profit group-cell amount-cell profit-cell">
                               {order.resolvedProfit != null ? `${order.resolvedProfit} TK` : '—'}
                             </td>
-                            <td rowSpan={rowSpan} className="ordf-col-payment group-cell">
-                              <span className={`payment-badge ${paymentBadgeClass[order.paymentStatus]}`}>
-                                {order.paymentStatus}
-                              </span>
-                            </td>
-                            <td rowSpan={rowSpan} className="ordf-col-status group-cell">
+                            <td rowSpan={rowSpan}
+                                className={`ordf-col-payment group-cell payment-cell ${paymentSelectClass[order.paymentStatus]}`}>
                               <select
-                                className={`order-status-select ${statusClass[order.status]}`}
+                                className={`payment-select ${paymentSelectClass[order.paymentStatus]}`}
+                                value={order.paymentStatus}
+                                aria-label="Change payment status"
+                                onChange={(e) => handlePaymentChange(order.orderNumber, e.target.value)}
+                              >
+                                {PAYMENT_OPTIONS.map(p => (
+                                  <option key={p} value={p}>{p}</option>
+                                ))}
+                              </select>
+                            </td>
+                            <td rowSpan={rowSpan}
+                                className={`ordf-col-status group-cell status-cell ${statusSelectClass[order.status]}`}>
+                              <select
+                                className={`order-status-select full-cell ${statusSelectClass[order.status]}`}
                                 value={order.status}
                                 aria-label="Change status"
                                 onChange={(e) => handleStatusChange(order.orderNumber, e.target.value)}

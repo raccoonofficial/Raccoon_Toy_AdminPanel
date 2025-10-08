@@ -1,6 +1,6 @@
-/* ====== Admin Orders Module (Grouped Multi-Row Structure) ====== */
+/* ====== Orders Full Group (Order-wide Hover) ====== */
 
-.admin-orders {
+.admin-orders.full-structure {
   padding: 18px 8px 0 8px;
   font-family: system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
   color: #2f2f33;
@@ -26,7 +26,6 @@
   box-shadow: 0 2px 8px rgba(124,77,255,0.06);
   line-height: 1.1;
 }
-
 .orders-controls {
   display: flex;
   align-items: center;
@@ -48,22 +47,11 @@
   outline: none;
   transition: border-color .15s, box-shadow .15s;
 }
-.search-box input[type="search"]:focus {
-  border-color: #7c4dff;
-  box-shadow: 0 0 0 3px rgba(124,77,255,0.15);
-}
+.search-box input[type="search"]:focus { border-color: #7c4dff; box-shadow: 0 0 0 3px rgba(124,77,255,0.15); }
 .search-box .search-icon {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #7c4dff;
-  font-size: 1.05rem;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  color: #7c4dff; font-size: 1.05rem; pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
 }
 
 /* Card */
@@ -77,18 +65,15 @@
   overflow: hidden;
 }
 
-/* Scroll Area */
+/* Scroll */
 .orders-table-scroll {
-  max-height: 420px;
+  max-height: 430px;
   overflow-y: auto;
   border-radius: 6px;
   scrollbar-width: thin;
   scrollbar-color: #c3a3f6 #f7f5ff;
 }
-.orders-table-scroll::-webkit-scrollbar {
-  width: 5px;
-  background: #f7f5ff;
-}
+.orders-table-scroll::-webkit-scrollbar { width: 5px; background: #f7f5ff; }
 .orders-table-scroll::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg,#c3a3f6 0%,#a076f9 100%);
   border-radius: 6px;
@@ -97,8 +82,8 @@
   background: linear-gradient(180deg,#b894ff 0%,#8f63f0 100%);
 }
 
-/* Table Core */
-.orders-table.alt-structure {
+/* Table */
+.orders-table.orders-full-group {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
@@ -106,105 +91,103 @@
   table-layout: fixed;
 }
 
-.orders-table.alt-structure thead th {
+.orders-full-group thead th {
   background: #9859ff;
   color: #fff;
   font-weight: 600;
-  font-size: .72rem;
+  font-size: .66rem;
   letter-spacing: .04em;
-  padding: 7px 6px;
+  padding: 6px 6px;
   border-bottom: 2px solid #6a39ff;
   position: sticky;
   top: 0;
   z-index: 2;
-  text-align: left;
-  white-space: nowrap;
   user-select: none;
+  white-space: nowrap;
+  text-align: left;
 }
 
-.orders-group-structure thead th.ord-col-qty,
-.orders-group-structure thead th.ord-col-line,
-.orders-group-structure thead th.ord-col-total,
-.orders-group-structure thead th.ord-col-payment,
-.orders-group-structure thead th.ord-col-fulfill,
-.orders-group-structure thead th.ord-col-action {
+.orders-full-group thead th.ordf-col-qty,
+.orders-full-group thead th.ordf-col-delivery,
+.orders-full-group thead th.ordf-col-price,
+.orders-full-group thead th.ordf-col-totalprice,
+.orders-full-group thead th.ordf-col-costafter,
+.orders-full-group thead th.ordf-col-sold,
+.orders-full-group thead th.ordf-col-profit,
+.orders-full-group thead th.ordf-col-payment,
+.orders-full-group thead th.ordf-col-status,
+.orders-full-group thead th.ordf-col-action {
   text-align: center;
 }
 
-/* Data Cells */
-.orders-table.alt-structure tbody td {
+/* Cells */
+.orders-full-group tbody td {
   padding: 4px 6px;
   border-bottom: 1px solid #ececf5;
   background: #fff;
   font-weight: 500;
   color: #444;
   vertical-align: middle;
-  word-break: break-word;
   transition: background .15s ease;
+  font-size: .62rem;
 }
 
-/* Group Cell (order-level) */
-.group-cell {
-  background: #ffffff;
-  font-weight: 600;
-  vertical-align: top;
+.group-cell { font-weight: 600; background: #ffffff; vertical-align: top; }
+
+/* Order block hover (HIGHLIGHTS ENTIRE ORDER) */
+.order-block:hover td {
+  background: #efe5ff !important;
 }
 
-/* Column Widths (namespaced ord-col-*) */
-.ord-col-id { min-width: 110px; width: 110px; }
-.ord-col-customer { min-width: 150px; width: 150px; }
-.ord-col-date { min-width: 100px; width: 100px; }
-.ord-col-item { min-width: 160px; width: 200px; }
-.ord-col-sku { min-width: 90px; width: 95px; }
-.ord-col-qty { min-width: 48px; width: 52px; text-align: center; }
-.ord-col-line { min-width: 90px; width: 90px; text-align: right; }
-.ord-col-total { min-width: 105px; width: 110px; text-align: right; }
-.ord-col-payment { min-width: 90px; width: 90px; text-align: center; }
-.ord-col-fulfill { min-width: 120px; width: 120px; text-align: center; }
-.ord-col-action { min-width: 70px; width: 70px; text-align: center; }
-
-/* Amount Cells */
-.amount-cell {
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  padding-right: 6px;
-}
-
-/* Order Total emphasis */
-.order-total-cell {
-  background: #faf7ff;
-  font-weight: 700;
-  border-left: 1px solid #ececf5;
-  border-right: 1px solid #ececf5;
-}
-
-/* Zebra (applies per row) */
-.orders-table.alt-structure tbody tr.grouped-row:nth-of-type(odd) td {
-  background: #ffffff;
-}
-.orders-table.alt-structure tbody tr.grouped-row:nth-of-type(even) td {
-  background: #f9f5ff;
-}
-
-/* Hover entire group row */
-.orders-table.alt-structure tbody tr.grouped-row:hover td {
-  background: #efe5ff;
-}
-
-/* Highlight for cancelled order group */
-.order-cancelled td {
+/* Cancelled highlight stays stronger */
+.order-block.order-cancelled td {
   background: #ffefef !important;
 }
-.order-cancelled:hover td {
-  background: #ffe5e5 !important;
+.order-block.order-cancelled:hover td {
+  background: #ffe4e4 !important;
 }
 
-/* Bottom border for last row in group (visual separator) */
-.orders-table.alt-structure tbody tr.order-last td {
+/* Last row border for each order */
+.order-block tr.order-last td {
   border-bottom: 1px solid #d5c8f5;
 }
 
-/* Payment badges (unchanged theme) */
+/* Zebra look inside order (optional subtle) */
+.order-block tr:nth-of-type(odd) td { background: #ffffff; }
+.order-block tr:nth-of-type(even) td { background: #f9f6ff; }
+.order-block.order-cancelled tr td { background: #ffefef !important; }
+
+/* No results */
+.no-results-row td { background: #faf7ff !important; border-bottom: none; }
+
+/* Column widths */
+.ordf-col-date { min-width: 78px; width: 82px; }
+.ordf-col-order { min-width: 90px; width: 95px; }
+.ordf-col-custname { min-width: 120px; width: 140px; }
+.ordf-col-custid { min-width: 85px; width: 90px; }
+.ordf-col-address { min-width: 160px; width: 190px; }
+.ordf-col-phone { min-width: 100px; width: 110px; }
+.ordf-col-product { min-width: 170px; width: 210px; }
+.ordf-col-qty { min-width: 46px; width: 50px; text-align: center; }
+.ordf-col-delivery { min-width: 70px; width: 70px; text-align: right; }
+.ordf-col-price { min-width: 70px; width: 70px; text-align: right; }
+.ordf-col-totalprice { min-width: 86px; width: 90px; text-align: right; }
+.ordf-col-costafter { min-width: 96px; width: 100px; text-align: right; }
+.ordf-col-sold { min-width: 100px; width: 105px; text-align: right; }
+.ordf-col-profit { min-width: 80px; width: 86px; text-align: right; }
+.ordf-col-payment { min-width: 74px; width: 80px; text-align: center; }
+.ordf-col-status { min-width: 80px; width: 86px; text-align: center; }
+.ordf-col-action { min-width: 68px; width: 68px; text-align: center; }
+
+.amount-cell {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-align: right;
+}
+.center { text-align: center; }
+.profit-cell { font-weight: 700; color: #4f3d00; }
+
+/* Payment badges */
 .payment-badge {
   display: inline-block;
   padding: 2px 8px 3px;
@@ -215,81 +198,45 @@
   border: 1px solid transparent;
   line-height: 1.1;
 }
-.payment-badge.paid {
-  background: #e8fff3;
-  color: #1d9b68;
-  border-color: #b4f5d4;
-}
-.payment-badge.unpaid {
-  background: #fff6e1;
-  color: #9c6b00;
-  border-color: #f3dc9b;
-}
-.payment-badge.refunded {
-  background: #eaf6ff;
-  color: #0f70b7;
-  border-color: #b6defc;
-}
+.payment-badge.paid { background:#e8fff3; color:#1d9b68; border-color:#b4f5d4; }
+.payment-badge.unpaid { background:#fff6e1; color:#9c6b00; border-color:#f3dc9b; }
+.payment-badge.refunded { background:#eaf6ff; color:#0f70b7; border-color:#b6defc; }
 
-/* Fulfillment select (retained theme) */
-.fulfill-select {
+/* Status select */
+.order-status-select {
   font-size: .58rem;
   font-weight: 600;
-  padding: 2px 22px 2px 6px;
+  padding: 2px 20px 2px 6px;
   border-radius: 7px;
   border: 1px solid #d5d7e2;
+  appearance: none;
+  background: #ffffff;
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  background-size: 10px 10px;
   cursor: pointer;
   outline: none;
-  line-height: 1.1;
-  appearance: none;
-  background-color: #ffffff;
-  background-repeat: no-repeat;
-  background-position: right 7px center;
-  background-size: 10px 10px;
-  transition: box-shadow .15s, border-color .15s, background-color .15s;
-  max-width: 120px;
-  text-align: left;
+  transition: border-color .15s, box-shadow .15s;
+  max-width: 110px;
   background-image: url("data:image/svg+xml;utf8,<svg width='12' height='12' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M6 9l6 6 6-6' stroke='%237c4dff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
 }
-.fulfill-select:hover { border-color: #b9b9c6; }
-.fulfill-select:focus {
-  border-color: #7c4dff;
-  box-shadow: 0 0 0 2px rgba(124,77,255,0.25);
-  background-image: url("data:image/svg+xml;utf8,<svg width='12' height='12' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M6 9l6 6 6-6' stroke='%235b2ee0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+.order-status-select:hover { border-color:#b9b9c6; }
+.order-status-select:focus {
+  border-color:#7c4dff;
+  box-shadow:0 0 0 2px rgba(124,77,255,0.25);
+  background-image:url("data:image/svg+xml;utf8,<svg width='12' height='12' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M6 9l6 6 6-6' stroke='%235b2ee0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
 }
 
-/* Fulfillment variants */
-.fulfill-select.pending {
-  background-color: #f2f2ff;
-  color: #5551b8;
-  border-color: #d8d6ff;
-}
-.fulfill-select.processing {
-  background-color: #e8fff3;
-  color: #1d9b68;
-  border-color: #b4f5d4;
-}
-.fulfill-select.shipped {
-  background-color: #eaf6ff;
-  color: #0f70b7;
-  border-color: #b6defc;
-}
-.fulfill-select.delivered {
-  background-color: #f1ffe9;
-  color: #4a9400;
-  border-color: #c7f9a9;
-}
-.fulfill-select.cancelled {
-  background-color: #ffeaea;
-  color: #d7261d;
-  border-color: #ffd6d6;
-}
+/* Status variants */
+.order-status-select.delivered { background:#e8fff3; color:#1d9b68; border-color:#b4f5d4; }
+.order-status-select.shipped { background:#eaf6ff; color:#0f70b7; border-color:#b6defc; }
+.order-status-select.send { background:#f2f2ff; color:#5551b8; border-color:#d8d6ff; }
+.order-status-select.packed { background:#fff6e1; color:#9c6b00; border-color:#f3dc9b; }
+.order-status-select.pending { background:#fff4e8; color:#a84d00; border-color:#f3c6a1; }
+.order-status-select.cancelled { background:#ffeaea; color:#d7261d; border-color:#ffd6d6; }
 
 /* Actions */
-.actions-cell {
-  white-space: nowrap;
-  text-align: center;
-}
+.actions-cell { white-space: nowrap; }
 .edit-btn,
 .delete-btn {
   background: none;
@@ -301,20 +248,9 @@
   line-height: 0;
   transition: background .16s;
 }
-.edit-btn svg,
-.delete-btn svg {
-  width: 11px;
-  height: 11px;
-  display: block;
-}
-.edit-btn:hover { background: #e7f3ff; }
-.delete-btn:hover { background: #ffe7e7; }
-
-/* No Results */
-.no-results-row td {
-  background: #faf7ff !important;
-  border-bottom: none;
-}
+.edit-btn svg, .delete-btn svg { width: 11px; height: 11px; display: block; }
+.edit-btn:hover { background:#e7f3ff; }
+.delete-btn:hover { background:#ffe7e7; }
 
 /* Footer */
 .orders-footer {
@@ -336,26 +272,20 @@
   box-shadow: 0 2px 8px rgba(124,77,255,0.25);
   transition: background .15s, box-shadow .15s;
 }
-.add-order-btn:hover {
-  background: #6736f1;
-  box-shadow: 0 3px 12px rgba(124,77,255,0.35);
-}
+.add-order-btn:hover { background:#6736f1; box-shadow:0 3px 12px rgba(124,77,255,0.35); }
 
 /* Responsive */
-@media (max-width: 860px) {
-  .orders-header h1 {
-    font-size: 1.55rem;
-    padding: 8px 16px;
-  }
-  .search-box input[type="search"] { width: 250px; }
-  .ord-col-item { min-width: 150px; width: 170px; }
-  .ord-col-customer { min-width: 140px; width: 140px; }
+@media (max-width: 980px) {
+  .orders-full-group { font-size:.64rem; }
+  .orders-full-group thead th { font-size:.62rem; }
+  .ordf-col-product { width:190px; }
 }
-@media (max-width: 640px) {
-  .orders-controls { width: 100%; justify-content: flex-start; }
-  .orders-table-scroll { max-height: 60vh; }
-  .orders-table.alt-structure { font-size: .64rem; }
-  .search-box input[type="search"] { width: 180px; }
-  .fulfill-select { font-size: .54rem; }
-  .ord-col-item { min-width: 140px; width: 160px; }
+@media (max-width: 700px) {
+  .orders-table-scroll { max-height:60vh; }
+  .search-box input[type="search"] { width:240px; }
+}
+@media (max-width: 560px) {
+  .search-box input[type="search"] { width:190px; }
+  .orders-full-group thead th { font-size:.58rem; }
+  .orders-full-group tbody td { font-size:.56rem; }
 }

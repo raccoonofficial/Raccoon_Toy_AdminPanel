@@ -14,7 +14,7 @@ const initialSuppliers = [
   {
     supplierNumber: 2,
     products: [
-      { name: 'Venom', productId: 'P_2025100004', category: 'Action Figure', quantity: 1, inStock: 1, buyingCost: 480, totalCost: 720, sellingPrice: 899, status: 'Stock Out' },
+      { name: 'Venom', productId: 'P_2025100004', category: 'Action Figure', quantity: 1, inStock: 0, buyingCost: 480, totalCost: 720, sellingPrice: 899, status: 'Stock Out' },
       { name: 'Luffy', productId: 'P_2025100005', category: 'Action Figure', quantity: 1, inStock: 1, buyingCost: 670, totalCost: 1000, sellingPrice: 1399, status: 'Re-Stock' },
     ]
   },

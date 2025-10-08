@@ -66,8 +66,8 @@ const statusTheme = {
   Loyal: {
     class: 'loyal',
     bg: '#fff9e6',      // light premium yellow background
-    color: '#b48900',   // rich but readable gold tone
-    border: '#f2df9f'   // soft golden border
+    color: '#e6b002ff',   // rich but readable gold tone
+    border: '#cfa004ff'   // soft golden border
   }
 };
 

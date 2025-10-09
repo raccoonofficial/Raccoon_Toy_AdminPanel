@@ -1,0 +1,125 @@
+.add-orders-page {
+  padding: 16px 10px 42px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  color: #2a2d33;
+}
+
+.ap-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.ap-header h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: .02em;
+  color: #3a2b63;
+}
+
+.ap-actions {
+  display: flex;
+  gap: 8px;
+}
+.ap-actions.bottom {
+  margin-top: 12px;
+  justify-content: flex-end;
+}
+
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 700;
+  font-size: .86rem;
+  cursor: pointer;
+}
+.btn.primary {
+  background: #7c4dff;
+  color: #fff;
+  box-shadow: 0 2px 10px -5px rgba(124,77,255,0.45);
+}
+.btn.primary:hover { background: #6a3af7; }
+.btn.muted {
+  background: #f1f2f7;
+  color: #333;
+  border: 1px solid #e4e6f0;
+}
+.btn.ghost {
+  background: transparent;
+  color: #6a3af7;
+  border: 1px solid #d8d3ff;
+}
+
+/* Layout */
+.ap-card {
+  background: #fff;
+  border: 1px solid #ececef;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px -8px rgba(60,40,120,.12);
+  padding: 12px;
+}
+.ap-card-title {
+  margin: 0 0 10px;
+  color: #4b2d8f;
+  font-size: 1.02rem;
+  font-weight: 800;
+  letter-spacing: .03em;
+}
+
+/* Fields */
+.field { margin-bottom: 10px; }
+.field label {
+  display: block;
+  font-size: .78rem;
+  font-weight: 700;
+  color: #3b3f4a;
+  margin: 0 0 4px;
+}
+.field input[type="text"],
+.field input[type="date"],
+.field input[type="number"],
+.field select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d7d9e6;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: .86rem;
+  outline: none;
+  background: #fff;
+  color: #23262f;
+}
+.field input:focus,
+.field select:focus {
+  border-color: #7c4dff;
+  box-shadow: 0 0 0 3px rgba(124,77,255,.12);
+}
+
+.field-row.two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.field-row.three {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.err {
+  margin-top: 4px;
+  color: #c81e1e;
+  font-weight: 700;
+  font-size: .72rem;
+}
+
+/* Responsive */
+@media (max-width: 980px) {
+  .field-row.two { grid-template-columns: 1fr; }
+  .field-row.three { grid-template-columns: 1fr; }
+  .ap-actions { display: none; }
+  .ap-actions.bottom { display: flex; }
+}

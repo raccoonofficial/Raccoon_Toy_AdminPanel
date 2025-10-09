@@ -18,127 +18,7 @@ const initialSuppliers = [
       { name: 'Luffy', productId: 'P_2025100005', category: 'Action Figure', quantity: 1, inStock: 1, buyingCost: 670, totalCost: 1000, sellingPrice: 1399, status: 'Re-Stock' },
     ]
   },
-   {
-    supplierNumber: 2,
-    products: [
-      { name: 'Venom', productId: 'P_2025100004', category: 'Action Figure', quantity: 1, inStock: 1, buyingCost: 480, totalCost: 720, sellingPrice: 899, status: 'Stock Out' },
-      { name: 'Luffy', productId: 'P_2025100005', category: 'Action Figure', quantity: 1, inStock: 1, buyingCost: 670, totalCost: 1000, sellingPrice: 1399, status: 'Re-Stock' },
-    ]
-  },
-   {
-    supplierNumber: 2,
-    products: [
-      { name: 'Venom', productId: 'P_2025100004', category: 'Action Figure', quantity: 1, inStock: 1, buyingCost: 480, totalCost: 720, sellingPrice: 899, status: 'Stock Out' },
-      { name: 'Luffy', productId: 'P_2025100005', category: 'Action Figure', quantity: 1, inStock: 1, buyingCost: 670, totalCost: 1000, sellingPrice: 1399, status: 'Re-Stock' },
-    ]
-  },
-   {
-    supplierNumber: 2,
-    products: [
-      { name: 'Venom', productId: 'P_2025100004', category: 'Action Figure', quantity: 1, inStock: 1, buyingCost: 480, totalCost: 720, sellingPrice: 899, status: 'Stock Out' },
-      { name: 'Luffy', productId: 'P_2025100005', category: 'Action Figure', quantity: 1, inStock: 1, buyingCost: 670, totalCost: 1000, sellingPrice: 1399, status: 'Re-Stock' },
-    ]
-  },
-   {
-    supplierNumber: 2,
-    products: [
-      { name: 'Venom', productId: 'P_2025100004', category: 'Action Figure', quantity: 1, inStock: 1, buyingCost: 480, totalCost: 720, sellingPrice: 899, status: 'Stock Out' },
-      { name: 'Luffy', productId: 'P_2025100005', category: 'Action Figure', quantity: 1, inStock: 1, buyingCost: 670, totalCost: 1000, sellingPrice: 1399, status: 'Re-Stock' },
-    ]
-  },
-   {
-    supplierNumber: 2,
-    products: [
-      { name: 'Venom', productId: 'P_2025100004', category: 'Action Figure', quantity: 1, inStock: 1, buyingCost: 480, totalCost: 720, sellingPrice: 899, status: 'Stock Out' },
-      { name: 'Luffy', productId: 'P_2025100005', category: 'Action Figure', quantity: 1, inStock: 1, buyingCost: 670, totalCost: 1000, sellingPrice: 1399, status: 'Re-Stock' },
-    ]
-  },
-   {
-    supplierNumber: 2,
-    products: [
-      { name: 'Venom', productId: 'P_2025100004', category: 'Action Figure', quantity: 1, inStock: 1, buyingCost: 480, totalCost: 720, sellingPrice: 899, status: 'Stock Out' },
-      { name: 'Luffy', productId: 'P_2025100005', category: 'Action Figure', quantity: 1, inStock: 1, buyingCost: 670, totalCost: 1000, sellingPrice: 1399, status: 'Re-Stock' },
-    ]
-  },
-  {
-    supplierNumber: 3,
-    products: [
-      { name: 'Zoro', productId: 'P_2025100006', category: 'Action Figure', quantity: 2, inStock: 2, buyingCost: 665, totalCost: 1199, sellingPrice: 1399, status: 'Available' },
-    ]
-  },
-  {
-    supplierNumber: 10,
-    products: [
-      { name: 'Sasuke', productId: 'P_2025100019', category: 'Action Figure', quantity: 1, inStock: 0, buyingCost: 665, totalCost: 1000, sellingPrice: 1399, status: 'Stock Out' },
-    ]
-  },
-  {
-    supplierNumber: 10,
-    products: [
-      { name: 'Sasuke', productId: 'P_2025100019', category: 'Action Figure', quantity: 1, inStock: 0, buyingCost: 665, totalCost: 1000, sellingPrice: 1399, status: 'Stock Out' },
-    ]
-  },
-  {
-    supplierNumber: 10,
-    products: [
-      { name: 'Sasuke', productId: 'P_2025100019', category: 'Action Figure', quantity: 1, inStock: 0, buyingCost: 665, totalCost: 1000, sellingPrice: 1399, status: 'Stock Out' },
-    ]
-  },
-  {
-    supplierNumber: 10,
-    products: [
-      { name: 'Sasuke', productId: 'P_2025100019', category: 'Action Figure', quantity: 1, inStock: 0, buyingCost: 665, totalCost: 1000, sellingPrice: 1399, status: 'Stock Out' },
-    ]
-  },
-  {
-    supplierNumber: 10,
-    products: [
-      { name: 'Sasuke', productId: 'P_2025100019', category: 'Action Figure', quantity: 1, inStock: 0, buyingCost: 665, totalCost: 1000, sellingPrice: 1399, status: 'Stock Out' },
-    ]
-  },
-  {
-    supplierNumber: 10,
-    products: [
-      { name: 'Sasuke', productId: 'P_2025100019', category: 'Action Figure', quantity: 1, inStock: 0, buyingCost: 665, totalCost: 1000, sellingPrice: 1399, status: 'Stock Out' },
-    ]
-  },
-  {
-    supplierNumber: 10,
-    products: [
-      { name: 'Sasuke', productId: 'P_2025100019', category: 'Action Figure', quantity: 1, inStock: 0, buyingCost: 665, totalCost: 1000, sellingPrice: 1399, status: 'Stock Out' },
-    ]
-  },
-  {
-    supplierNumber: 10,
-    products: [
-      { name: 'Sasuke', productId: 'P_2025100019', category: 'Action Figure', quantity: 1, inStock: 0, buyingCost: 665, totalCost: 1000, sellingPrice: 1399, status: 'Stock Out' },
-    ]
-  },
-  {
-    supplierNumber: 10,
-    products: [
-      { name: 'Sasuke', productId: 'P_2025100019', category: 'Action Figure', quantity: 1, inStock: 0, buyingCost: 665, totalCost: 1000, sellingPrice: 1399, status: 'Stock Out' },
-    ]
-  },
-  {
-    supplierNumber: 10,
-    products: [
-      { name: 'Sasuke', productId: 'P_2025100019', category: 'Action Figure', quantity: 1, inStock: 0, buyingCost: 665, totalCost: 1000, sellingPrice: 1399, status: 'Stock Out' },
-    ]
-  },
-  {
-    supplierNumber: 10,
-    products: [
-      { name: 'Sasuke', productId: 'P_2025100019', category: 'Action Figure', quantity: 1, inStock: 0, buyingCost: 665, totalCost: 1000, sellingPrice: 1399, status: 'Stock Out' },
-    ]
-  },
-  {
-    supplierNumber: 10,
-    products: [
-      { name: 'Sasuke', productId: 'P_2025100019', category: 'Action Figure', quantity: 1, inStock: 0, buyingCost: 665, totalCost: 1000, sellingPrice: 1399, status: 'Stock Out' },
- { name: 'Sasuke', productId: 'P_2025100019', category: 'Action Figure', quantity: 1, inStock: 0, buyingCost: 665, totalCost: 1000, sellingPrice: 1399, status: 'Stock Out' },   
-    ]
-  },
+  // ... (keep the rest of your initialSuppliers entries unchanged)
 ];
 
 const categoryOptions = [
@@ -154,24 +34,9 @@ const categoryOptions = [
 const STATUS_OPTIONS = ['Available', 'Stock Out', 'Re-Stock'];
 
 const statusTheme = {
-  'Available': {
-    class: 'available',
-    bg: '#e8fff3',
-    color: '#1d9b68',
-    border: '#b4f5d4'
-  },
-  'Stock Out': {
-    class: 'out',
-    bg: '#ffeaea',
-    color: '#d7261d',
-    border: '#ffd6d6'
-  },
-  'Re-Stock': {
-    class: 'restock',
-    bg: '#fcfbe6',
-    color: '#a18400',
-    border: '#f2e3a0'
-  }
+  'Available': { class: 'available', bg: '#e8fff3', color: '#1d9b68', border: '#b4f5d4' },
+  'Stock Out': { class: 'out',       bg: '#ffeaea', color: '#d7261d', border: '#ffd6d6' },
+  'Re-Stock':  { class: 'restock',   bg: '#fcfbe6', color: '#a18400', border: '#f2e3a0' }
 };
 
 /* Accessible custom dropdown for status */
@@ -185,15 +50,11 @@ function StatusDropdown({ value, onChange }) {
 
   const close = useCallback(() => setOpen(false), []);
 
-  // Close on outside click
   useEffect(() => {
     if (!open) return;
     const handler = (e) => {
       if (!btnRef.current) return;
-      if (
-        !btnRef.current.contains(e.target) &&
-        !(listRef.current && listRef.current.contains(e.target))
-      ) {
+      if (!btnRef.current.contains(e.target) && !(listRef.current && listRef.current.contains(e.target))) {
         close();
       }
     };
@@ -205,7 +66,6 @@ function StatusDropdown({ value, onChange }) {
     };
   }, [open, close]);
 
-  // Keyboard navigation
   const onButtonKeyDown = (e) => {
     if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -241,7 +101,6 @@ function StatusDropdown({ value, onChange }) {
     }
   };
 
-  // Ensure activeIndex follows current value if it changes externally
   useEffect(() => {
     const idx = STATUS_OPTIONS.findIndex(s => s === value);
     if (idx >= 0) setActiveIndex(idx);
@@ -259,8 +118,7 @@ function StatusDropdown({ value, onChange }) {
         onClick={() => setOpen(o => !o)}
         onKeyDown={onButtonKeyDown}
       >
-        <span className="status-swatch" aria-hidden="true"
-              style={{ backgroundColor: statusTheme[value].color }}></span>
+        <span className="status-swatch" aria-hidden="true" style={{ backgroundColor: statusTheme[value].color }}></span>
         {value}
         <span className="status-caret" aria-hidden="true" />
       </button>
@@ -296,11 +154,7 @@ function StatusDropdown({ value, onChange }) {
                   btnRef.current?.focus();
                 }}
               >
-                <span
-                  className="option-accent"
-                  style={{ backgroundColor: theme.color }}
-                  aria-hidden="true"
-                />
+                <span className="option-accent" style={{ backgroundColor: theme.color }} aria-hidden="true" />
                 <span className="option-label">{opt}</span>
               </li>
             );
@@ -311,7 +165,7 @@ function StatusDropdown({ value, onChange }) {
   );
 }
 
-function AdminProducts() {
+function AdminProducts({ onAddNew = () => {} }) {
   const [supplierData, setSupplierData] = useState(initialSuppliers);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -465,7 +319,12 @@ function AdminProducts() {
           </table>
         </div>
         <div className="products-footer">
-          <button className="add-product-btn">+ Add New Products</button>
+          <button
+            className="add-product-btn"
+            onClick={onAddNew} // Switch to Add_Products view
+          >
+            + Add New Products
+          </button>
         </div>
       </div>
     </section>

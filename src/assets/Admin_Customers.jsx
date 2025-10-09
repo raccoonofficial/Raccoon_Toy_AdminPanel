@@ -2,7 +2,6 @@ import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { FiSearch } from 'react-icons/fi';
 import './Admin_Customers.css';
 
-/* ------------------ Sample Data (Address + Basic/Loyal) ------------------ */
 const initialCustomers = [
   {
     customerId: 'CUST_10001',
@@ -48,157 +47,9 @@ const initialCustomers = [
     orders: 7,
     address: '20 Ingram Street, Queens, NY',
     status: 'Basic'
-  },
-  {
-    customerId: 'CUST_10005',
-    name: 'Peter Parker',
-    email: 'peter@dailybugle.net',
-    phone: '+1 555-1004',
-    orders: 7,
-    address: '20 Ingram Street, Queens, NY',
-    status: 'Basic'
-  },
-  {
-    customerId: 'CUST_10005',
-    name: 'Peter Parker',
-    email: 'peter@dailybugle.net',
-    phone: '+1 555-1004',
-    orders: 7,
-    address: '20 Ingram Street, Queens, NY',
-    status: 'Basic'
-  },
-  {
-    customerId: 'CUST_10005',
-    name: 'Peter Parker',
-    email: 'peter@dailybugle.net',
-    phone: '+1 555-1004',
-    orders: 7,
-    address: '20 Ingram Street, Queens, NY',
-    status: 'Basic'
-  },
-  {
-    customerId: 'CUST_10005',
-    name: 'Peter Parker',
-    email: 'peter@dailybugle.net',
-    phone: '+1 555-1004',
-    orders: 7,
-    address: '20 Ingram Street, Queens, NY',
-    status: 'Basic'
-  },
-  {
-    customerId: 'CUST_10005',
-    name: 'Peter Parker',
-    email: 'peter@dailybugle.net',
-    phone: '+1 555-1004',
-    orders: 7,
-    address: '20 Ingram Street, Queens, NY',
-    status: 'Basic'
-  },
-  {
-    customerId: 'CUST_10005',
-    name: 'Peter Parker',
-    email: 'peter@dailybugle.net',
-    phone: '+1 555-1004',
-    orders: 7,
-    address: '20 Ingram Street, Queens, NY',
-    status: 'Basic'
-  },
-
-  {
-    customerId: 'CUST_10005',
-    name: 'Peter Parker',
-    email: 'peter@dailybugle.net',
-    phone: '+1 555-1004',
-    orders: 7,
-    address: '20 Ingram Street, Queens, NY',
-    status: 'Basic'
-  },
-  {
-    customerId: 'CUST_10005',
-    name: 'Peter Parker',
-    email: 'peter@dailybugle.net',
-    phone: '+1 555-1004',
-    orders: 7,
-    address: '20 Ingram Street, Queens, NY',
-    status: 'Basic'
-  },
-  {
-    customerId: 'CUST_10005',
-    name: 'Peter Parker',
-    email: 'peter@dailybugle.net',
-    phone: '+1 555-1004',
-    orders: 7,
-    address: '20 Ingram Street, Queens, NY',
-    status: 'Basic'
-  },
-  {
-    customerId: 'CUST_10005',
-    name: 'Peter Parker',
-    email: 'peter@dailybugle.net',
-    phone: '+1 555-1004',
-    orders: 7,
-    address: '20 Ingram Street, Queens, NY',
-    status: 'Basic'
-  },
-  {
-    customerId: 'CUST_10005',
-    name: 'Peter Parker',
-    email: 'peter@dailybugle.net',
-    phone: '+1 555-1004',
-    orders: 7,
-    address: '20 Ingram Street, Queens, NY',
-    status: 'Basic'
-  },
-  {
-    customerId: 'CUST_10005',
-    name: 'Peter Parker',
-    email: 'peter@dailybugle.net',
-    phone: '+1 555-1004',
-    orders: 7,
-    address: '20 Ingram Street, Queens, NY',
-    status: 'Basic'
-  },
-   {
-    customerId: 'CUST_10005',
-    name: 'Peter Parker',
-    email: 'peter@dailybugle.net',
-    phone: '+1 555-1004',
-    orders: 7,
-    address: '20 Ingram Street, Queens, NY',
-    status: 'Basic'
-  },
-   {
-    customerId: 'CUST_10005',
-    name: 'Peter Parker',
-    email: 'peter@dailybugle.net',
-    phone: '+1 555-1004',
-    orders: 7,
-    address: '20 Ingram Street, Queens, NY',
-    status: 'Basic'
-  },
-   {
-    customerId: 'CUST_10005',
-    name: 'Peter Parker',
-    email: 'peter@dailybugle.net',
-    phone: '+1 555-1004',
-    orders: 7,
-    address: '20 Ingram Street, Queens, NY',
-    status: 'Basic'
-  },
-   {
-    customerId: 'CUST_10006',
-    name: 'Peter Parker',
-    email: 'peter@dailybugle.net',
-    phone: '+1 555-1004',
-    orders: 7,
-    address: '20 Ingram Street, Queens, NY',
-    status: 'Basic'
   }
 ];
 
-/* ------------------ Status Theming (Light Premium Yellow for Loyal) ------------------
-   Using a simple object; Loyal variant can be upgraded later to gradient or sheen if desired.
-*/
 const CUSTOMER_STATUS_OPTIONS = ['Basic', 'Loyal'];
 
 const statusTheme = {
@@ -210,13 +61,12 @@ const statusTheme = {
   },
   Loyal: {
     class: 'loyal',
-    bg: '#fff9e6',      // light premium yellow background
-    color: '#e6b002ff',   // rich but readable gold tone
-    border: '#cfa004ff'   // soft golden border
+    bg: '#fff9e6',
+    color: '#e6b002ff',
+    border: '#cfa004ff'
   }
 };
 
-/* ------------------ Custom Status Dropdown ------------------ */
 function StatusDropdown({ value, onChange }) {
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(
@@ -295,8 +145,8 @@ function StatusDropdown({ value, onChange }) {
         onKeyDown={onButtonKeyDown}
         style={{
           background: statusTheme[value].bg,
-            color: statusTheme[value].color,
-            borderColor: statusTheme[value].border
+          color: statusTheme[value].color,
+          borderColor: statusTheme[value].border
         }}
       >
         <span
@@ -355,8 +205,7 @@ function StatusDropdown({ value, onChange }) {
   );
 }
 
-/* ------------------ Main Component ------------------ */
-function Admin_Customers() {
+function Admin_Customers({ onAddNew }) {
   const [customers, setCustomers] = useState(initialCustomers);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -439,23 +288,24 @@ function Admin_Customers() {
                   <td className="cust-actions-cell cust-col-action">
                     <button className="edit-btn" title="Edit">
                       <svg viewBox="0 0 24 24" width="11" height="11" fill="#007aff">
-                        <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM20.71 7.04a.9959.9959 0 0 0 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                        <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM20.71 7.04a.9959.9959 0 0 0 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
                       </svg>
                     </button>
                     <button className="delete-btn" title="Delete">
                       <svg viewBox="0 0 24 24" width="11" height="11" fill="#ff3b30">
-                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
                       </svg>
                     </button>
                   </td>
                 </tr>
               ))}
-
             </tbody>
           </table>
         </div>
         <div className="customers-footer">
-          <button className="add-customer-btn">+ Add Customer</button>
+          <button className="add-customer-btn" onClick={onAddNew}>
+            + Add Customer
+          </button>
         </div>
       </div>
     </section>

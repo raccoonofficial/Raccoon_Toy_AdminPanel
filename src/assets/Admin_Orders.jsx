@@ -2,21 +2,8 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import './Admin_Orders.css';
 
-/**
- * Update Summary:
- * - Grouped by DATE: one Date cell (rowSpan) spans multiple ORDERS that share the same date.
- * - Added STD ID column (already requested earlier) – each order has its own stdId.
- * - Multiple orders under a single date rowSpan demo included (several dates have 2–3 orders).
- * - Hover highlight now applies to ALL rows (all product lines) of a single order using React state,
- *   while the Date cell (shared across orders that day) never changes color.
- * - Payment is a full-cell colored select (Paid, DC Paid, Unpaid, DC Paid retained).
- * - Status is a full-cell colored select (Delivered, Pending, Packed, Shipped, Cancelled).
- * - Search includes date, stdId, orderNumber, customer info, product names.
- * - Keeps per-order computations (computedTotalPrice, resolvedSold, resolvedProfit).
- */
-
 const PAYMENT_OPTIONS = ['Paid', 'DC Paid', 'Unpaid'];
-const STATUS_OPTIONS  = ['Delivered', 'Pending', 'Packed', 'Shipped', 'Cancelled'];
+const STATUS_OPTIONS = ['Delivered', 'Pending', 'Packed', 'Shipped', 'Cancelled'];
 
 const initialOrders = [
   {
@@ -146,55 +133,62 @@ const initialOrders = [
 ];
 
 const paymentSelectClass = {
-  'Paid': 'paid',
+  Paid: 'paid',
   'DC Paid': 'dcpaid',
-  'Unpaid': 'unpaid'
+  Unpaid: 'unpaid',
 };
 
 const statusSelectClass = {
-  'Delivered': 'delivered',
-  'Pending': 'pending',
-  'Packed': 'packed',
-  'Shipped': 'shipped',
-  'Cancelled': 'cancelled'
+  Delivered: 'delivered',
+  Pending: 'pending',
+  Packed: 'packed',
+  Shipped: 'shipped',
+  Cancelled: 'cancelled',
 };
 
-function Admin_Orders() {
+function Admin_Orders({ onAddNew }) {
   const [orders, setOrders] = useState(initialOrders);
   const [search, setSearch] = useState('');
   const [hoveredOrder, setHoveredOrder] = useState(null);
 
-  const enriched = useMemo(() =>
-    orders.map(o => {
-      const sums = o.items.reduce((acc, it) => {
-        acc.items += it.unitPrice * it.qty;
-        acc.delivery += it.deliveryCharge;
-        return acc;
-      }, { items: 0, delivery: 0 });
-      const computedTotal = sums.items + sums.delivery;
-      const sold   = o.totalSoldPrice != null ? o.totalSoldPrice : computedTotal;
-      const profit = o.profit != null ? o.profit :
-                     (o.costAfterSell != null ? sold - o.costAfterSell : null);
-      return { ...o, computedTotalPrice: computedTotal, resolvedSold: sold, resolvedProfit: profit };
-    })
-  , [orders]);
+  const enriched = useMemo(
+    () =>
+      orders.map((o) => {
+        const sums = o.items.reduce(
+          (acc, it) => {
+            acc.items += it.unitPrice * it.qty;
+            acc.delivery += it.deliveryCharge;
+            return acc;
+          },
+          { items: 0, delivery: 0 }
+        );
+        const computedTotal = sums.items + sums.delivery;
+        const sold = o.totalSoldPrice != null ? o.totalSoldPrice : computedTotal;
+        const profit =
+          o.profit != null
+            ? o.profit
+            : o.costAfterSell != null
+            ? sold - o.costAfterSell
+            : null;
+        return { ...o, computedTotalPrice: computedTotal, resolvedSold: sold, resolvedProfit: profit };
+      }),
+    [orders]
+  );
 
-  // Group by date (preserve original chronological order)
   const groupedByDate = useMemo(() => {
     const map = new Map();
-    enriched.forEach(o => {
+    enriched.forEach((o) => {
       if (!map.has(o.date)) map.set(o.date, []);
       map.get(o.date).push(o);
     });
-    return Array.from(map.entries())
-      .sort((a,b)=> a[0].localeCompare(b[0])); // sort by date ascending
+    return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
   }, [enriched]);
 
   const filteredGroups = useMemo(() => {
     const term = search.trim().toLowerCase();
     if (!term) return groupedByDate;
     return groupedByDate.reduce((acc, [date, ordersList]) => {
-      const filtered = ordersList.filter(o =>
+      const filtered = ordersList.filter((o) =>
         date.toLowerCase().includes(term) ||
         o.stdId.toLowerCase().includes(term) ||
         o.orderNumber.toLowerCase().includes(term) ||
@@ -202,7 +196,7 @@ function Admin_Orders() {
         o.customer.id.toLowerCase().includes(term) ||
         (o.customer.address && o.customer.address.toLowerCase().includes(term)) ||
         (o.customer.phone && o.customer.phone.toLowerCase().includes(term)) ||
-        o.items.some(it => it.productName.toLowerCase().includes(term))
+        o.items.some((it) => it.productName.toLowerCase().includes(term))
       );
       if (filtered.length) acc.push([date, filtered]);
       return acc;
@@ -210,10 +204,10 @@ function Admin_Orders() {
   }, [groupedByDate, search]);
 
   const handleStatusChange = (orderNumber, newStatus) => {
-    setOrders(prev => prev.map(o => o.orderNumber === orderNumber ? { ...o, status: newStatus } : o));
+    setOrders((prev) => prev.map((o) => (o.orderNumber === orderNumber ? { ...o, status: newStatus } : o)));
   };
   const handlePaymentChange = (orderNumber, newPayment) => {
-    setOrders(prev => prev.map(o => o.orderNumber === orderNumber ? { ...o, paymentStatus: newPayment } : o));
+    setOrders((prev) => prev.map((o) => (o.orderNumber === orderNumber ? { ...o, paymentStatus: newPayment } : o)));
   };
 
   const onEnterOrder = useCallback((orderNumber) => setHoveredOrder(orderNumber), []);
@@ -265,7 +259,7 @@ function Admin_Orders() {
             {filteredGroups.length === 0 && (
               <tbody>
                 <tr className="no-results-row">
-                  <td colSpan={18} style={{ textAlign:'center', padding:'14px 8px', fontWeight:600, color:'#6a39ff' }}>
+                  <td colSpan={18} style={{ textAlign: 'center', padding: '14px 8px', fontWeight: 600, color: '#6a39ff' }}>
                     No matching orders or items.
                   </td>
                 </tr>
@@ -273,53 +267,59 @@ function Admin_Orders() {
             )}
 
             {filteredGroups.map(([date, ordersForDate]) => {
-              // Total rows (sum of all line items across orders for this date)
-              const dateRowSpan = ordersForDate.reduce((sum,o)=> sum + o.items.length, 0);
+              const dateRowSpan = ordersForDate.reduce((sum, o) => sum + o.items.length, 0);
               let dateCellOutput = false;
 
               return (
                 <tbody key={date} className="date-group-body">
-                  {ordersForDate.map(order => {
+                  {ordersForDate.map((order) => {
                     const rowSpanOrder = order.items.length;
                     const isCancelled = order.status === 'Cancelled';
 
                     return order.items.map((line, idx) => {
                       const firstLineOfOrder = idx === 0;
-                      const lastLineOfOrder  = idx === rowSpanOrder - 1;
+                      const lastLineOfOrder = idx === rowSpanOrder - 1;
                       const orderHovered = hoveredOrder === order.orderNumber;
                       const profitDisplay = order.resolvedProfit != null ? `${order.resolvedProfit} TK` : '—';
 
                       return (
                         <tr
                           key={`${order.orderNumber}-${idx}-${line.productName}`}
-                          className={
-                            [
-                              'data-row',
-                              'order-row',
-                              isCancelled ? 'order-cancelled' : '',
-                              orderHovered ? 'hovered' : '',
-                              lastLineOfOrder ? 'order-last' : ''
-                            ].join(' ').trim()
-                          }
+                          className={[
+                            'data-row',
+                            'order-row',
+                            isCancelled ? 'order-cancelled' : '',
+                            orderHovered ? 'hovered' : '',
+                            lastLineOfOrder ? 'order-last' : '',
+                          ].join(' ').trim()}
                           onMouseEnter={() => onEnterOrder(order.orderNumber)}
                           onMouseLeave={onLeaveOrder}
                         >
                           {!dateCellOutput && (
-                            <td
-                              rowSpan={dateRowSpan}
-                              className="ordf-col-date group-cell date-cell"
-                            >
+                            <td rowSpan={dateRowSpan} className="ordf-col-date group-cell date-cell">
                               {date}
                             </td>
                           )}
                           {firstLineOfOrder && (
                             <>
-                              <td rowSpan={rowSpanOrder} className="ordf-col-stdid group-cell">{order.stdId}</td>
-                              <td rowSpan={rowSpanOrder} className="ordf-col-order group-cell">{order.orderNumber}</td>
-                              <td rowSpan={rowSpanOrder} className="ordf-col-custname group-cell">{order.customer.name}</td>
-                              <td rowSpan={rowSpanOrder} className="ordf-col-custid group-cell">{order.customer.id}</td>
-                              <td rowSpan={rowSpanOrder} className="ordf-col-address group-cell">{order.customer.address}</td>
-                              <td rowSpan={rowSpanOrder} className="ordf-col-phone group-cell">{order.customer.phone}</td>
+                              <td rowSpan={rowSpanOrder} className="ordf-col-stdid group-cell">
+                                {order.stdId}
+                              </td>
+                              <td rowSpan={rowSpanOrder} className="ordf-col-order group-cell">
+                                {order.orderNumber}
+                              </td>
+                              <td rowSpan={rowSpanOrder} className="ordf-col-custname group-cell">
+                                {order.customer.name}
+                              </td>
+                              <td rowSpan={rowSpanOrder} className="ordf-col-custid group-cell">
+                                {order.customer.id}
+                              </td>
+                              <td rowSpan={rowSpanOrder} className="ordf-col-address group-cell">
+                                {order.customer.address}
+                              </td>
+                              <td rowSpan={rowSpanOrder} className="ordf-col-phone group-cell">
+                                {order.customer.phone}
+                              </td>
                             </>
                           )}
 
@@ -347,43 +347,47 @@ function Admin_Orders() {
                               </td>
                               <td
                                 rowSpan={rowSpanOrder}
-                                className={
-                                  `ordf-col-payment group-cell payment-cell ${paymentSelectClass[order.paymentStatus]}`
-                                }
+                                className={`ordf-col-payment group-cell payment-cell ${paymentSelectClass[order.paymentStatus]}`}
                               >
                                 <select
                                   className={`payment-select ${paymentSelectClass[order.paymentStatus]}`}
                                   value={order.paymentStatus}
                                   aria-label="Change payment status"
-                                  onChange={(e)=>handlePaymentChange(order.orderNumber, e.target.value)}
+                                  onChange={(e) => handlePaymentChange(order.orderNumber, e.target.value)}
                                 >
-                                  {PAYMENT_OPTIONS.map(p => <option key={p} value={p}>{p}</option>)}
+                                  {PAYMENT_OPTIONS.map((p) => (
+                                    <option key={p} value={p}>
+                                      {p}
+                                    </option>
+                                  ))}
                                 </select>
                               </td>
                               <td
                                 rowSpan={rowSpanOrder}
-                                className={
-                                  `ordf-col-status group-cell status-cell ${statusSelectClass[order.status]}`
-                                }
+                                className={`ordf-col-status group-cell status-cell ${statusSelectClass[order.status]}`}
                               >
                                 <select
                                   className={`order-status-select full-cell ${statusSelectClass[order.status]}`}
                                   value={order.status}
                                   aria-label="Change status"
-                                  onChange={(e)=>handleStatusChange(order.orderNumber, e.target.value)}
+                                  onChange={(e) => handleStatusChange(order.orderNumber, e.target.value)}
                                 >
-                                  {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
+                                  {STATUS_OPTIONS.map((s) => (
+                                    <option key={s} value={s}>
+                                      {s}
+                                    </option>
+                                  ))}
                                 </select>
                               </td>
                               <td rowSpan={rowSpanOrder} className="ordf-col-action group-cell actions-cell">
                                 <button className="edit-btn" title="Edit">
                                   <svg viewBox="0 0 24 24" width="11" height="11" fill="#007aff">
-                                    <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM20.71 7.04a.9959.9959 0 0 0 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                                    <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM20.71 7.04a.9959.9959 0 0 0 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
                                   </svg>
                                 </button>
                                 <button className="delete-btn" title="Delete / Cancel">
                                   <svg viewBox="0 0 24 24" width="11" height="11" fill="#ff3b30">
-                                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
                                   </svg>
                                 </button>
                               </td>
@@ -401,7 +405,9 @@ function Admin_Orders() {
           </table>
         </div>
         <div className="orders-footer">
-          <button className="add-order-btn">+ Create Order</button>
+          <button className="add-order-btn" onClick={onAddNew}>
+            + Create Order
+          </button>
         </div>
       </div>
     </section>

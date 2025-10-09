@@ -8,10 +8,7 @@ export default function Add_Orders({ onBack, onCreated }) {
   const [customerId, setCustomerId] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
-  const [productName, setProductName] = useState('');
-  const [qty, setQty] = useState('');
-  const [deliveryCharge, setDeliveryCharge] = useState('');
-  const [unitPrice, setUnitPrice] = useState('');
+  const [products, setProducts] = useState([{ productName: '', qty: '', deliveryCharge: '', unitPrice: '' }]);
   const [status, setStatus] = useState('Pending');
   const [paymentStatus, setPaymentStatus] = useState('Unpaid');
   const [errors, setErrors] = useState({});
@@ -24,10 +21,14 @@ export default function Add_Orders({ onBack, onCreated }) {
     if (!customerId.trim()) next.customerId = 'Customer ID is required';
     if (!address.trim()) next.address = 'Address is required';
     if (!phone.trim()) next.phone = 'Phone number is required';
-    if (!productName.trim()) next.productName = 'Product name is required';
-    if (!qty.trim() || isNaN(Number(qty))) next.qty = 'Valid quantity is required';
-    if (!deliveryCharge.trim() || isNaN(Number(deliveryCharge))) next.deliveryCharge = 'Valid delivery charge is required';
-    if (!unitPrice.trim() || isNaN(Number(unitPrice))) next.unitPrice = 'Valid unit price is required';
+
+    products.forEach((product, index) => {
+      if (!product.productName.trim()) next[`productName_${index}`] = 'Product name is required';
+      if (!product.qty.trim() || isNaN(Number(product.qty))) next[`qty_${index}`] = 'Valid quantity is required';
+      if (!product.deliveryCharge.trim() || isNaN(Number(product.deliveryCharge))) next[`deliveryCharge_${index}`] = 'Valid delivery charge is required';
+      if (!product.unitPrice.trim() || isNaN(Number(product.unitPrice))) next[`unitPrice_${index}`] = 'Valid unit price is required';
+    });
+
     return next;
   }
 
@@ -38,13 +39,24 @@ export default function Add_Orders({ onBack, onCreated }) {
     setCustomerId('');
     setAddress('');
     setPhone('');
-    setProductName('');
-    setQty('');
-    setDeliveryCharge('');
-    setUnitPrice('');
+    setProducts([{ productName: '', qty: '', deliveryCharge: '', unitPrice: '' }]);
     setStatus('Pending');
     setPaymentStatus('Unpaid');
     setErrors({});
+  }
+
+  function addProduct() {
+    setProducts([...products, { productName: '', qty: '', deliveryCharge: '', unitPrice: '' }]);
+  }
+
+  function removeProduct(index) {
+    setProducts(products.filter((_, i) => i !== index));
+  }
+
+  function handleProductChange(index, field, value) {
+    const updatedProducts = [...products];
+    updatedProducts[index][field] = value;
+    setProducts(updatedProducts);
   }
 
   function onSubmit(e) {
@@ -57,7 +69,12 @@ export default function Add_Orders({ onBack, onCreated }) {
       orderId,
       date,
       customer: { name: customerName, id: customerId, address, phone },
-      items: [{ productName, qty: Number(qty), deliveryCharge: Number(deliveryCharge), unitPrice: Number(unitPrice) }],
+      items: products.map(product => ({
+        productName: product.productName.trim(),
+        qty: Number(product.qty),
+        deliveryCharge: Number(product.deliveryCharge),
+        unitPrice: Number(product.unitPrice),
+      })),
       status,
       paymentStatus,
     };
@@ -108,26 +125,60 @@ export default function Add_Orders({ onBack, onCreated }) {
             <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="e.g., +1 555-1000" />
             {errors.phone && <div className="err">{errors.phone}</div>}
           </div>
-          <div className="field">
-            <label>Product Name</label>
-            <input type="text" value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="e.g., Halo Kitty Doll" />
-            {errors.productName && <div className="err">{errors.productName}</div>}
-          </div>
-          <div className="field">
-            <label>Qty</label>
-            <input type="number" value={qty} onChange={(e) => setQty(e.target.value)} placeholder="e.g., 2" />
-            {errors.qty && <div className="err">{errors.qty}</div>}
-          </div>
-          <div className="field">
-            <label>Delivery Charge</label>
-            <input type="number" value={deliveryCharge} onChange={(e) => setDeliveryCharge(e.target.value)} placeholder="e.g., 50.00" />
-            {errors.deliveryCharge && <div className="err">{errors.deliveryCharge}</div>}
-          </div>
-          <div className="field">
-            <label>Unit Price</label>
-            <input type="number" value={unitPrice} onChange={(e) => setUnitPrice(e.target.value)} placeholder="e.g., 100.00" />
-            {errors.unitPrice && <div className="err">{errors.unitPrice}</div>}
-          </div>
+
+          <h2 className="ap-card-title">Products</h2>
+          {products.map((product, index) => (
+            <div key={index} className="field-row three">
+              <div className="field">
+                <label>Product Name</label>
+                <input
+                  type="text"
+                  value={product.productName}
+                  onChange={(e) => handleProductChange(index, 'productName', e.target.value)}
+                  placeholder="e.g., Halo Kitty Doll"
+                />
+                {errors[`productName_${index}`] && <div className="err">{errors[`productName_${index}`]}</div>}
+              </div>
+              <div className="field">
+                <label>Qty</label>
+                <input
+                  type="number"
+                  value={product.qty}
+                  onChange={(e) => handleProductChange(index, 'qty', e.target.value)}
+                  placeholder="e.g., 2"
+                />
+                {errors[`qty_${index}`] && <div className="err">{errors[`qty_${index}`]}</div>}
+              </div>
+              <div className="field">
+                <label>Delivery Charge</label>
+                <input
+                  type="number"
+                  value={product.deliveryCharge}
+                  onChange={(e) => handleProductChange(index, 'deliveryCharge', e.target.value)}
+                  placeholder="e.g., 50.00"
+                />
+                {errors[`deliveryCharge_${index}`] && <div className="err">{errors[`deliveryCharge_${index}`]}</div>}
+              </div>
+              <div className="field">
+                <label>Unit Price</label>
+                <input
+                  type="number"
+                  value={product.unitPrice}
+                  onChange={(e) => handleProductChange(index, 'unitPrice', e.target.value)}
+                  placeholder="e.g., 100.00"
+                />
+                {errors[`unitPrice_${index}`] && <div className="err">{errors[`unitPrice_${index}`]}</div>}
+              </div>
+              <div className="field">
+                <button type="button" className="btn muted" onClick={() => removeProduct(index)}>
+                  Remove Product
+                </button>
+              </div>
+            </div>
+          ))}
+          <button type="button" className="btn ghost" onClick={addProduct}>
+            + Add Another Product
+          </button>
           <div className="field">
             <label>Status</label>
             <select value={status} onChange={(e) => setStatus(e.target.value)}>

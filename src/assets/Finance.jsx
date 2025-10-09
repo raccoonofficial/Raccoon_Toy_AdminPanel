@@ -1,19 +1,18 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import './Finance.css';
 
 /**
  * Finance Page
  *
- * Update in this revision:
- * - Removed the member filter input (always shows all members).
- * - Added an overall "Total Cost" grand row at the bottom of the Cost Counter table
- *   which sums every category total and displays a single grand total value.
- * - No other functional changes.
+ * Fixes:
+ * - Money Tracker editor now strictly fits inside the cell (min-width:0, max-width:100%, block).
+ * - Cells are overflow:hidden to prevent any spillover.
+ * - Editor styling is identical across Money Tracker and Cost Counter.
  */
 
 const BASE_CURRENCY = 'BDT';
 const FX_RATES = { USD: 110 };
-const SALES_PROFIT_FACTOR = 0.54;
+const SALES_PROFIT_FACTOR_DEFAULT = 0.54;
 
 /* Money Tracker sources + buckets */
 const TRACKER_SOURCE_ROWS = [
@@ -23,10 +22,9 @@ const TRACKER_SOURCE_ROWS = [
   { key: 'steedfast', label: 'Steed Fast' },
   { key: 'moveon',    label: 'Moveon' }
 ];
-const BUCKETS = ['sales','main'];
 
 /* Demo transactions */
-const transactions = [
+const initialTransactions = [
   { member:'Badhon',  source:'cash',      bucket:'main',  currency:'BDT', amount:16000 },
   { member:'Badhon',  source:'card',      bucket:'main',  currency:'BDT', amount:200 },
   { member:'Badhon',  source:'steedfast', bucket:'main',  currency:'BDT', amount:0 },
@@ -53,7 +51,7 @@ const transactions = [
 ];
 
 /* Cost Counter categories */
-const costCategories = [
+const initialCostCategories = [
   {
     key: 'marketing',
     label: 'Marketing',
@@ -132,11 +130,68 @@ function aggregate(list){
   return { pivot, memberBucketTotals, bucketTotals };
 }
 
-export default function Finance() {
+/* Inline editable value component (simple, consistent) */
+function EditableValue({ value, onChange, type='number', disabled=false, format=(v)=>v }) {
+  const [editing, setEditing] = useState(false);
+  const [temp, setTemp] = useState(value);
 
+  useEffect(() => {
+    if (!editing) setTemp(value);
+  }, [value, editing]);
+
+  const commit = () => {
+    if (disabled) return setEditing(false);
+    const val = type === 'number' ? Number(temp) : String(temp ?? '');
+    if (type === 'number') {
+      if (!Number.isNaN(val)) onChange(val);
+    } else {
+      onChange(val);
+    }
+    setEditing(false);
+  };
+  const onKeyDown = (e) => {
+    if (e.key === 'Enter') commit();
+    if (e.key === 'Escape') {
+      setTemp(value);
+      setEditing(false);
+    }
+  };
+
+  if (disabled) {
+    return <span>{format(value)}</span>;
+  }
+
+  return editing ? (
+    <input
+      type={type === 'number' ? 'number' : 'text'}
+      step={type === 'number' ? 'any' : undefined}
+      className={`editable-input ${type === 'number' ? 'number' : 'text'}`}
+      value={type === 'number' ? (temp ?? 0) : (temp ?? '')}
+      onChange={e=>setTemp(type === 'number' ? e.target.value : e.target.value)}
+      onBlur={commit}
+      onKeyDown={onKeyDown}
+      autoFocus
+      title={`Previous: ${format(value)}`}
+      placeholder={type === 'number' ? String(value ?? 0) : String(value ?? '')}
+    />
+  ) : (
+    <span className="editable-value" onClick={()=>setEditing(true)} title="Click to edit">
+      {format(value)}
+    </span>
+  );
+}
+
+export default function Finance() {
+  /* State */
+  const [tx, setTx] = useState(initialTransactions);
+  const [costs, setCosts] = useState(initialCostCategories);
+  const [profitOverride, setProfitOverride] = useState(null);
+  const [salesProfitFactor] = useState(SALES_PROFIT_FACTOR_DEFAULT);
+
+  /* Aggregations */
   const { pivot, memberBucketTotals, bucketTotals } = useMemo(
-    ()=>aggregate(transactions),
-    []
+    ()=>aggregate(tx),
+    [tx]
   );
 
   const members = useMemo(
@@ -145,32 +200,36 @@ export default function Finance() {
   );
   const filteredMembers = members; // no filter (show all)
 
-  /* Total Money logic */
+  /* Helpers for tx manipulation */
+  const setComboAmount = (member, sourceKey, bucketKey, newAmount) => {
+    const amt = Math.max(0, Number(newAmount) || 0);
+    setTx(prev => {
+      const rest = prev.filter(t => !(t.member===member && t.source===sourceKey && t.bucket===bucketKey));
+      return [...rest, { member, source: sourceKey, bucket: bucketKey, currency: BASE_CURRENCY, amount: amt }];
+    });
+  };
+
+  /* Total Money logic (read-only) */
   const memberMainBase = (member) => {
     const mainObj = memberBucketTotals[member]?.main || {};
     return Object.entries(mainObj).reduce(
       (s,[cur,amt]) => s + toBase(cur, amt), 0
     );
   };
-  const sourceMainBase = (sourceKey) =>
-    transactions.reduce((s,t)=>{
-      if (t.source === sourceKey && t.bucket === 'main')
-        return s + toBase(t.currency, t.amount);
-      return s;
-    },0);
 
   const mainRows = [
-    { label: 'Badhon', value: memberMainBase('Badhon') },
-    { label: 'Mahin',  value: memberMainBase('Mahin') },
-    { label: 'Moveon', value: sourceMainBase('moveon') },
-    { label: 'Card',   value: sourceMainBase('card') }
+    { label: 'Badhon',  value: memberMainBase('Badhon') },
+    { label: 'Mahin',   value: memberMainBase('Mahin') },
+    { label: 'Samir',   value: memberMainBase('Samir') },
+    { label: 'Shamim',  value: memberMainBase('Shamim') },
   ];
   const mainTotal = mainRows.reduce((s,r)=>s + r.value,0);
 
   const salesTotal = Object.entries(bucketTotals.sales || {}).reduce(
     (s,[cur,amt]) => s + toBase(cur, amt), 0
   );
-  const profitTotal = Math.round(salesTotal * SALES_PROFIT_FACTOR);
+  const profitComputed = Math.round(salesTotal * salesProfitFactor);
+  const profitTotal = profitOverride ?? profitComputed;
   const sellsRows = [
     { label: 'Basic',  value: salesTotal },
     { label: 'Profit', value: profitTotal }
@@ -178,9 +237,9 @@ export default function Finance() {
   const sellsTotal = sellsRows.reduce((s,r)=>s + r.value, 0);
 
   /* Cost Counter dynamic rows & totals */
-  const costRowCount = Math.max(...costCategories.map(c => c.rows.length));
-  const categoryTotals = costCategories.map(c =>
-    c.rows.reduce((s,r)=> s + (r.amount||0), 0)
+  const costRowCount = Math.max(...costs.map(c => c.rows.length));
+  const categoryTotals = costs.map(c =>
+    c.rows.reduce((s,r)=> s + (Number(r.amount)||0), 0)
   );
   const grandCost = categoryTotals.reduce((a,b)=>a+b,0);
 
@@ -192,24 +251,32 @@ export default function Finance() {
     );
   }
 
+  /* Cost Counter: add a new row across all categories */
+  const addCostRow = () => {
+    setCosts(prev =>
+      prev.map(cat => ({
+        ...cat,
+        rows: [...cat.rows, { item: '', amount: 0 }]
+      }))
+    );
+  };
+
   return (
     <section className="finance-page">
       <h1 className="finance-title">Finance</h1>
 
-      {/* Row: Total Money (narrow) + Money Tracker */}
+      {/* Row: Total Money (narrow) + KPI Cards + Money Tracker */}
       <div className="finance-top-row">
         <div className="tm-card merged narrow">
+          <h2 className="tm-title">Total Money</h2>
           <table className="tm-table merged narrow">
             <thead>
-              <tr>
-                <th colSpan={4} className="tm-title-single">Total Money</th>
-              </tr>
-            </thead>
-            <tbody>
               <tr className="tm-group-row">
                 <td colSpan={2} className="tm-section-head tm-main-head">Main</td>
                 <td colSpan={2} className="tm-section-head tm-sells-head">Sales</td>
               </tr>
+            </thead>
+            <tbody>
               {Array.from({length: Math.max(mainRows.length, sellsRows.length)}).map((_,i)=>{
                 const L = mainRows[i];
                 const R = sellsRows[i];
@@ -230,6 +297,22 @@ export default function Finance() {
               </tr>
             </tbody>
           </table>
+        </div>
+
+        {/* KPI Info Cards */}
+        <div className="info-cards">
+          <div className="info-card" title="Main Total + Sales Basic">
+            <div className="info-card-title">Base Total Money</div>
+            <div className="info-card-value">{formatMoney(mainTotal + salesTotal)}</div>
+          </div>
+          <div className="info-card" title="Grand total of Cost Counter">
+            <div className="info-card-title">Total Cost</div>
+            <div className="info-card-value">{formatMoney(grandCost)}</div>
+          </div>
+          <div className="info-card" title="Profit">
+            <div className="info-card-title">Total Profit</div>
+            <div className="info-card-value">{formatMoney(profitTotal)}</div>
+          </div>
         </div>
 
         <div className="finance-matrix-card slim-version inline">
@@ -261,8 +344,22 @@ export default function Finance() {
                       const mainAmt  = getAmount(m, src.key, 'main');
                       return (
                         <React.Fragment key={`${src.key}-${m}`}>
-                          <td className="mt-cell sales">{formatMoney(salesAmt)}</td>
-                          <td className="mt-cell main">{formatMoney(mainAmt)}</td>
+                          <td className="mt-cell sales">
+                            <EditableValue
+                              value={salesAmt}
+                              onChange={(v)=>setComboAmount(m, src.key, 'sales', v)}
+                              type="number"
+                              format={formatMoney}
+                            />
+                          </td>
+                          <td className="mt-cell main">
+                            <EditableValue
+                              value={mainAmt}
+                              onChange={(v)=>setComboAmount(m, src.key, 'main', v)}
+                              type="number"
+                              format={formatMoney}
+                            />
+                          </td>
                         </React.Fragment>
                       );
                     })}
@@ -276,13 +373,14 @@ export default function Finance() {
 
       {/* Cost Counter below full width */}
       <div className="cc-card full-width">
+        <div className="cc-header">
+          <h2 className="cc-title">Cost Counter</h2>
+          <button type="button" className="cc-add-row-btn" onClick={addCostRow}>+ Add Row</button>
+        </div>
         <table className="cc-table">
           <thead>
-            <tr>
-              <th colSpan={costCategories.length * 2} className="cc-title-head">Cost Counter</th>
-            </tr>
             <tr className="cc-cat-row">
-              {costCategories.map(cat => (
+              {costs.map(cat => (
                 <th key={cat.key} colSpan={2} className={`cc-cat-head cat-${cat.key}`}>
                   {cat.label}
                 </th>
@@ -292,24 +390,51 @@ export default function Finance() {
           <tbody>
             {Array.from({length: costRowCount}).map((_,rowIdx)=>(
               <tr key={rowIdx}>
-                {costCategories.map(cat => {
+                {costs.map((cat, ci) => {
                   const entry = cat.rows[rowIdx];
+                  const itemVal = entry?.item ?? '';
+                  const amtVal = entry?.amount ?? 0;
+
                   return (
                     <React.Fragment key={cat.key + '-' + rowIdx}>
                       <td className={`cc-item-cell cat-${cat.key}`}>
-                        {entry?.item || ''}
+                        <EditableValue
+                          value={itemVal}
+                          onChange={(v)=>{
+                            setCosts(prev=>{
+                              const copy = prev.map(c => ({...c, rows: c.rows.slice()}));
+                              if (!copy[ci].rows[rowIdx]) copy[ci].rows[rowIdx] = { item:'', amount:0 };
+                              copy[ci].rows[rowIdx].item = v;
+                              return copy;
+                            });
+                          }}
+                          type="text"
+                          format={(v)=>String(v || '')}
+                        />
                       </td>
                       <td className={`cc-amt-cell cat-${cat.key}`}>
-                        {entry ? formatMoney(entry.amount) : ''}
+                        <EditableValue
+                          value={amtVal}
+                          onChange={(v)=>{
+                            setCosts(prev=>{
+                              const copy = prev.map(c => ({...c, rows: c.rows.slice()}));
+                              if (!copy[ci].rows[rowIdx]) copy[ci].rows[rowIdx] = { item:'', amount:0 };
+                              copy[ci].rows[rowIdx].amount = Math.max(0, Number(v)||0);
+                              return copy;
+                            });
+                          }}
+                          type="number"
+                          format={formatMoney}
+                        />
                       </td>
                     </React.Fragment>
                   );
                 })}
               </tr>
             ))}
-            {/* Per-category totals */}
+            {/* Per-category totals (locked) */}
             <tr className="cc-total-row">
-              {costCategories.map((cat, i) => {
+              {costs.map((cat, i) => {
                 const total = categoryTotals[i];
                 return (
                   <React.Fragment key={cat.key + '-total'}>
@@ -319,11 +444,11 @@ export default function Finance() {
                 );
               })}
             </tr>
-            {/* Grand Total Cost Row */}
+            {/* Grand Total Cost Row (locked) */}
             <tr className="cc-grand-row">
               <td
                 className="cc-grand-label"
-                colSpan={costCategories.length * 2 - 1}
+                colSpan={costs.length * 2 - 1}
               >
                 Total Cost :
               </td>

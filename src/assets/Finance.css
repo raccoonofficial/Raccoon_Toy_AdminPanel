@@ -15,7 +15,7 @@
   color:#4b2d8f;
 }
 
-/* Row holding Total Money + Cost Counter side by side */
+/* Row holding Total Money + others side by side */
 .finance-summary-row {
   display:flex;
   flex-wrap:wrap;
@@ -23,15 +23,39 @@
   align-items:flex-start;
 }
 
+/* New top row used by the React component */
+.finance-top-row {
+  display:flex;
+  flex-wrap:wrap;
+  gap:18px;
+  align-items:flex-start;
+}
+
+/* Section titles (outside tables, standardized like Money Tracker) */
+.tm-title,
+.cc-title,
+.matrix-title {
+  margin:0 0 8px;
+  font-size:1.0rem;
+  letter-spacing:.04em;
+  color:#000000;
+  font-weight:800;
+}
+
 /* ------------ Total Money (Merged Header) ------------- */
 .tm-card.merged {
   background:#ffffff;
   border:1px solid #d8ddec;
   border-radius:10px;
-  padding:6px 10px 10px;
+  padding:10px 10px 12px;
   box-shadow:0 2px 10px -5px rgba(80,40,140,.15);
   width:520px;
   flex:0 0 auto;
+}
+
+/* Narrow variant to make room for info cards */
+.tm-card.merged.narrow {
+  width:650px;
 }
 
 .tm-table.merged {
@@ -42,16 +66,13 @@
   table-layout:fixed;
 }
 
-
-.tm-table.merged th {
-  border:1px solid #cfd5e6;
-  padding:4px 6px;
-  text-align:left;
-  background:#d3b2ff;
-  font-weight:600;
-  position:relative;
+/* Narrow variant table */
+.tm-table.merged.narrow {
+  min-width:420px;
+  width:650px;
 }
 
+.tm-table.merged th,
 .tm-table.merged td {
   border:1px solid #cfd5e6;
   padding:4px 6px;
@@ -59,16 +80,6 @@
   background:#fff;
   font-weight:600;
   position:relative;
-}
-
-.tm-title-single {
-  background:#dfeaf0;
-  font-size:.78rem;
-  font-weight:700;
-  letter-spacing:.05em;
-  color:#000000;
-  text-align:center;
-  border-bottom:2px solid #b9c8d2;
 }
 
 .tm-group-row td.tm-section-head {
@@ -138,21 +149,84 @@
   background:#d9d0ef;
 }
 
+/* ------------ Info Cards (KPIs) ------------- */
+.info-cards {
+  margin-left: 80px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  flex:0 0 auto;
+}
+
+.info-card {
+  background:#ffffff;               /* standardized */
+  border:1px solid #d8ddec;         /* standardized */
+  border-radius:10px;
+  padding:8px 10px;                 /* smaller */
+  box-shadow:0 2px 10px -5px rgba(80,40,140,.15);
+  width:180px;                      /* smaller */
+  cursor:pointer;
+  transition:transform .12s ease, box-shadow .12s ease, background-color .12s ease;
+}
+.info-card:hover {
+  transform:translateY(-1px);
+  box-shadow:0 4px 14px -6px rgba(80,40,140,.22);
+  background:#fafbff;
+}
+.info-card:active {
+  transform:translateY(0);
+}
+
+.info-card-title {
+  font-size:.74rem;
+  font-weight:700;
+  letter-spacing:.04em;
+  color:#394150;
+  margin:0 0 4px;
+}
+
+.info-card-value {
+  font-size:.95rem;
+  font-weight:800;
+  color:#1f2540;
+}
+
 /* ------------ Cost Counter ------------- */
 .cc-card {
   background:#ffffff;
   border:1px solid #d8ddec;
   border-radius:10px;
-  padding:6px 10px 10px;
+  padding:10px 10px 12px; /* extra top for external title */
   box-shadow:0 2px 10px -5px rgba(80,40,140,.15);
   width:1080px;
- 
+}
+
+.cc-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:8px;
+}
+
+.cc-add-row-btn {
+  font-size:.7rem;
+  padding:6px 10px;
+  border:1px solid #cfd2e4;
+  border-radius:8px;
+  background:#fff;
+  color:#2a2d33;
+  cursor:pointer;
+  transition:background-color .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+.cc-add-row-btn:hover {
+  background:#f6f7fb;
+  border-color:#b9bfd6;
+  box-shadow:0 2px 8px -6px rgba(60,40,120,.25);
 }
 
 .cc-table {
   border-collapse:collapse;
   width:100%;
-/* each category 2 cols; adjust as needed */
   font-size:.6rem;
   table-layout:fixed;
 }
@@ -161,28 +235,15 @@
 .cc-table td {
   border:1px solid #cfd2e4;
   padding:4px 6px;
-
   font-weight:600;
   position:relative;
-}
-
-.cc-title-head {
-  margin:0 0 8px;
-  font-size:1.0rem;
-
-  letter-spacing:.04em;
-  color:#000000;
-  font-size:.98rem;
-  font-weight:700;
-  letter-spacing:.05em;
-  text-align: left;
-  border-bottom:2px solid #b0b2bc;
+  overflow:hidden;        /* keep editors inside cell width */
 }
 
 .cc-cat-row .cc-cat-head {
-    background-color: #bfd8ff;
+  background-color: #bfd8ff;
   font-size:.62rem;
-  font-weight:700;
+  font-weight:900;
   letter-spacing:.04em;
   text-align:center;
   padding:6px 4px;
@@ -220,6 +281,20 @@
 .cc-total-row td.cat-studio    { background:#e0d4f3; }
 .cc-total-row td.cat-others    { background:#ffdcbf; }
 
+/* Grand total styling */
+.cc-grand-row td {
+  border-top:2px solid #b0b6c9;
+  background:#eef2f7;
+  font-weight:800;
+}
+.cc-grand-label {
+  text-align:right;
+  padding-right:10px;
+}
+.cc-grand-value {
+  text-align:right;
+}
+
 /* Hover */
 .cc-table tbody tr:not(.cc-total-row):hover td {
   filter:brightness(0.95);
@@ -247,9 +322,9 @@
   box-shadow:0 0 0 2px rgba(124,77,255,0.25);
 }
 
-/* ------------ Money Tracker (same as before, no totals col) ------------- */
+/* ------------ Money Tracker ------------- */
 .finance-matrix-card.slim-version {
-     margin-top: 20px;
+  margin-top: 20px;
   background:#fff;
   border:1px solid #ececef;
   border-radius:12px;
@@ -260,7 +335,6 @@
 .matrix-title {
   margin:0 0 8px;
   font-size:1.0rem;
-
   letter-spacing:.04em;
   color:#000000;
 }
@@ -290,6 +364,7 @@
   font-weight:600;
   position:relative;
   white-space:nowrap;
+  overflow:hidden;        /* keep editors inside cell width */
 }
 .mt-row.tier-1 th {
   background:#d8cff5;
@@ -309,8 +384,8 @@
   font-weight:700;
 }
 .mt-source-col {
-  background:#6f41d8 !important;
-  color:#fff !important;
+  background:#b595ff !important;
+  color:#281f57 !important;
   width:110px;
   min-width:110px;
 }
@@ -336,3 +411,34 @@
   background:#f5f2ff;
 }
 
+/* ------------ Editable cells (simple, consistent) ------------- */
+.editable-value {
+  display:block;          /* block keeps width rules stable */
+  width:100%;
+  cursor:pointer;
+  color:inherit;
+}
+
+/* Shared input style (Cost Counter + Money Tracker) */
+.editable-input {
+  display:block;
+  width:100%;
+  max-width:100%;
+  min-width:0;            /* allow shrink within narrow cells */
+  box-sizing:border-box;
+  border:1px solid #cfd5e6;
+  border-radius:4px;
+  padding:2px 4px;
+  outline:none;
+  font-size:.6rem;
+  background:#ffffff;
+  color:#111;
+  height:20px;            /* shorter to fit */
+  line-height:16px;
+}
+.editable-input.number { text-align:right; }
+.editable-input.text { text-align:left; }
+.editable-input:focus {
+  border-color:#9aa4c9;
+  box-shadow:none;
+}

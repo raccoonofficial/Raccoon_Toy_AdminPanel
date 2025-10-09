@@ -6,6 +6,10 @@
   display:flex;
   flex-direction:column;
   gap:20px;
+
+  /* New: Money Tracker fixed column widths */
+  --mt-source-width: 110px;   /* left "Source" column */
+  --mt-col-width: 120px;      /* Sales/Main width (same size) */
 }
 .finance-title {
   font-size:1.55rem;
@@ -268,8 +272,8 @@
 .cc-item-cell.cat-others,
 .cc-amt-cell.cat-others { background:#ffefd9; }
 
-.cc-item-cell { font-weight:600; }
-.cc-amt-cell  { text-align:right; font-weight:600; }
+.cc-item-cell { font-weight:600; cursor:text; }
+.cc-amt-cell  { text-align:right; font-weight:600; cursor:text; }
 
 .cc-total-row td {
   font-weight:700;
@@ -298,28 +302,6 @@
 /* Hover */
 .cc-table tbody tr:not(.cc-total-row):hover td {
   filter:brightness(0.95);
-}
-
-/* ------------ Controls ------------- */
-.finance-controls {
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  padding:2px 2px;
-}
-.member-filter {
-  font-size:.7rem;
-  padding:5px 10px;
-  border:1px solid #d5d7e2;
-  border-radius:8px;
-  outline:none;
-  width:200px;
-  background:#fff;
-  transition:border-color .15s, box-shadow .15s;
-}
-.member-filter:focus {
-  border-color:#7c4dff;
-  box-shadow:0 0 0 2px rgba(124,77,255,0.25);
 }
 
 /* ------------ Money Tracker ------------- */
@@ -354,6 +336,9 @@
   border-spacing:0;
   width:1080px;
   font-size:.6rem;
+
+  /* Key: no stretch when editing */
+  table-layout: fixed;
 }
 .mt-table th,
 .mt-table td {
@@ -386,8 +371,9 @@
 .mt-source-col {
   background:#b595ff !important;
   color:#281f57 !important;
-  width:110px;
-  min-width:110px;
+  width:var(--mt-source-width);
+  min-width:var(--mt-source-width);
+  max-width:var(--mt-source-width);
 }
 .mt-source-label {
   text-align:left;
@@ -401,6 +387,15 @@
 .mt-sub.main  { background:#e2ecff; }
 .mt-cell.sales { background:#fff4f4; color:#333741; }
 .mt-cell.main  { background:#f4f8ff; color:#333741; }
+
+/* Fixed equal widths for Sales/Main columns via colgroup */
+.mt-table col.col-source { width: var(--mt-source-width); }
+.mt-table col.col-sales,
+.mt-table col.col-main {
+  width: var(--mt-col-width);
+}
+
+/* Keep hover subtle */
 .mt-row:hover td:not(.mt-source-label):not(.sticky-col) {
   background:#efe5ff;
 }
@@ -411,20 +406,36 @@
   background:#f5f2ff;
 }
 
-/* ------------ Editable cells (simple, consistent) ------------- */
+/* ------------ Editable cells ------------- */
 .editable-value {
-  display:block;          /* block keeps width rules stable */
+  display:block;
   width:100%;
   cursor:pointer;
   color:inherit;
 }
 
-/* Shared input style (Cost Counter + Money Tracker) */
+.editable-button {
+  display:block;
+  width:100%;
+  min-height:20px;
+  padding:2px 4px;
+  border:0;
+  background:transparent;
+  text-align:left;
+  cursor:text;
+  color:inherit;
+}
+.editable-button:focus {
+  outline:1px dashed #9aa4c9;
+  outline-offset:1px;
+}
+
+/* Shared input style */
 .editable-input {
   display:block;
   width:100%;
   max-width:100%;
-  min-width:0;            /* allow shrink within narrow cells */
+  min-width:0;
   box-sizing:border-box;
   border:1px solid #cfd5e6;
   border-radius:4px;
@@ -433,7 +444,7 @@
   font-size:.6rem;
   background:#ffffff;
   color:#111;
-  height:20px;            /* shorter to fit */
+  height:20px;
   line-height:16px;
 }
 .editable-input.number { text-align:right; }
@@ -441,4 +452,24 @@
 .editable-input:focus {
   border-color:#9aa4c9;
   box-shadow:none;
+}
+
+/* ------------ Responsive ------------- */
+@media (max-width: 1180px) {
+  .finance-summary-row {
+    flex-direction:column;
+  }
+  .cc-card { flex:1 1 auto; min-width:520px; }
+}
+@media (max-width: 860px) {
+  .finance-title { font-size:1.3rem; }
+  .tm-table.merged { font-size:.56rem; }
+  .cc-table { font-size:.56rem; }
+  .mt-table { font-size:.55rem; }
+}
+@media (max-width: 560px) {
+  .member-filter { width:160px; }
+  .tm-table.merged { min-width:520px; }
+  .cc-table { min-width:640px; }
+  .mt-table { min-width:700px; }
 }

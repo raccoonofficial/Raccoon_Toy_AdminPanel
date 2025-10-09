@@ -8,6 +8,11 @@ import './Finance.css';
  * - Money Tracker editor now strictly fits inside the cell (min-width:0, max-width:100%, block).
  * - Cells are overflow:hidden to prevent any spillover.
  * - Editor styling is identical across Money Tracker and Cost Counter.
+ *
+ * Update:
+ * - Make the entire cell clickable even when it looks "blank"/black by using a full-width/height
+ *   button hit area (.editable-button). This ensures empty cells also enter edit mode on click.
+ * - Prevent column stretching on edit by using <colgroup> with fixed widths for Source/Sales/Main.
  */
 
 const BASE_CURRENCY = 'BDT';
@@ -175,9 +180,16 @@ function EditableValue({ value, onChange, type='number', disabled=false, format=
       placeholder={type === 'number' ? String(value ?? 0) : String(value ?? '')}
     />
   ) : (
-    <span className="editable-value" onClick={()=>setEditing(true)} title="Click to edit">
+    // Full-width/height clickable area so even "blank-looking" cells enter edit mode
+    <button
+      type="button"
+      className="editable-button"
+      onClick={()=>setEditing(true)}
+      title="Click to edit"
+      tabIndex={0}
+    >
       {format(value)}
-    </span>
+    </button>
   );
 }
 
@@ -319,6 +331,17 @@ export default function Finance() {
           <h2 className="matrix-title small">Money Tracker</h2>
           <div className="mt-scroll">
             <table className="mt-table no-totals compact">
+              {/* Fixed column sizes to prevent stretching */}
+              <colgroup>
+                <col className="col-source" />
+                {filteredMembers.map(m => (
+                  <React.Fragment key={`cg-${m}`}>
+                    <col className="col-sales" />
+                    <col className="col-main" />
+                  </React.Fragment>
+                ))}
+              </colgroup>
+
               <thead>
                 <tr className="mt-row tier-1">
                   <th rowSpan={2} className="mt-source-col sticky-col">Source</th>

@@ -1,65 +1,54 @@
 import React from 'react';
 import './Admin_Sidebar.css';
 
-function AdminSidebar({ activeView, setActiveView }) {
+function AdminSidebar({ activeView, setActiveView, className = '', isMobile = false, isOpen = false }) {
+  const sidebarClasses = `admin-sidebar ${className} ${isMobile && isOpen ? 'open' : ''}`.trim();
+
+  const navItems = [
+    { view: 'dashboard', label: 'Dashboard', icon: '📊' },
+    { view: 'products', label: 'Products', icon: '📦' },
+    { view: 'customers', label: 'Customers', icon: '👥' },
+    { view: 'orders', label: 'Orders List', icon: '🛒' },
+    { view: 'finance', label: 'Finance', icon: '💰' }
+  ];
+
   return (
-    <aside className="admin-sidebar">
-      <div className="logo">
-        <img
-          src="https://i.postimg.cc/pTyvHkyK/Frame-361.png"
-          alt="Raccoon Toy Logo"
-          className="logo-img"
-        />
+    <aside className={sidebarClasses}>
+      <div className="sidebar-inner">
+        <div className="logo">
+          <img
+            src="https://i.postimg.cc/pTyvHkyK/Frame-361.png"
+            alt="Logo"
+            className="logo-img"
+          />
+        </div>
+        
+        <nav className="sidebar-nav">
+          <ul>
+            {navItems.map((item) => (
+              <li 
+                key={item.view}
+                className={activeView === item.view ? 'active' : ''}
+              >
+                <button
+                  type="button"
+                  onClick={() => setActiveView(item.view)}
+                  aria-current={activeView === item.view ? 'page' : undefined}
+                  aria-label={item.label}
+                  data-tooltip={item.label}
+                >
+                  <span className="nav-icon">{item.icon}</span>
+                  <span className="nav-text">{item.label}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="sidebar-footer">
+          <span className="sidebar-version">v2.0</span>
+        </div>
       </div>
-      <nav>
-        <ul>
-          <li className={activeView === 'dashboard' ? 'active' : ''}>
-            <button
-              type="button"
-              onClick={() => setActiveView('dashboard')}
-              aria-current={activeView === 'dashboard' ? 'page' : undefined}
-            >
-              Dashboard
-            </button>
-          </li>
-          <li className={activeView === 'products' ? 'active' : ''}>
-            <button
-              type="button"
-              onClick={() => setActiveView('products')}
-              aria-current={activeView === 'products' ? 'page' : undefined}
-            >
-              Products
-            </button>
-          </li>
-          <li className={activeView === 'customers' ? 'active' : ''}>
-            <button
-              type="button"
-              onClick={() => setActiveView('customers')}
-              aria-current={activeView === 'customers' ? 'page' : undefined}
-            >
-              Customers
-            </button>
-          </li>
-          <li className={activeView === 'orders' ? 'active' : ''}>
-            <button
-              type="button"
-              onClick={() => setActiveView('orders')}
-              aria-current={activeView === 'orders' ? 'page' : undefined}
-            >
-              Orders List
-            </button>
-          </li>
-          <li className={activeView === 'finance' ? 'active' : ''}>
-            <button
-              type="button"
-              onClick={() => setActiveView('finance')}
-              aria-current={activeView === 'finance' ? 'page' : undefined}
-            >
-              Finance
-            </button>
-          </li>
-        </ul>
-      </nav>
     </aside>
   );
 }

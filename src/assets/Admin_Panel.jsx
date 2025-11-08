@@ -1,17 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminSidebar from './Admin_Sidebar';
 import AdminDashboard from './Admin_Dashboard';
 import AdminProducts from './Admin_Products';
 import Admin_Customers from './Admin_Customers';
 import Admin_Orders from './Admin_Orders';
 import Finance from './Finance';
-import Add_Products from './Add_Products'; // NEW: import Add Products page
-import Add_Customers from './Add_Customers'; // NEW: import Add Customers page
-import Add_Orders from './Add_Orders'; // NEW: import Add Orders page
+import Add_Products from './Add_Products';
+import Add_Customers from './Add_Customers';
+import Add_Orders from './Add_Orders';
 import './Admin_Panel.css';
 
 function AdminPanel() {
   const [activeView, setActiveView] = useState('dashboard');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect screen size for responsive behavior
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      // Close mobile menu when switching to desktop
+      if (window.innerWidth > 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    // Initial check
+    handleResize();
+
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Close mobile menu when view changes
+  useEffect(() => {
+    if (isMobile) {
+      setIsMobileMenuOpen(false);
+    }
+  }, [activeView, isMobile]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen && isMobile) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isMobileMenuOpen, isMobile]);
 
   // Callbacks used by children to change the view
   const goProductsList = () => setActiveView('products');
@@ -21,44 +59,93 @@ function AdminPanel() {
   const goOrdersList = () => setActiveView('orders');
   const goAddOrder = () => setActiveView('addOrder');
 
+  // Toggle mobile menu
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  // Close mobile menu when overlay is clicked
+  const handleOverlayClick = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <div className="admin-panel">
-      <AdminSidebar activeView={activeView} setActiveView={setActiveView} />
+      {/* Mobile Menu Toggle Button */}
+      {isMobile && (
+        <button
+          className={`mobile-menu-toggle ${isMobileMenuOpen ? 'active' : ''}`}
+          onClick={toggleMobileMenu}
+          aria-label="Toggle menu"
+          aria-expanded={isMobileMenuOpen}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      )}
+
+      {/* Sidebar Overlay for Mobile */}
+      {isMobile && (
+        <div
+          className={`sidebar-overlay ${isMobileMenuOpen ? 'active' : ''}`}
+          onClick={handleOverlayClick}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Sidebar */}
+      <AdminSidebar
+        activeView={activeView}
+        setActiveView={setActiveView}
+        className={isMobileMenuOpen ? 'open' : ''}
+        isMobile={isMobile}
+        isOpen={isMobileMenuOpen}
+      />
+
+      {/* Main Content Area */}
       <div className="admin-content">
         {activeView === 'dashboard' && <AdminDashboard />}
+        
         {activeView === 'products' && (
           <AdminProducts
-            onAddNew={goAddProduct} // Pass callback to switch to Add Products page
+            onAddNew={goAddProduct}
           />
         )}
+        
         {activeView === 'addProduct' && (
           <Add_Products
-            onBack={goProductsList}    // Back to product list
-            onCreated={goProductsList} // After successful create, go to product list
+            onBack={goProductsList}
+            onCreated={goProductsList}
           />
         )}
+        
         {activeView === 'customers' && (
           <Admin_Customers
-            onAddNew={goAddCustomer} // Pass callback to switch to Add Customers page
+            onAddNew={goAddCustomer}
           />
         )}
+        
         {activeView === 'addCustomer' && (
           <Add_Customers
-            onBack={goCustomersList}    // Back to customer list
-            onCreated={goCustomersList} // After successful create, go to customer list
+            onBack={goCustomersList}
+            onCreated={goCustomersList}
           />
         )}
+        
         {activeView === 'orders' && (
           <Admin_Orders
-            onAddNew={goAddOrder} // Pass callback to switch to Add Orders page
+            onAddNew={goAddOrder}
           />
         )}
+        
         {activeView === 'addOrder' && (
           <Add_Orders
-            onBack={goOrdersList}    // Back to orders list
-            onCreated={goOrdersList} // After successful create, go to orders list
+            onBack={goOrdersList}
+            onCreated={goOrdersList}
           />
         )}
+        
         {activeView === 'finance' && <Finance />}
       </div>
     </div>

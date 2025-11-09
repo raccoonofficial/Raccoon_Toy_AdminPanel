@@ -1,5 +1,5 @@
 import React from 'react';
-import { DollarSign, ShoppingBag, BarChart3, Wallet, Users, Package } from 'lucide-react'; // Import necessary icons
+import { DollarSign, ShoppingBag, BarChart3, Wallet, Users, Package, Bell, Eye, UserCheck } from 'lucide-react'; // Import necessary icons
 import './Admin_Dashboard.css';
 import SalesChart from './SalesChart';
 import './SalesChart.css';
@@ -10,6 +10,8 @@ const summaryData = [
   { title: 'Total Profit', value: '300K', icon: ShoppingBag, color: '#facc15' },
   { title: 'Sell This Month', value: '300K', icon: BarChart3, color: '#60a5fa' },
   { title: 'Cost This Month', value: '300K', icon: Wallet, color: '#f87171' },
+  { title: 'Total Visitors', value: '45.2K', icon: Eye, color: '#a78bfa' },
+  { title: 'Today Visitors', value: '1,234', icon: UserCheck, color: '#fb923c' },
 ];
 
 function AdminDashboard() {
@@ -25,6 +27,9 @@ function AdminDashboard() {
     year: 'numeric', month: 'long', day: 'numeric'
   });
 
+  // Notification count (you can make this dynamic)
+  const notificationCount = 5;
+
   return (
     <main className="admin-dashboard" role="main">
       <div className="admin-dashboard-inner">
@@ -34,6 +39,14 @@ function AdminDashboard() {
           <div>
             <h1>Welcome back, shamim-kabir-kazim-git!</h1>
             <p>Here's your business snapshot as of {today}.</p>
+          </div>
+          <div className="notification-wrapper">
+            <button className="notification-btn" aria-label="Notifications">
+              <Bell size={24} />
+              {notificationCount > 0 && (
+                <span className="notification-badge">{notificationCount}</span>
+              )}
+            </button>
           </div>
         </div>
 

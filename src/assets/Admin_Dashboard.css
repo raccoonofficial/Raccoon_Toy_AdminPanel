@@ -17,6 +17,9 @@
 /* --- Dashboard Header --- */
 .dashboard-header {
   margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .dashboard-header h1 {
@@ -31,6 +34,46 @@
   font-size: 1rem;
   color: #94a3b8;
   margin: 0;
+}
+
+/* --- Notification Button --- */
+.notification-wrapper {
+  position: relative;
+}
+
+.notification-btn {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.notification-btn:hover {
+  background: #283449;
+  border-color: #4f46e5;
+  color: #f1f5f9;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ef4444;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 2px 6px;
+  min-width: 20px;
+  text-align: center;
 }
 
 /* --- Card Base Style --- */
@@ -50,7 +93,7 @@
 /* --- Summary Cards Grid --- */
 .summary-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -89,7 +132,7 @@
 /* --- Main Dashboard Section Layout --- */
 .dashboard-main-section {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr; /* Full width by default */
   gap: 2rem;
 }
 
@@ -158,10 +201,10 @@
 
 /* --- Responsive Design --- */
 
-/* For main section grid */
-@media (min-width: 1200px) {
+/* Large screens - side by side layout */
+@media (min-width: 1400px) {
   .dashboard-main-section {
-    grid-template-columns: 2fr 1fr; /* Chart takes more space */
+    grid-template-columns: 1.5fr 1fr; /* Chart and table side by side */
   }
   .chart-card {
     order: 1;
@@ -171,17 +214,47 @@
   }
 }
 
+/* Medium screens - adjust summary cards */
+@media (max-width: 1200px) {
+  .summary-cards {
+    grid-template-columns: repeat(2, 1fr); /* 2 cards per row */
+  }
+}
+
 /* Tablet & Mobile */
 @media (max-width: 768px) {
   .admin-dashboard {
     padding: 1rem;
   }
 
+  .dashboard-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+  }
+
   .dashboard-header h1 {
     font-size: 1.5rem;
   }
+  
   .dashboard-header p {
     font-size: 0.875rem;
+  }
+
+  .notification-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .notification-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .summary-cards {
+    grid-template-columns: repeat(2, 1fr); /* 2 cards per row on mobile */
+    gap: 1rem;
   }
 
   .summary-card {
@@ -191,6 +264,11 @@
   .card-icon {
     width: 40px;
     height: 40px;
+  }
+
+  .card-icon svg {
+    width: 20px;
+    height: 20px;
   }
 
   .card-content h2 {
@@ -220,5 +298,26 @@
     display: inline;
     font-weight: 600;
     color: #94a3b8;
+  }
+}
+
+/* Very small mobile devices */
+@media (max-width: 480px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .notification-wrapper {
+    align-self: flex-end;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.25rem;
+  }
+
+  .summary-cards {
+    grid-template-columns: 1fr; /* 1 card per row on very small screens */
   }
 }

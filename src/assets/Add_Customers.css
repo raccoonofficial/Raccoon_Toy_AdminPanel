@@ -1,86 +1,191 @@
-/* ============================================
-   ADVANCED CUSTOMER PAGE - DARK/ORANGE THEME
-   ============================================ */
+/* =========================================================
+   CVC ADVANCED PROFILE BUILDER - DARK, ORANGE & WHITE THEME
+   ========================================================= */
+
 :root {
-  --brand-color: #f97316;
-  --brand-color-dark: #ea580c;
-  --dark-bg-primary: #111827;
-  --dark-bg-secondary: #1f2937;
-  --dark-bg-tertiary: #374151;
-  --text-primary: #f9fafb;
-  --text-secondary: #9ca3af;
-  --border-color: #374151;
+  --cvc-builder-bg: #111827;
+  --cvc-card-bg: #1f2937;
+  --cvc-left-panel-bg: #161e2b;
+  --cvc-border-color: #374151;
+  --cvc-text-primary: #f9fafb;
+  --cvc-text-secondary: #9ca3af;
+  --cvc-accent-primary: #f97316;
+  --cvc-accent-primary-light: rgba(249, 115, 22, 0.2);
+  --cvc-accent-primary-dark: #ea580c;
 }
 
-.customers-page { padding: 1.5rem 2rem; color: var(--text-primary); }
+.cvc-profile-builder {
+  background-color: var(--cvc-builder-bg);
+}
 
-.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-.page-header h1 { font-size: 2rem; font-weight: 700; }
+.cvc-builder-card {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  background: var(--cvc-card-bg);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  border: 1px solid var(--cvc-border-color);
+  min-height: 85vh;
+}
 
-/* --- Filter & View Controls --- */
-.filter-controls { display: flex; justify-content: space-between; gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
-.search-wrapper { position: relative; flex-grow: 1; min-width: 250px; }
-.search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
-.search-wrapper input { width: 100%; padding: 0.75rem 1rem 0.75rem 3rem; background: var(--dark-bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 1rem; }
-.filter-wrapper { display: flex; align-items: center; gap: 1rem; }
-.filter-wrapper select { padding: 0.75rem 1rem; background: var(--dark-bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px; }
-.view-toggle { display: flex; background: var(--dark-bg-secondary); border-radius: 8px; padding: 4px; }
-.view-toggle button { background: transparent; border: none; color: var(--text-secondary); padding: 0.4rem 0.6rem; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
-.view-toggle button.active { background: var(--brand-color); color: white; }
+/* --- Left Panel: Profile Preview --- */
+.cvc-left-panel {
+  width: 320px;
+  flex-shrink: 0;
+  background: var(--cvc-left-panel-bg);
+  border-right: 1px solid var(--cvc-border-color);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
-/* --- Card View --- */
-.card-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem; }
-.customer-card { background: var(--dark-bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; transition: all 0.2s; }
-.customer-card:hover { border-color: var(--brand-color); transform: translateY(-2px); }
-.customer-card .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
-.customer-card h3 { margin: 0; font-size: 1.25rem; }
-.customer-card p { margin: 0.3rem 0; color: var(--text-secondary); font-size: 0.9rem; }
-.customer-card p strong { color: var(--text-primary); font-weight: 500; }
-.customer-card .card-footer { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-color); font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
-.card-actions { display: flex; gap: 0.5rem; }
-.card-actions button { background: var(--dark-bg-tertiary); border: none; border-radius: 6px; padding: 0.4rem; color: var(--text-secondary); cursor: pointer; }
-.card-actions button:hover { background: var(--brand-color); color: white; }
-.card-actions button.delete:hover { background: #ef4444; }
+.cvc-profile-preview { text-align: center; }
+.cvc-avatar-placeholder {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--cvc-builder-bg);
+  color: var(--cvc-text-secondary);
+  border: 1px solid var(--cvc-border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+.cvc-profile-preview h3 { font-size: 1.4rem; color: var(--cvc-text-primary); margin: 0 0 0.25rem; word-break: break-word; }
+.cvc-profile-preview p { font-size: 0.9rem; color: var(--cvc-text-secondary); margin: 0 0 1rem; font-family: monospace; }
 
-/* --- List View --- */
-.list-view { background: var(--dark-bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; overflow: auto; }
-.list-view table { width: 100%; border-collapse: collapse; min-width: 800px; }
-.list-view th, .list-view td { padding: 1rem 1.5rem; text-align: left; }
-.list-view th { background: var(--dark-bg-tertiary); color: var(--text-secondary); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; }
-.list-view tr:not(:last-child) td { border-bottom: 1px solid var(--border-color); }
-.list-view .phone-sub { font-size: 0.8rem; color: var(--text-secondary); }
-.list-actions { display: flex; gap: 0.75rem; }
-.list-actions button { background: none; border: none; padding: 0; color: var(--text-secondary); cursor: pointer; }
-.list-actions button:hover { color: var(--brand-color); }
-.list-actions button.delete:hover { color: #ef4444; }
+.cvc-tier-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.cvc-tier-badge.cvc-tier-basic { background: rgba(107, 114, 128, 0.2); color: var(--cvc-text-secondary); }
+.cvc-tier-badge.cvc-tier-bronze { background: rgba(205, 127, 50, 0.2); color: #cd7f32; }
+.cvc-tier-badge.cvc-tier-silver { background: rgba(192, 192, 192, 0.2); color: #c0c0c0; }
+.cvc-tier-badge.cvc-tier-gold { background: rgba(255, 215, 0, 0.2); color: #ffd700; }
 
-/* --- Status Badges --- */
-.status-badge { padding: 0.25rem 0.6rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
-.status-badge.loyal { background: rgba(249, 115, 22, 0.2); color: var(--brand-color); }
-.status-badge.basic { background: rgba(107, 114, 128, 0.2); color: var(--text-secondary); }
+/* --- NEW: Live Profile Details --- */
+.cvc-profile-details {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--cvc-border-color);
+  text-align: left;
+}
+.cvc-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--cvc-text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+  word-break: break-all;
+}
+.cvc-detail-item svg {
+  flex-shrink: 0;
+  color: var(--cvc-text-secondary);
+}
+.cvc-detail-item span {
+  line-height: 1.4;
+}
 
-/* --- Add/Edit Customer Modal --- */
-.customer-form-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
-.modal-content { background: var(--dark-bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; width: 100%; max-width: 550px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--border-color); }
-.modal-header h2 { margin: 0; }
-.modal-close-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; }
-.ap-form { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-.modal-actions { display: flex; justify-content: flex-end; gap: 0.75rem; padding-top: 0.5rem; }
-.no-results { text-align: center; padding: 3rem; color: var(--text-secondary); }
+/* --- Right Panel: Tabs and Content --- */
+.cvc-right-panel { flex-grow: 1; display: flex; flex-direction: column; }
 
-/* --- General Form Fields --- */
-.field { display: flex; flex-direction: column; gap: 0.5rem; }
-.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.field label { font-weight: 600; color: var(--text-secondary); font-size: 0.9rem; }
-.field input, .field textarea, .field select { width: 100%; box-sizing: border-box; background: var(--dark-bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px; padding: 0.75rem; font-size: 0.95rem; }
-.field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--brand-color); box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2); }
-.field input:disabled { background: var(--dark-bg-tertiary); opacity: 0.7; cursor: not-allowed; }
-.err { margin-top: 2px; color: #ef4444; font-size: 0.8rem; }
+.cvc-tab-navigation {
+  display: flex;
+  border-bottom: 1px solid var(--cvc-border-color);
+  padding: 0 2rem;
+}
+.cvc-tab-navigation button {
+  background: none; border: none;
+  padding: 1.25rem 0; margin-right: 2rem;
+  font-size: 0.95rem; font-weight: 600;
+  color: var(--cvc-text-secondary);
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  position: relative;
+  transition: color 0.2s;
+  outline: none;
+}
+.cvc-tab-navigation button:hover { color: var(--cvc-text-primary); }
+.cvc-tab-navigation button.cvc-active { color: var(--cvc-accent-primary); }
+.cvc-tab-navigation button::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 2px;
+  background: var(--cvc-accent-primary);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+.cvc-tab-navigation button.cvc-active::after { transform: scaleX(1); }
 
-/* --- Buttons --- */
-.btn { border: none; border-radius: 8px; padding: 0.75rem 1.25rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s; }
-.btn.primary { background: var(--brand-color); color: white; }
-.btn.primary:hover { background: var(--brand-color-dark); }
-.btn.muted { background: var(--dark-bg-tertiary); color: var(--text-primary); }
-.btn.muted:hover { background: var(--border-color); }
+.cvc-tab-content-container { padding: 2rem; flex-grow: 1; }
+.cvc-field-group { margin-bottom: 1.25rem; }
+.cvc-field-group-row { display: flex; gap: 1rem; margin-bottom: 1.25rem; }
+.cvc-field-group-row > * { flex: 1; }
+
+.cvc-field-group label {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-weight: 600; color: var(--cvc-text-secondary);
+  font-size: 0.9rem; margin-bottom: 0.5rem;
+}
+
+.cvc-field-group input, .cvc-field-group textarea, .cvc-field-group select {
+  width: 100%; box-sizing: border-box;
+  background: var(--cvc-builder-bg);
+  border: 1px solid var(--cvc-border-color);
+  color: var(--cvc-text-primary);
+  border-radius: 6px;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+.cvc-field-group input:focus, .cvc-field-group textarea:focus, .cvc-field-group select:focus {
+  outline: none;
+  border-color: var(--cvc-accent-primary);
+  background: var(--cvc-builder-bg);
+  box-shadow: 0 0 0 2px var(--cvc-accent-primary-light);
+}
+
+.cvc-err { margin-top: 0.25rem; color: #ef4444; font-size: 0.8rem; }
+
+/* --- Modern Checkbox Buttons --- */
+.cvc-checkbox-grid-modern { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.cvc-checkbox-grid-modern div { display: inline-block; }
+.cvc-checkbox-grid-modern input[type="checkbox"] { display: none; }
+.cvc-checkbox-grid-modern label {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  background: var(--cvc-builder-bg);
+  color: var(--cvc-text-secondary);
+  border: 1px solid var(--cvc-border-color);
+  cursor: pointer;
+  font-weight: 500; font-size: 0.85rem;
+  transition: all 0.2s;
+}
+.cvc-checkbox-grid-modern input:checked + label {
+  background: var(--cvc-accent-primary-light);
+  color: var(--cvc-accent-primary);
+  border-color: var(--cvc-accent-primary);
+}
+
+/* --- Vertical Buttons --- */
+.cvc-form-actions-vertical { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 2rem; }
+.cvc-btn-form {
+  width: 100%; border: 1px solid transparent; border-radius: 8px;
+  padding: 0.8rem; font-weight: 600; cursor: pointer;
+  font-size: 0.95rem; transition: all 0.2s;
+}
+.cvc-btn-form.cvc-primary { background: var(--cvc-accent-primary); color: white; }
+.cvc-btn-form.cvc-primary:hover { background-color: var(--cvc-accent-primary-dark); }
+.cvc-btn-form.cvc-muted { background: var(--cvc-card-bg); color: var(--cvc-text-secondary); border-color: var(--cvc-border-color); }
+.cvc-btn-form.cvc-muted:hover { background-color: #374151; border-color: #4b5563; }

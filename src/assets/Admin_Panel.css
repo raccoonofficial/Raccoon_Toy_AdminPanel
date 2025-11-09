@@ -13,8 +13,8 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: #0a0a0a;
-  color: #ffffff;
+  background: var(--dark-bg-primary, #111827); /* Use theme variable */
+  color: var(--text-primary, #f9fafb); /* Use theme variable */
   overflow: hidden; /* Prevents main page scroll */
 }
 
@@ -26,37 +26,25 @@ body {
 }
 
 /* ============================================
-   CONTENT AREA - CORRECTED
+   CONTENT AREA
    ============================================ */
 .admin-content {
   flex-grow: 1;
   height: 100vh;
   overflow-y: auto; /* Enables internal scrolling for content */
   padding: 2rem;
-  
-
-  /* 
-    THIS IS THE FIX:
-    The margin-left has been removed. The content will now
-    start from the left edge of the screen, underneath the floating sidebar.
-  */
-  margin-left: 110px
-  /* The transition is no longer needed as margin-left is gone */
-
+  margin-left: 110px; /* Space for the collapsed floating sidebar */
 }
 
-/* This rule is no longer necessary, as we are not changing the margin */
 .admin-panel.sidebar-collapsed .admin-content {
-  margin-left: 0; /* Explicitly set to 0 */
+  margin-left: 0;
 }
 
 .admin-content > div {
-  background: #1a1a1a;
-  border-radius: 16px;
-  border: 1px solid #2a2a2a;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-  padding: 1.5rem;
-  /* This ensures the content itself is readable on large screens */
+  background: transparent; /* Remove the inner container background */
+  border: none;
+  box-shadow: none;
+  padding: 0;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -102,7 +90,7 @@ body {
     top: 1rem;
     left: 1rem;
     z-index: 1001;
-    background: #3a3d54;
+    background: var(--sidebar-active-bg, #4b5563);
     border: none;
     width: 44px;
     height: 44px;

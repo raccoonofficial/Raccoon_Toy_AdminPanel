@@ -5,7 +5,7 @@
 /* --- Main Container --- */
 .admin-dashboard {
   width: 100%;
-  padding: 2rem; /* Consistent padding */
+  padding: 0; /* Padding is handled by admin_panel.css */
   box-sizing: border-box;
 }
 
@@ -25,14 +25,14 @@
 .dashboard-header h1 {
   font-size: 2rem;
   font-weight: 700;
-  color: #f1f5f9;
+  color: var(--text-primary, #f9fafb);
   letter-spacing: -0.025em;
   margin: 0 0 0.25rem 0;
 }
 
 .dashboard-header p {
   font-size: 1rem;
-  color: #94a3b8;
+  color: var(--text-secondary, #9ca3af);
   margin: 0;
 }
 
@@ -42,8 +42,8 @@
 }
 
 .notification-btn {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--dark-bg-secondary, #1f2937);
+  border: 1px solid var(--border-color, #374151);
   border-radius: 50%;
   width: 48px;
   height: 48px;
@@ -51,22 +51,22 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #94a3b8;
+  color: var(--text-secondary, #9ca3af);
   transition: all 0.3s ease;
   position: relative;
 }
 
 .notification-btn:hover {
-  background: #283449;
-  border-color: #4f46e5;
-  color: #f1f5f9;
+  background: var(--dark-bg-tertiary, #374151);
+  border-color: var(--brand-color, #f97316);
+  color: var(--text-primary, #f9fafb);
 }
 
 .notification-badge {
   position: absolute;
   top: -4px;
   right: -4px;
-  background: #ef4444;
+  background: #ef4444; /* Red for notifications */
   color: white;
   font-size: 0.75rem;
   font-weight: 600;
@@ -78,15 +78,15 @@
 
 /* --- Card Base Style --- */
 .card {
-  background: #1e293b;
+  background: var(--dark-bg-secondary, #1f2937);
   border-radius: 12px;
   padding: 1.5rem;
-  border: 1px solid #334155;
+  border: 1px solid var(--border-color, #374151);
   transition: border-color 0.3s ease, transform 0.3s ease;
 }
 
 .card:hover {
-  border-color: #4f46e5;
+  border-color: var(--brand-color, #f97316);
   transform: translateY(-2px);
 }
 
@@ -118,7 +118,7 @@
 .card-content p {
   margin: 0 0 0.5rem 0;
   font-size: 0.875rem;
-  color: #94a3b8;
+  color: var(--text-secondary, #9ca3af);
   font-weight: 500;
 }
 
@@ -126,7 +126,7 @@
   margin: 0;
   font-size: 1.75rem;
   font-weight: 700;
-  color: #f1f5f9;
+  color: var(--text-primary, #f9fafb);
 }
 
 /* --- Main Dashboard Section Layout --- */
@@ -143,15 +143,15 @@
   gap: 0.75rem;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #334155;
+  border-bottom: 1px solid var(--border-color, #374151);
 }
 
 .header-icon {
-  color: #94a3b8;
+  color: var(--text-secondary, #9ca3af);
 }
 
 .card-header h3 {
-  color: #f1f5f9;
+  color: var(--text-primary, #f9fafb);
   font-size: 1.125rem;
   font-weight: 600;
   margin: 0;
@@ -165,7 +165,7 @@
 .orders-card table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px; /* Ensures table is scrollable on small containers */
+  min-width: 600px;
 }
 
 .orders-card th, .orders-card td {
@@ -175,15 +175,15 @@
 
 .orders-card th {
   font-weight: 600;
-  color: #94a3b8;
+  color: var(--text-secondary, #9ca3af);
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid #334155;
+  border-bottom: 1px solid var(--border-color, #374151);
 }
 
 .orders-card td {
-  color: #cbd5e1;
+  color: var(--text-primary, #f9fafb);
   font-size: 0.875rem;
 }
 
@@ -192,7 +192,7 @@
 }
 
 .orders-card tbody tr:hover {
-  background-color: #283449;
+  background-color: var(--dark-bg-tertiary, #374151);
 }
 
 .orders-card td .cell-label {
@@ -200,124 +200,47 @@
 }
 
 /* --- Responsive Design --- */
-
-/* Large screens - side by side layout */
 @media (min-width: 1400px) {
   .dashboard-main-section {
-    grid-template-columns: 1.5fr 1fr; /* Chart and table side by side */
-  }
-  .chart-card {
-    order: 1;
-  }
-  .orders-card {
-    order: 2;
+    grid-template-columns: 1.5fr 1fr;
   }
 }
 
-/* Medium screens - adjust summary cards */
 @media (max-width: 1200px) {
   .summary-cards {
-    grid-template-columns: repeat(2, 1fr); /* 2 cards per row */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Tablet & Mobile */
 @media (max-width: 768px) {
-  .admin-dashboard {
+  .admin-dashboard-inner {
     padding: 1rem;
-  }
-
-  .dashboard-header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1.5rem;
   }
 
   .dashboard-header h1 {
     font-size: 1.5rem;
   }
-  
-  .dashboard-header p {
-    font-size: 0.875rem;
-  }
-
-  .notification-btn {
-    width: 42px;
-    height: 42px;
-  }
-
-  .notification-btn svg {
-    width: 20px;
-    height: 20px;
-  }
 
   .summary-cards {
-    grid-template-columns: repeat(2, 1fr); /* 2 cards per row on mobile */
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
-
-  .summary-card {
-    gap: 1rem;
-  }
-
-  .card-icon {
-    width: 40px;
-    height: 40px;
-  }
-
-  .card-icon svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .card-content h2 {
-    font-size: 1.5rem;
-  }
-
-  /* Responsive table: hide headers, use data labels in cells */
-  .orders-card thead {
-    display: none;
-  }
-  .orders-card tr {
-    display: block;
-    border: 1px solid #334155;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-  }
-  .orders-card td {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid #334155;
-  }
-  .orders-card tr td:last-child {
-    border-bottom: none;
-  }
-  .orders-card td .cell-label {
-    display: inline;
-    font-weight: 600;
-    color: #94a3b8;
-  }
+  
+  /* Responsive table */
+  .orders-card thead { display: none; }
+  .orders-card tr { display: block; border: 1px solid var(--border-color, #374151); border-radius: 8px; margin-bottom: 1rem; }
+  .orders-card td { display: flex; justify-content: space-between; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color, #374151); }
+  .orders-card tr td:last-child { border-bottom: none; }
+  .orders-card td .cell-label { display: inline; font-weight: 600; color: var(--text-secondary, #9ca3af); }
 }
 
-/* Very small mobile devices */
 @media (max-width: 480px) {
   .dashboard-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
   }
-
-  .notification-wrapper {
-    align-self: flex-end;
-  }
-
-  .dashboard-header h1 {
-    font-size: 1.25rem;
-  }
-
   .summary-cards {
-    grid-template-columns: 1fr; /* 1 card per row on very small screens */
+    grid-template-columns: 1fr;
   }
 }

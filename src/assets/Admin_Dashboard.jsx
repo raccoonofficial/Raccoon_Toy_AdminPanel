@@ -6,12 +6,12 @@ import './SalesChart.css';
 
 // Data for summary cards, making it easier to manage and render
 const summaryData = [
-  { title: 'Total Sell', value: '300K', icon: DollarSign, color: '#4ade80' },
-  { title: 'Total Profit', value: '300K', icon: ShoppingBag, color: '#facc15' },
-  { title: 'Sell This Month', value: '300K', icon: BarChart3, color: '#60a5fa' },
-  { title: 'Cost This Month', value: '300K', icon: Wallet, color: '#f87171' },
-  { title: 'Total Visitors', value: '45.2K', icon: Eye, color: '#a78bfa' },
-  { title: 'Today Visitors', value: '1,234', icon: UserCheck, color: '#fb923c' },
+  { title: 'Total Sell', value: '300K', icon: DollarSign, color: '#f97316' },
+  { title: 'Total Profit', value: '300K', icon: ShoppingBag, color: '#fb923c' },
+  { title: 'Sell This Month', value: '300K', icon: BarChart3, color: '#fdba74' },
+  { title: 'Cost This Month', value: '300K', icon: Wallet, color: '#f87171' }, // Kept red for "cost"
+  { title: 'Total Visitors', value: '45.2K', icon: Eye, color: '#ea580c' },
+  { title: 'Today Visitors', value: '1,234', icon: UserCheck, color: '#c2410c' },
 ];
 
 function AdminDashboard() {
@@ -23,7 +23,7 @@ function AdminDashboard() {
   ];
   
   // Get today's date formatted nicely
-  const today = new Date('2025-11-09T14:46:03Z').toLocaleDateString('en-US', {
+  const today = new Date('2025-11-09T19:54:08Z').toLocaleDateString('en-US', {
     year: 'numeric', month: 'long', day: 'numeric'
   });
 

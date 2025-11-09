@@ -17,7 +17,7 @@ function AdminPanel() {
   const navigate = useNavigate();
 
   const userName = "shamim-kabir-kazim-git";
-  const currentDate = new Date('2025-11-09T15:12:28Z');
+  const currentDate = new Date('2025-11-09T15:50:57Z');
 
   useEffect(() => {
     const handleResize = () => {
@@ -77,18 +77,23 @@ function AdminPanel() {
 
       <div className="admin-content">
         <Routes>
+          {/* Dashboard Routes */}
           <Route path="/" element={<AdminDashboard userName={userName} date={currentDate} />} />
           <Route path="/dashboard" element={<AdminDashboard userName={userName} date={currentDate} />} />
           
+          {/* Products Routes */}
           <Route path="/products" element={<AdminProducts onAddNew={() => navigate('/products/add')} />} />
           <Route path="/products/add" element={<Add_Products onCreated={() => navigate('/products')} onBack={() => navigate('/products')} />} />
           
+          {/* Users/Customers Routes */}
           <Route path="/users" element={<Admin_Customers onAddNew={() => navigate('/users/add')} />} />
           <Route path="/users/add" element={<Add_Customers onCreated={() => navigate('/users')} onBack={() => navigate('/users')} />} />
 
+          {/* Orders Routes */}
           <Route path="/orders" element={<Admin_Orders onAddNew={() => navigate('/orders/add')} />} />
           <Route path="/orders/add" element={<Add_Orders onCreated={() => navigate('/orders')} onBack={() => navigate('/orders')} />} />
           
+          {/* Finance Route */}
           <Route path="/finance" element={<Finance />} />
         </Routes>
       </div>

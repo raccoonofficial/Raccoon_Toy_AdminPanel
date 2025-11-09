@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, User, LogIn, Shield } from 'lucide-react';
+import { Lock, User, LogIn } from 'lucide-react';
+import logo from '../assets/images/logo.png'; // Make sure the path is correct
 import './Login.css';
 
 function Login() {
@@ -29,10 +30,10 @@ function Login() {
         {/* Card Header */}
         <div className="login-header">
           <div className="header-logo">
-            <Shield size={48} />
+            <img src={logo} alt="Raccoon Toy Co. Logo" className="header-logo-img" />
           </div>
           <h1 className="header-title">Raccoon Toy Co.</h1>
-          <p className="header-subtitle">Administrator Sign In</p>
+          <p className="header-subtitle"></p>
         </div>
 
         {/* Login Form */}
@@ -82,19 +83,19 @@ function Login() {
             {isLoading ? (
               <>
                 <div className="spinner"></div>
-                <span>Signing In...</span>
+                <span>Please Wait</span>
               </>
             ) : (
               <>
                 <LogIn size={20} />
-                <span>Sign In</span>
+                <span>Enter</span>
               </>
             )}
           </button>
         </form>
 
         <div className="login-footer">
-          &copy; 2025 Raccoon Toy Admin Panel. All rights reserved.
+          
         </div>
       </div>
     </div>

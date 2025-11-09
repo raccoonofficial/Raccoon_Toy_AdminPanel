@@ -1,12 +1,16 @@
 /* --- Global Styles & Variables --- */
 :root {
-  --sidebar-bg-color: #1a1d2e;
-  --sidebar-text-color: #b0b3c0;
-  --sidebar-hover-bg: #2a2d40;
-  --sidebar-active-bg: #3a3d54;
-  --accent-color: #4F46E5;
-  --accent-gradient: linear-gradient(90deg, #4F46E5, #8a5cf6);
-  --shadow-color: rgba(0, 0, 0, 0.2); /* Slightly darker shadow for floating effect */
+  /* Orange Theme */
+  --accent-color: #f97316; /* Vibrant Orange */
+  --accent-gradient: linear-gradient(90deg, #f97316, #ea580c);
+
+  /* Dark Theme */
+  --sidebar-bg-color: #1f2937; /* Dark Gray for Card */
+  --sidebar-text-color: #9ca3af; /* Light Gray */
+  --sidebar-hover-bg: #374151; /* Lighter Gray for hover */
+  --sidebar-active-bg: #4b5563; /* Even lighter for active */
+  
+  --shadow-color: rgba(0, 0, 0, 0.3);
   --sidebar-width-collapsed: 80px;
   --sidebar-width-expanded: 250px;
 }
@@ -14,7 +18,7 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   margin: 0;
-  background-color: #f4f7fa;
+  background-color: #111827; /* Updated main background */
 }
 
 /* --- Sidebar Container --- */
@@ -28,18 +32,12 @@ body {
   padding: 16px;
   overflow: hidden;
   z-index: 1000;
-  
-  /* === NEW STYLES FOR FLOATING & CENTERING === */
-  height: 70vh; /* 1. Set height to 70% of the viewport height */
-  top: 50%;     /* 2. Position the top edge at the vertical midpoint */
-  left: 1rem;   /* 3. Give it some space from the left edge */
-  border-radius: 16px; /* 4. Add rounded corners for a modern look */
-  box-shadow: 5px 5px 20px var(--shadow-color); /* 5. Enhance shadow for depth */
-
-  /* 6. Use transform to pull the sidebar up by half its height, achieving perfect vertical centering */
+  height: 70vh;
+  top: 50%;
+  left: 1rem;
+  border-radius: 16px;
+  box-shadow: 5px 5px 20px var(--shadow-color);
   transform: translateY(-50%); 
-  
-  /* 7. Update transition to include new properties for smooth animation */
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
               height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -63,8 +61,8 @@ body {
 .sidebar-logo-icon {
   width: 32px;
   height: 32px;
-  color: var(--accent-color);
   flex-shrink: 0;
+  object-fit: contain; /* Ensures logo scales properly */
 }
 
 .sidebar-logo-text {
@@ -113,11 +111,12 @@ body {
 }
 
 .sidebar-link.active {
-  background-color: var(--sidebar-active-bg);
+  background: var(--accent-color); /* Use solid accent color for active background */
   color: #fff;
   font-weight: 700;
 }
 
+/* Remove the active link's "before" pseudo-element for a cleaner look */
 .sidebar-link.active::before {
   content: '';
   position: absolute;
@@ -125,7 +124,7 @@ body {
   top: 0;
   bottom: 0;
   width: 4px;
-  background: var(--accent-gradient);
+  background: rgb(255, 255, 255);
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
@@ -156,24 +155,16 @@ body {
   border-top: 1px solid var(--sidebar-hover-bg);
 }
 
-/* 
-  === FIX FOR MOBILE VIEW ===
-  On mobile, the sidebar should slide in from the left and be full-height.
-  This media query will override the floating styles for screens 768px and smaller.
-*/
+/* --- Mobile View --- */
 @media (max-width: 768px) {
   .sidebar {
-    height: 100vh; /* Revert to full height */
-    left: 0;      /* Revert to edge position */
-    top: 0;       /* Revert to top position */
-    border-radius: 0; /* Remove rounding */
-
-    /* The 'transform' is now used for the slide-in/out effect, controlled from AdminPanel.css */
-    /* This overrides the translateY(-50%) for desktop */
+    height: 100vh;
+    left: 0;
+    top: 0;
+    border-radius: 0;
     transform: translateX(-100%); 
   }
 
-  /* This class from AdminPanel.jsx will make it slide into view */
   .sidebar.open {
     transform: translateX(0);
   }

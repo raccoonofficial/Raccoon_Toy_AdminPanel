@@ -2,18 +2,21 @@
    ADMIN PANEL LOGIN - CENTERED LAYOUT
    ============================================ */
 :root {
-  --brand-color: #22c55e;
-  --brand-color-dark: #16a34a;
+  /* Orange Theme */
+  --brand-color: #f97316; /* Vibrant Orange */
+  --brand-color-dark: #ea580c; /* Darker Orange */
   --brand-gradient: linear-gradient(135deg, var(--brand-color), var(--brand-color-dark));
   
-  --dark-bg-primary: #0f172a;
-  --dark-bg-secondary: #1e293b;
-  --dark-bg-tertiary: #334155;
+  /* Dark Theme */
+  --dark-bg-primary: #111827; /* Near-black Gray */
+  --dark-bg-secondary: #1f2937; /* Dark Gray for Card */
+  --dark-bg-tertiary: #374151; /* Lighter Gray for elements */
 
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-placeholder: #64748b;
-  --border-color: #334155;
+  /* Text & Border Colors */
+  --text-primary: #f9fafb; /* Off-white */
+  --text-secondary: #9ca3af; /* Light Gray */
+  --text-placeholder: #6b7280; /* Muted Gray */
+  --border-color: #374151; /* Gray for borders */
 }
 
 /* --- Full Page Container --- */
@@ -25,8 +28,8 @@
   height: 100vh;
   background-color: var(--dark-bg-primary);
   background-image:
-    radial-gradient(circle at 15% 25%, rgba(34, 197, 94, 0.1), transparent 30%),
-    radial-gradient(circle at 85% 75%, rgba(51, 65, 85, 0.2), transparent 40%);
+    radial-gradient(circle at 15% 25%, rgba(249, 115, 22, 0.1), transparent 30%),
+    radial-gradient(circle at 85% 75%, rgba(55, 65, 81, 0.2), transparent 40%);
   color: var(--text-primary);
   padding: 1rem;
   box-sizing: border-box;
@@ -52,8 +55,12 @@
 }
 
 .header-logo {
-  color: var(--brand-color);
   margin-bottom: 1rem;
+}
+
+.header-logo-img {
+  height: 60px;
+  width: auto;
 }
 
 .header-title {
@@ -115,7 +122,7 @@
 .input-wrapper input:focus {
   outline: none;
   border-color: var(--brand-color);
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
 }
 
 .input-wrapper input::placeholder {
@@ -139,12 +146,12 @@
   gap: 0.6rem;
   transition: all 0.2s ease;
   margin-top: 0.5rem;
-  box-shadow: 0 4px 10px rgba(34, 197, 94, 0.2);
+  box-shadow: 0 4px 10px rgba(249, 115, 22, 0.2);
 }
 
 .login-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(34, 197, 94, 0.3);
+  box-shadow: 0 6px 15px rgba(249, 115, 22, 0.3);
 }
 
 .login-button:disabled {

@@ -8,9 +8,9 @@ import {
   BarChart3,
   Settings,
   LogOut,
-  Rss,
-  Landmark, // Imported the Landmark icon for Finance
+  Landmark,
 } from 'lucide-react';
+import logo from '../assets/images/logo.png'; // Import the logo
 import './Admin_Sidebar.css';
 
 const navLinks = [
@@ -18,7 +18,7 @@ const navLinks = [
   { label: 'Users', icon: Users, href: '/users' },
   { label: 'Products', icon: Package, href: '/products' },
   { label: 'Orders', icon: ShoppingCart, href: '/orders' },
-  { label: 'Finance', icon: Landmark, href: '/finance' }, // Added Finance link
+  { label: 'Finance', icon: Landmark, href: '/finance' },
   { label: 'Analytics', icon: BarChart3, href: '/analytics' },
   { label: 'Settings', icon: Settings, href: '/settings' },
 ];
@@ -40,8 +40,8 @@ const Admin_Sidebar = ({ onNavigate, className }) => {
       onMouseLeave={() => setIsCollapsed(true)}
     >
       <div className="sidebar-header">
-        <Rss className="sidebar-logo-icon" />
-        <span className="sidebar-logo-text">Raccoon Admin</span>
+        <img src={logo} alt="Logo" className="sidebar-logo-icon" />
+        <span className="sidebar-logo-text">RaccoonToy Co.</span>
       </div>
 
       <ul className="sidebar-links">

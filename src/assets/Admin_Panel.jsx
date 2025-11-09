@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import AdminSidebar from './Admin_Sidebar';
 import AdminDashboard from './Admin_Dashboard';
 import AdminProducts from './Admin_Products';
@@ -11,38 +12,26 @@ import Add_Orders from './Add_Orders';
 import './Admin_Panel.css';
 
 function AdminPanel() {
-  const [activeView, setActiveView] = useState('dashboard');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const navigate = useNavigate();
 
-  // Detect screen size for responsive behavior
+  const userName = "shamim-kabir-kazim-git";
+  const currentDate = new Date('2025-11-09T15:12:28Z');
+
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-      // Close mobile menu when switching to desktop
-      if (window.innerWidth > 768) {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      if (!mobile) {
         setIsMobileMenuOpen(false);
       }
     };
-
-    // Initial check
     handleResize();
-
-    // Add event listener
     window.addEventListener('resize', handleResize);
-
-    // Cleanup
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Close mobile menu when view changes
-  useEffect(() => {
-    if (isMobile) {
-      setIsMobileMenuOpen(false);
-    }
-  }, [activeView, isMobile]);
-
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen && isMobile) {
       document.body.style.overflow = 'hidden';
@@ -50,28 +39,18 @@ function AdminPanel() {
       document.body.style.overflow = 'unset';
     }
   }, [isMobileMenuOpen, isMobile]);
-
-  // Callbacks used by children to change the view
-  const goProductsList = () => setActiveView('products');
-  const goAddProduct = () => setActiveView('addProduct');
-  const goCustomersList = () => setActiveView('customers');
-  const goAddCustomer = () => setActiveView('addCustomer');
-  const goOrdersList = () => setActiveView('orders');
-  const goAddOrder = () => setActiveView('addOrder');
-
-  // Toggle mobile menu
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+  
+  const handleNavigate = (path) => {
+    navigate(path);
+    if (isMobile) {
+      setIsMobileMenuOpen(false);
+    }
   };
 
-  // Close mobile menu when overlay is clicked
-  const handleOverlayClick = () => {
-    setIsMobileMenuOpen(false);
-  };
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   return (
     <div className="admin-panel">
-      {/* Mobile Menu Toggle Button */}
       {isMobile && (
         <button
           className={`mobile-menu-toggle ${isMobileMenuOpen ? 'active' : ''}`}
@@ -79,74 +58,39 @@ function AdminPanel() {
           aria-label="Toggle menu"
           aria-expanded={isMobileMenuOpen}
         >
-          <span></span>
-          <span></span>
-          <span></span>
+          <span /><span /><span />
         </button>
       )}
 
-      {/* Sidebar Overlay for Mobile */}
       {isMobile && (
         <div
           className={`sidebar-overlay ${isMobileMenuOpen ? 'active' : ''}`}
-          onClick={handleOverlayClick}
+          onClick={() => setIsMobileMenuOpen(false)}
           aria-hidden="true"
         />
       )}
 
-      {/* Sidebar */}
       <AdminSidebar
-        activeView={activeView}
-        setActiveView={setActiveView}
+        onNavigate={handleNavigate}
         className={isMobileMenuOpen ? 'open' : ''}
-        isMobile={isMobile}
-        isOpen={isMobileMenuOpen}
       />
 
-      {/* Main Content Area */}
       <div className="admin-content">
-        {activeView === 'dashboard' && <AdminDashboard />}
-        
-        {activeView === 'products' && (
-          <AdminProducts
-            onAddNew={goAddProduct}
-          />
-        )}
-        
-        {activeView === 'addProduct' && (
-          <Add_Products
-            onBack={goProductsList}
-            onCreated={goProductsList}
-          />
-        )}
-        
-        {activeView === 'customers' && (
-          <Admin_Customers
-            onAddNew={goAddCustomer}
-          />
-        )}
-        
-        {activeView === 'addCustomer' && (
-          <Add_Customers
-            onBack={goCustomersList}
-            onCreated={goCustomersList}
-          />
-        )}
-        
-        {activeView === 'orders' && (
-          <Admin_Orders
-            onAddNew={goAddOrder}
-          />
-        )}
-        
-        {activeView === 'addOrder' && (
-          <Add_Orders
-            onBack={goOrdersList}
-            onCreated={goOrdersList}
-          />
-        )}
-        
-        {activeView === 'finance' && <Finance />}
+        <Routes>
+          <Route path="/" element={<AdminDashboard userName={userName} date={currentDate} />} />
+          <Route path="/dashboard" element={<AdminDashboard userName={userName} date={currentDate} />} />
+          
+          <Route path="/products" element={<AdminProducts onAddNew={() => navigate('/products/add')} />} />
+          <Route path="/products/add" element={<Add_Products onCreated={() => navigate('/products')} onBack={() => navigate('/products')} />} />
+          
+          <Route path="/users" element={<Admin_Customers onAddNew={() => navigate('/users/add')} />} />
+          <Route path="/users/add" element={<Add_Customers onCreated={() => navigate('/users')} onBack={() => navigate('/users')} />} />
+
+          <Route path="/orders" element={<Admin_Orders onAddNew={() => navigate('/orders/add')} />} />
+          <Route path="/orders/add" element={<Add_Orders onCreated={() => navigate('/orders')} onBack={() => navigate('/orders')} />} />
+          
+          <Route path="/finance" element={<Finance />} />
+        </Routes>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   Users,
@@ -7,30 +8,34 @@ import {
   BarChart3,
   Settings,
   LogOut,
-  Rss, // Using Rss as a placeholder for the logo icon
+  Rss,
+  Landmark, // Imported the Landmark icon for Finance
 } from 'lucide-react';
 import './Admin_Sidebar.css';
 
 const navLinks = [
-  { label: 'Dashboard', icon: LayoutDashboard, href: '#' },
-  { label: 'Users', icon: Users, href: '#' },
-  { label: 'Products', icon: Package, href: '#' },
-  { label: 'Orders', icon: ShoppingCart, href: '#' },
-  { label: 'Analytics', icon: BarChart3, href: '#' },
-  { label: 'Settings', icon: Settings, href: '#' },
+  { label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
+  { label: 'Users', icon: Users, href: '/users' },
+  { label: 'Products', icon: Package, href: '/products' },
+  { label: 'Orders', icon: ShoppingCart, href: '/orders' },
+  { label: 'Finance', icon: Landmark, href: '/finance' }, // Added Finance link
+  { label: 'Analytics', icon: BarChart3, href: '/analytics' },
+  { label: 'Settings', icon: Settings, href: '/settings' },
 ];
 
-const Admin_Sidebar = () => {
+const Admin_Sidebar = ({ onNavigate, className }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [activeLink, setActiveLink] = useState('Dashboard');
+  const location = useLocation();
 
-  const handleLinkClick = (label) => {
-    setActiveLink(label);
+  const handleLinkClick = (path) => {
+    if (onNavigate) {
+      onNavigate(path);
+    }
   };
-
+  
   return (
     <nav
-      className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}
+      className={`sidebar ${isCollapsed ? 'collapsed' : ''} ${className || ''}`}
       onMouseEnter={() => setIsCollapsed(false)}
       onMouseLeave={() => setIsCollapsed(true)}
     >
@@ -42,20 +47,20 @@ const Admin_Sidebar = () => {
       <ul className="sidebar-links">
         {navLinks.map((link) => (
           <li key={link.label}>
-            <a
-              href={link.href}
-              className={`sidebar-link ${activeLink === link.label ? 'active' : ''}`}
-              onClick={() => handleLinkClick(link.label)}
+            <Link
+              to={link.href}
+              className={`sidebar-link ${location.pathname.startsWith(link.href) ? 'active' : ''}`}
+              onClick={() => handleLinkClick(link.href)}
             >
               <link.icon className="sidebar-icon" />
               <span className="sidebar-label">{link.label}</span>
-            </a>
+            </Link>
           </li>
         ))}
       </ul>
 
       <div className="sidebar-footer">
-        <a href="#" className="sidebar-link">
+        <a href="#" className="sidebar-link" onClick={(e) => { e.preventDefault(); handleLinkClick('/logout'); }}>
           <LogOut className="sidebar-icon" />
           <span className="sidebar-label">Logout</span>
         </a>

@@ -1,56 +1,67 @@
-import React from 'react';
+import React, { useState } from 'react';
+import {
+  LayoutDashboard,
+  Users,
+  Package,
+  ShoppingCart,
+  BarChart3,
+  Settings,
+  LogOut,
+  Rss, // Using Rss as a placeholder for the logo icon
+} from 'lucide-react';
 import './Admin_Sidebar.css';
 
-function AdminSidebar({ activeView, setActiveView, className = '', isMobile = false, isOpen = false }) {
-  const sidebarClasses = `admin-sidebar ${className} ${isMobile && isOpen ? 'open' : ''}`.trim();
+const navLinks = [
+  { label: 'Dashboard', icon: LayoutDashboard, href: '#' },
+  { label: 'Users', icon: Users, href: '#' },
+  { label: 'Products', icon: Package, href: '#' },
+  { label: 'Orders', icon: ShoppingCart, href: '#' },
+  { label: 'Analytics', icon: BarChart3, href: '#' },
+  { label: 'Settings', icon: Settings, href: '#' },
+];
 
-  const navItems = [
-    { view: 'dashboard', label: 'Dashboard', icon: '📊' },
-    { view: 'products', label: 'Products', icon: '📦' },
-    { view: 'customers', label: 'Customers', icon: '👥' },
-    { view: 'orders', label: 'Orders List', icon: '🛒' },
-    { view: 'finance', label: 'Finance', icon: '💰' }
-  ];
+const Admin_Sidebar = () => {
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [activeLink, setActiveLink] = useState('Dashboard');
+
+  const handleLinkClick = (label) => {
+    setActiveLink(label);
+  };
 
   return (
-    <aside className={sidebarClasses}>
-      <div className="sidebar-inner">
-        <div className="logo">
-          <img
-            src="https://i.postimg.cc/pTyvHkyK/Frame-361.png"
-            alt="Logo"
-            className="logo-img"
-          />
-        </div>
-        
-        <nav className="sidebar-nav">
-          <ul>
-            {navItems.map((item) => (
-              <li 
-                key={item.view}
-                className={activeView === item.view ? 'active' : ''}
-              >
-                <button
-                  type="button"
-                  onClick={() => setActiveView(item.view)}
-                  aria-current={activeView === item.view ? 'page' : undefined}
-                  aria-label={item.label}
-                  data-tooltip={item.label}
-                >
-                  <span className="nav-icon">{item.icon}</span>
-                  <span className="nav-text">{item.label}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <div className="sidebar-footer">
-          <span className="sidebar-version">v2.0</span>
-        </div>
+    <nav
+      className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}
+      onMouseEnter={() => setIsCollapsed(false)}
+      onMouseLeave={() => setIsCollapsed(true)}
+    >
+      <div className="sidebar-header">
+        <Rss className="sidebar-logo-icon" />
+        <span className="sidebar-logo-text">Raccoon Admin</span>
       </div>
-    </aside>
-  );
-}
 
-export default AdminSidebar;
+      <ul className="sidebar-links">
+        {navLinks.map((link) => (
+          <li key={link.label}>
+            <a
+              href={link.href}
+              className={`sidebar-link ${activeLink === link.label ? 'active' : ''}`}
+              onClick={() => handleLinkClick(link.label)}
+            >
+              <link.icon className="sidebar-icon" />
+              <span className="sidebar-label">{link.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <div className="sidebar-footer">
+        <a href="#" className="sidebar-link">
+          <LogOut className="sidebar-icon" />
+          <span className="sidebar-label">Logout</span>
+        </a>
+      </div>
+    </nav>
+  );
+};
+
+export default Admin_Sidebar;

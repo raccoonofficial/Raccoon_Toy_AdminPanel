@@ -1,248 +1,180 @@
-/* ============================================
-   ADMIN SIDEBAR - Clean & Optimized
-   70% Height, Centered, Rounded Right Corners
-   ============================================ */
-
-.admin-sidebar {
-  display: flex;
-  align-items: center;
-  padding-left: 15px;
+/* --- Global Styles & Variables --- */
+:root {
+  --sidebar-bg-color: #1a1d2e;
+  --sidebar-text-color: #b0b3c0;
+  --sidebar-hover-bg: #2a2d40;
+  --sidebar-active-bg: #3a3d54;
+  --accent-color: #4F46E5;
+  --accent-gradient: linear-gradient(90deg, #4F46E5, #8a5cf6);
+  --shadow-color: rgba(0, 0, 0, 0.2); /* Slightly darker shadow for floating effect */
+  --sidebar-width-collapsed: 80px;
+  --sidebar-width-expanded: 250px;
 }
 
-/* Sidebar Inner Container */
-.sidebar-inner {
-  width: 100%;
-  height: 70vh;
-  max-height: 600px;
-  background: #1a1a1a;
-  border-radius: 0 20px 20px 0;
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.6);
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  margin: 0;
+  background-color: #f4f7fa;
+}
+
+/* --- Sidebar Container --- */
+.sidebar {
   display: flex;
   flex-direction: column;
+  width: var(--sidebar-width-expanded);
+  position: fixed;
+  background-color: var(--sidebar-bg-color);
+  color: var(--sidebar-text-color);
+  padding: 16px;
   overflow: hidden;
+  z-index: 1000;
+  
+  /* === NEW STYLES FOR FLOATING & CENTERING === */
+  height: 70vh; /* 1. Set height to 70% of the viewport height */
+  top: 50%;     /* 2. Position the top edge at the vertical midpoint */
+  left: 1rem;   /* 3. Give it some space from the left edge */
+  border-radius: 16px; /* 4. Add rounded corners for a modern look */
+  box-shadow: 5px 5px 20px var(--shadow-color); /* 5. Enhance shadow for depth */
+
+  /* 6. Use transform to pull the sidebar up by half its height, achieving perfect vertical centering */
+  transform: translateY(-50%); 
+  
+  /* 7. Update transition to include new properties for smooth animation */
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Logo */
-.logo {
-  height: 90px;
+.sidebar.collapsed {
+  width: var(--sidebar-width-collapsed);
+}
+
+/* --- Sidebar Header & Logo --- */
+.sidebar-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  gap: 16px;
+  padding: 16px 8px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--sidebar-hover-bg);
+  margin-bottom: 16px;
 }
 
-.logo-img {
-  width: 45px;
-  height: 45px;
-  object-fit: contain;
-  transition: all 0.3s ease;
+.sidebar-logo-icon {
+  width: 32px;
+  height: 32px;
+  color: var(--accent-color);
+  flex-shrink: 0;
 }
 
-.admin-sidebar:hover .logo-img {
-  width: 60px;
-  height: 60px;
+.sidebar-logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
 }
 
-/* Navigation */
-.sidebar-nav {
-  flex: 1;
-  padding: 20px 0;
-  overflow-y: auto;
+.sidebar.collapsed .sidebar-logo-text {
+  opacity: 0;
+  pointer-events: none;
 }
 
-.sidebar-nav::-webkit-scrollbar {
-  width: 4px;
-}
-
-.sidebar-nav::-webkit-scrollbar-thumb {
-  background: rgba(255, 107, 53, 0.3);
-  border-radius: 2px;
-}
-
-.sidebar-nav ul {
+/* --- Navigation Links --- */
+.sidebar-links {
   list-style: none;
   padding: 0;
   margin: 0;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  overflow-y: auto; /* Add scroll for smaller heights */
 }
 
-.sidebar-nav ul li {
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--sidebar-text-color);
+  font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease;
   position: relative;
-  padding: 0 15px;
+  overflow: hidden;
 }
 
-/* Nav Buttons */
-.sidebar-nav ul li button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  width: 100%;
-  padding: 14px;
-  background: transparent;
-  border: none;
-  border-radius: 12px;
-  color: #e0e0e0;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: left;
+.sidebar-link:hover {
+  background-color: var(--sidebar-hover-bg);
+  color: #fff;
 }
 
-.admin-sidebar:hover .sidebar-nav ul li button {
-  justify-content: flex-start;
+.sidebar-link.active {
+  background-color: var(--sidebar-active-bg);
+  color: #fff;
+  font-weight: 700;
 }
 
-/* Icons */
-.nav-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  font-size: 28px;
-  flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-  transition: all 0.3s ease;
-}
-
-/* Text Labels */
-.nav-text {
-  opacity: 0;
-  transform: translateX(-10px);
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.admin-sidebar:hover .nav-text {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* Hover State */
-.sidebar-nav ul li button:hover {
-  background: #252525;
-  color: #ffffff;
-}
-
-.sidebar-nav ul li button:hover .nav-icon {
-  transform: scale(1.1);
-  background: rgba(255, 107, 53, 0.15);
-}
-
-/* Active State */
-.sidebar-nav ul li.active button {
-  background: rgba(255, 107, 53, 0.15);
-  color: #ff6b35;
-}
-
-.sidebar-nav ul li.active .nav-icon {
-  background: rgba(255, 107, 53, 0.25);
-  box-shadow: 0 0 15px rgba(255, 107, 53, 0.4);
-}
-
-/* Active Indicator */
-.sidebar-nav ul li.active::before {
+.sidebar-link.active::before {
   content: '';
   position: absolute;
   left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
+  bottom: 0;
   width: 4px;
-  height: 60%;
-  background: #ff6b35;
-  border-radius: 0 4px 4px 0;
+  background: var(--accent-gradient);
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 
-/* Tooltips (collapsed state) */
-.sidebar-nav ul li button::before {
-  content: attr(data-tooltip);
-  position: absolute;
-  left: calc(100% + 10px);
-  top: 50%;
-  transform: translateY(-50%);
-  background: #2a2a2a;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 0.85rem;
+/* --- Icons and Labels --- */
+.sidebar-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.sidebar-label {
   white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.sidebar.collapsed .sidebar-label {
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease;
-  z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
-.admin-sidebar:not(:hover) .sidebar-nav ul li button:hover::before {
-  opacity: 1;
-}
-
-/* Footer */
+/* --- Sidebar Footer --- */
 .sidebar-footer {
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  min-height: 50px;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--sidebar-hover-bg);
 }
 
-.sidebar-version {
-  font-size: 0.7rem;
-  color: #666;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.admin-sidebar:hover .sidebar-version {
-  opacity: 1;
-}
-
-/* Mobile */
+/* 
+  === FIX FOR MOBILE VIEW ===
+  On mobile, the sidebar should slide in from the left and be full-height.
+  This media query will override the floating styles for screens 768px and smaller.
+*/
 @media (max-width: 768px) {
-  .admin-sidebar {
-    padding-left: 0;
-    background: rgba(0, 0, 0, 0.95);
+  .sidebar {
+    height: 100vh; /* Revert to full height */
+    left: 0;      /* Revert to edge position */
+    top: 0;       /* Revert to top position */
+    border-radius: 0; /* Remove rounding */
+
+    /* The 'transform' is now used for the slide-in/out effect, controlled from AdminPanel.css */
+    /* This overrides the translateY(-50%) for desktop */
+    transform: translateX(-100%); 
   }
 
-  .sidebar-inner {
-    width: 85%;
-    max-width: 300px;
-    height: 100%;
-    max-height: 100%;
-  }
-
-  .sidebar-nav ul li button {
-    justify-content: flex-start;
-  }
-
-  .nav-text {
-    opacity: 1;
+  /* This class from AdminPanel.jsx will make it slide into view */
+  .sidebar.open {
     transform: translateX(0);
-  }
-
-  .nav-icon {
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
-    font-size: 24px;
-  }
-}
-
-/* Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    transition: none !important;
-    animation: none !important;
   }
 }

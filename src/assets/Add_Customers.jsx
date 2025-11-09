@@ -142,7 +142,7 @@ export default function AdminCustomersPage() {
           {filteredCustomers.map(c => (
             <div className="customer-card" key={c.id}>
               <div className="card-header"><h3>{c.name}</h3><span className={`status-badge ${c.status.toLowerCase()}`}>{c.status}</span></div>
-              <p><strong>ID:</strong> {c.id}</p>
+              <p><strong>IDss:</strong> {c.id}</p>
               <p><strong>Email:</strong> {c.email}</p>
               <p><strong>Phone:</strong> {c.phone}</p>
               <p><strong>Address:</strong> {c.address}</p>

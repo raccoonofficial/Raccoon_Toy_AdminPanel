@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 // Import the audio file from its new location
@@ -17,36 +17,51 @@ import Add_Products from './assets/Add_Products';
 import Add_Orders from './assets/Add_Orders';
 import './App.css';
 
+// Create the audio instance once outside the component
+const audio = new Audio(backgroundMusic);
+audio.loop = true;
+audio.volume = 0.3;
+
 function App() {
   const userName = "shamim-kabir-kazim-git";
   const currentDate = new Date('2025-11-09T15:50:57Z');
+  const isPlaying = useRef(false); // Use ref to track playing state
 
-  // This effect will run once when the App component mounts
   useEffect(() => {
-    const audio = new Audio(backgroundMusic);
-    audio.loop = true;   // Make the music loop continuously
-    audio.volume = 0.3;  // Set a reasonable starting volume
+    const playAudio = async () => {
+      if (!isPlaying.current) {
+        try {
+          await audio.play();
+          isPlaying.current = true;
+          console.log("Background music is playing.");
+        } catch (error) {
+          console.log("Autoplay prevented. Waiting for user interaction to play music.");
+          const playOnClick = async () => {
+            if (!isPlaying.current) {
+              try {
+                await audio.play();
+                isPlaying.current = true;
+                console.log("Music started after user interaction.");
+              } catch (playError) {
+                console.error("Error playing audio after click:", playError);
+              }
+            }
+            window.removeEventListener('click', playOnClick);
+          };
+          window.addEventListener('click', playOnClick);
+        }
+      }
+    };
 
-    const playPromise = audio.play();
+    playAudio();
 
-    if (playPromise !== undefined) {
-      playPromise.then(_ => {
-        // Autoplay started successfully!
-        console.log("Background music is playing.");
-      }).catch(error => {
-        // Autoplay was prevented. We'll wait for a user interaction.
-        console.log("Autoplay prevented. Waiting for user interaction to play music.");
-        const playOnClick = () => {
-          audio.play();
-          window.removeEventListener('click', playOnClick);
-        };
-        window.addEventListener('click', playOnClick);
-      });
-    }
-    
-    // Cleanup function to stop the music when the component is unmounted
+    // Cleanup function to pause the music when the app is closed/unmounted
     return () => {
-      audio.pause();
+      if (isPlaying.current) {
+        audio.pause();
+        isPlaying.current = false;
+        console.log("Background music paused.");
+      }
     };
   }, []); // The empty array ensures this effect runs only once
 

@@ -1,14 +1,17 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiPackage, FiHash, FiTag, FiClipboard, FiDollarSign, FiBarChart2, FiUploadCloud, FiPaperclip } from 'react-icons/fi';
+// FiRuler has been corrected to FiMaximize
+import { FiPackage, FiHash, FiTag, FiClipboard, FiDollarSign, FiBarChart2, FiUploadCloud, FiPaperclip, FiMaximize, FiDroplet, FiArchive, FiGift, FiBox, FiCpu } from 'react-icons/fi';
 import './Add_Products.css';
 
 const categoryOptions = ['Action Figure', 'Small Action Figure', 'Bricks', 'Vehicle Figure', 'Cute Dolls', 'Small Cute Dolls', 'Decorations'];
 const statusOptions = ['Available', 'Stock Out', 'Re-Stock'];
+const MAX_IMAGES = 5;
 
 export default function AddProductsPage() {
   const navigate = useNavigate();
-  const fileRef = useRef(null);
+  const fileInputRef = useRef(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const [supplierNumber, setSupplierNumber] = useState('');
   const [name, setName] = useState('');
@@ -20,8 +23,19 @@ export default function AddProductsPage() {
   const [sellingPrice, setSellingPrice] = useState('');
   const [status, setStatus] = useState(statusOptions[0]);
   const [details, setDetails] = useState('');
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState('');
+  
+  const [images, setImages] = useState(Array(MAX_IMAGES).fill(null));
+  const [imagePreviews, setImagePreviews] = useState(Array(MAX_IMAGES).fill(null));
+
+  const [specifications, setSpecifications] = useState({
+    materials: '',
+    dimensions: '',
+    color: '',
+    weight: '',
+    ageRange: '',
+    brand: 'RaccoonToy',
+  });
+  
   const [errors, setErrors] = useState({});
 
   const profit = useMemo(() => Number(sellingPrice) - Number(buyingCost), [sellingPrice, buyingCost]);
@@ -32,18 +46,36 @@ export default function AddProductsPage() {
     setProductId(`P-${timestamp}`);
   }
 
+  function handleImageUploadClick(index) {
+    setActiveImageIndex(index);
+    fileInputRef.current?.click();
+  }
+
   function onImageChange(e) {
     const file = e.target.files?.[0];
     if (!file) return;
-    setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
+
+    const newImages = [...images];
+    newImages[activeImageIndex] = file;
+    setImages(newImages);
+
+    const newImagePreviews = [...imagePreviews];
+    newImagePreviews[activeImageIndex] = URL.createObjectURL(file);
+    setImagePreviews(newImagePreviews);
+    
+    e.target.value = '';
+  }
+
+  function handleSpecChange(e) {
+    const { name, value } = e.target;
+    setSpecifications(prev => ({ ...prev, [name]: value }));
   }
 
   function validate() {
-    // Validation logic can be expanded here
     const next = {};
     if (!name.trim()) next.name = 'Product name is required';
     if (!productId.trim()) next.productId = 'Product ID is required';
+    if (!imagePreviews[0]) next.image = 'Primary image is required';
     return next;
   }
 
@@ -53,10 +85,9 @@ export default function AddProductsPage() {
     setErrors(v);
     if (Object.keys(v).length > 0) return;
 
-    console.log("Creating product:", { name, productId });
-    // In a real app, you would send this data to an API
+    console.log("Creating product:", { name, productId, images, specifications });
     alert('Product created successfully!');
-    navigate('/products'); // Navigate back to the list
+    navigate('/products');
   }
 
   return (
@@ -128,23 +159,73 @@ export default function AddProductsPage() {
               <div className="addp-chip">Margin: <strong>{marginPct.toFixed(1)}%</strong></div>
             </div>
           </div>
+          
+          <div className="addp-card">
+            <h2 className="addp-card-title">Specifications</h2>
+            <div className="addp-spec-grid">
+              <div className="addp-field">
+                <label htmlFor="materials"><FiBox/> Materials</label>
+                <input id="materials" name="materials" type="text" value={specifications.materials} onChange={handleSpecChange} placeholder="e.g., Plastic" />
+              </div>
+              <div className="addp-field">
+                {/* Corrected icon FiMaximize is used here */}
+                <label htmlFor="dimensions"><FiMaximize/> Dimensions</label>
+                <input id="dimensions" name="dimensions" type="text" value={specifications.dimensions} onChange={handleSpecChange} placeholder="e.g., 12x7x12 cm" />
+              </div>
+              <div className="addp-field">
+                <label htmlFor="color"><FiDroplet/> Color</label>
+                <input id="color" name="color" type="text" value={specifications.color} onChange={handleSpecChange} placeholder="e.g., Green" />
+              </div>
+              <div className="addp-field">
+                <label htmlFor="weight"><FiArchive/> Weight</label>
+                <input id="weight" name="weight" type="text" value={specifications.weight} onChange={handleSpecChange} placeholder="e.g., 150g" />
+              </div>
+              <div className="addp-field">
+                <label htmlFor="ageRange"><FiGift/> Age Range</label>
+                <input id="ageRange" name="ageRange" type="text" value={specifications.ageRange} onChange={handleSpecChange} placeholder="e.g., 6+ years" />
+              </div>
+              <div className="addp-field">
+                <label htmlFor="brand"><FiCpu/> Brand</label>
+                <input id="brand" name="brand" type="text" value={specifications.brand} onChange={handleSpecChange} placeholder="e.g., RaccoonToy" />
+              </div>
+            </div>
+          </div>
+
         </div>
 
         {/* Right Panel */}
         <div className="addp-right-panel">
           <div className="addp-card">
             <h2 className="addp-card-title">Product Media</h2>
-            <div className="addp-uploader" onClick={() => fileRef.current?.click()}>
-              {imagePreview ? (
-                <img src={imagePreview} alt="Product Preview" />
+            <p className="addp-media-sub">Add up to 5 images. The first is the primary image.</p>
+            
+            <div className="addp-uploader addp-uploader-primary" onClick={() => handleImageUploadClick(0)}>
+              {imagePreviews[0] ? (
+                <img src={imagePreviews[0]} alt="Primary product view" />
               ) : (
                 <div className="addp-upload-placeholder">
                   <FiUploadCloud size={32} />
-                  <span>Click to upload image</span>
+                  <span>Upload Primary Image</span>
                 </div>
               )}
-              <input type="file" accept="image/*" ref={fileRef} onChange={onImageChange} hidden />
             </div>
+            {errors.image && <div className="addp-err">{errors.image}</div>}
+            
+            <div className="addp-secondary-grid">
+              {imagePreviews.slice(1).map((preview, index) => (
+                <div key={index} className="addp-uploader addp-uploader-secondary" onClick={() => handleImageUploadClick(index + 1)}>
+                  {preview ? (
+                    <img src={preview} alt={`Secondary product view ${index + 1}`} />
+                  ) : (
+                    <div className="addp-upload-placeholder-small">
+                      <FiUploadCloud size={20} />
+                      <span>Add image</span>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <input type="file" accept="image/*" ref={fileInputRef} onChange={onImageChange} hidden />
           </div>
 
           <div className="addp-card">

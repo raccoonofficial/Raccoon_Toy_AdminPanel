@@ -1,25 +1,32 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, User, LogIn } from 'lucide-react';
+import { Lock, User, LogIn, ShieldAlert } from 'lucide-react';
 import logo from '../assets/images/logo.png'; // Make sure the path is correct
 import './Login.css';
 
 function Login() {
   const navigate = useNavigate();
+  // Set initial state to empty strings for user input
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  // Simple login handler for frontend development
+  // Login handler that validates user input
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(''); // Clear previous errors
 
-    // Simulate login delay
+    // Simulate network delay and validate credentials
     setTimeout(() => {
-      sessionStorage.setItem('authToken', 'demo_token_' + Date.now());
-      sessionStorage.setItem('username', username);
-      navigate('/dashboard');
+      if (username === 'cabrio' && password === 'devil') {
+        sessionStorage.setItem('authToken', 'demo_token_' + Date.now());
+        sessionStorage.setItem('username', username);
+        navigate('/dashboard');
+      } else {
+        setError('Invalid username or password. Please try again.');
+      }
       setIsLoading(false);
     }, 800);
   };
@@ -33,7 +40,7 @@ function Login() {
             <img src={logo} alt="Raccoon Toy Co. Logo" className="header-logo-img" />
           </div>
           <h1 className="header-title">Raccoon Toy Co.</h1>
-          <p className="header-subtitle"></p>
+          <p className="header-subtitle">Admin Panel Access</p>
         </div>
 
         {/* Login Form */}
@@ -73,6 +80,14 @@ function Login() {
               />
             </div>
           </div>
+          
+          {/* Error Message Display */}
+          {error && (
+            <div className="login-error">
+              <ShieldAlert size={18} />
+              <span>{error}</span>
+            </div>
+          )}
 
           {/* Submit Button */}
           <button 

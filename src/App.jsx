@@ -22,6 +22,14 @@ const audio = new Audio(backgroundMusic);
 audio.loop = true;
 audio.volume = 0.3;
 
+// --- Private Route Wrapper ---
+// This component checks if the user is authenticated.
+// If not, it redirects them to the login page.
+const PrivateRoute = ({ children }) => {
+  const isAuthenticated = sessionStorage.getItem('authToken');
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+};
+
 function App() {
   const userName = "shamim-kabir-kazim-git";
   const currentDate = new Date('2025-11-09T15:50:57Z');
@@ -69,10 +77,19 @@ function App() {
   return (
     <div className="App">
       <Routes>
+        {/* The login page is now the default entry point */}
         <Route path="/login" element={<Login />} />
 
-        {/* AdminPanel acts as a layout for all nested routes */}
-        <Route path="/" element={<AdminPanel />}>
+        {/* All admin routes are nested under a PrivateRoute to protect them */}
+        <Route 
+          path="/" 
+          element={
+            <PrivateRoute>
+              <AdminPanel />
+            </PrivateRoute>
+          }
+        >
+          {/* Default route inside admin panel redirects to dashboard */}
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<AdminDashboard userName={userName} date={currentDate} />} />
           
@@ -89,6 +106,7 @@ function App() {
           <Route path="finance" element={<Finance />} />
         </Route>
 
+        {/* Any other path redirects to the root, which will be handled by PrivateRoute */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 
 // Import the audio file from its new location
 import backgroundMusic from './assets/music/loverboy.mp3';
@@ -26,6 +26,7 @@ function App() {
   const userName = "shamim-kabir-kazim-git";
   const currentDate = new Date('2025-11-09T15:50:57Z');
   const isPlaying = useRef(false); // Use ref to track playing state
+  const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
     const playAudio = async () => {
@@ -82,8 +83,8 @@ function App() {
           <Route path="users" element={<AdminCustomersPage />} />
           <Route path="users/add" element={<AddCustomersPage />} />
 
-          <Route path="orders" element={<Admin_Orders />} />
-          <Route path="orders/add" element={<Add_Orders />} />
+          <Route path="orders" element={<Admin_Orders onAddNew={() => navigate('/orders/add')} />} />
+          <Route path="orders/add" element={<Add_Orders onBack={() => navigate('/orders')} onCreated={() => navigate('/orders')} />} />
           
           <Route path="finance" element={<Finance />} />
         </Route>

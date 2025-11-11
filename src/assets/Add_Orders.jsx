@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiHash, FiCalendar, FiUser, FiHome, FiPhone, FiArchive, FiDollarSign, FiPlus, FiClipboard, FiPackage, FiSearch, FiPercent } from 'react-icons/fi';
+import { FiHash, FiCalendar, FiUser, FiHome, FiPhone, FiArchive, FiDollarSign, FiPlus, FiClipboard, FiPackage, FiSearch, FiPercent, FiEdit2 } from 'react-icons/fi';
+import { CheckCircle, Circle, Package, Send, ShoppingCart, Truck } from 'lucide-react';
 import { Trash2 } from 'lucide-react';
 import './Add_Orders.css';
 
@@ -18,6 +19,13 @@ const deliveryOptions = [
     { label: 'Free', value: 0 },
     { label: 'Standard (60 TK)', value: 60 },
     { label: 'Express (120 TK)', value: 120 },
+];
+
+const orderStatusSteps = [
+    { name: 'Pending', icon: <ShoppingCart size={24}/> },
+    { name: 'Packed', icon: <Package size={24}/> },
+    { name: 'Send', icon: <Send size={24}/> },
+    { name: 'Delivered', icon: <Truck size={24}/> },
 ];
 
 // --- STABLE ProductSearch COMPONENT ---
@@ -73,6 +81,23 @@ function ProductSearch({ lineId, selectedProduct, onProductSelect }) {
     );
 }
 
+function OrderStatusTrail({ currentStatus }) {
+    const currentStatusIndex = orderStatusSteps.findIndex(s => s.name === currentStatus);
+    return (
+        <div className="order-status-trail">
+            {orderStatusSteps.map((step, index) => (
+                <React.Fragment key={step.name}>
+                    <div className={`trail-item ${index <= currentStatusIndex ? 'completed' : ''}`}>
+                        <div className="trail-icon">{step.icon}</div>
+                        <div className="trail-name">{step.name}</div>
+                    </div>
+                    {index < orderStatusSteps.length - 1 && <div className="trail-connector"></div>}
+                </React.Fragment>
+            ))}
+        </div>
+    );
+}
+
 
 export default function Add_Orders({ onBack, onCreated }) {
   const navigate = useNavigate();
@@ -87,6 +112,7 @@ export default function Add_Orders({ onBack, onCreated }) {
   const [paymentStatus, setPaymentStatus] = useState('Unpaid');
   const [advanceAmount, setAdvanceAmount] = useState('');
   const [marketingOptIn, setMarketingOptIn] = useState(true);
+  const [notes, setNotes] = useState('');
   const [errors, setErrors] = useState({});
   const [globalDiscountFixed, setGlobalDiscountFixed] = useState('');
   const [globalDiscountPercent, setGlobalDiscountPercent] = useState('');
@@ -105,7 +131,7 @@ export default function Add_Orders({ onBack, onCreated }) {
   // --- Real-time Price Calculation ---
   const priceSummary = useMemo(() => {
       let subtotal = 0;
-      let totalDiscount = 0;
+      let totalLineItemDiscount = 0;
       let totalDelivery = 0;
 
       products.forEach(p => {
@@ -114,22 +140,31 @@ export default function Add_Orders({ onBack, onCreated }) {
               subtotal += lineTotal;
               
               let lineDiscount = 0;
-              // Prioritize fixed discount if both exist, but logic should prevent that
               if (p.discountFixed) {
                   lineDiscount = Number(p.discountFixed) || 0;
               } else if (p.discountPercent) {
                   lineDiscount = lineTotal * ((Number(p.discountPercent) || 0) / 100);
               }
-              totalDiscount += lineDiscount;
+              totalLineItemDiscount += lineDiscount;
           }
           totalDelivery += Number(p.deliveryCharge) || 0;
       });
 
-      const subtotalAfterDiscount = subtotal - totalDiscount;
-      const grandTotal = subtotalAfterDiscount + totalDelivery;
+      const subtotalAfterLineItemDiscount = subtotal - totalLineItemDiscount;
+
+      let globalDiscountAmount = 0;
+      if (globalDiscountFixed) {
+          globalDiscountAmount = Number(globalDiscountFixed) || 0;
+      } else if (globalDiscountPercent) {
+          globalDiscountAmount = subtotalAfterLineItemDiscount * ((Number(globalDiscountPercent) || 0) / 100);
+      }
       
-      return { subtotal, totalDiscount, subtotalAfterDiscount, totalDelivery, grandTotal };
-  }, [products]);
+      const totalDiscount = totalLineItemDiscount + globalDiscountAmount;
+      const subtotalAfterTotalDiscount = subtotal - totalDiscount;
+      const grandTotal = subtotalAfterTotalDiscount + totalDelivery;
+      
+      return { subtotal, totalDiscount, grandTotal, totalDelivery, subtotalAfterDiscount: subtotalAfterTotalDiscount };
+  }, [products, globalDiscountFixed, globalDiscountPercent]);
 
 
   function validate() { /* Validation logic remains the same */ return {}; }
@@ -164,35 +199,18 @@ export default function Add_Orders({ onBack, onCreated }) {
 
   function handleGlobalDiscountChange(type, value) {
       const numericValue = Number(value) || 0;
-      const totalSubtotal = priceSummary.subtotal;
+      // Use subtotal *after* line item discounts for percent calculation
+      const baseSubtotal = priceSummary.subtotal - (priceSummary.totalDiscount - (Number(globalDiscountFixed) || 0));
 
       if (type === 'fixed') {
-          const percent = totalSubtotal > 0 ? (numericValue / totalSubtotal) * 100 : 0;
+          const percent = baseSubtotal > 0 ? (numericValue / baseSubtotal) * 100 : 0;
           setGlobalDiscountFixed(value);
           setGlobalDiscountPercent(percent > 0 ? percent.toFixed(2) : '');
       } else { // percent
-          const fixed = totalSubtotal * (numericValue / 100);
+          const fixed = baseSubtotal * (numericValue / 100);
           setGlobalDiscountFixed(fixed > 0 ? fixed.toFixed(2) : '');
           setGlobalDiscountPercent(value);
       }
-  }
-  
-  function applyGlobalDiscount() {
-      const percentToApply = Number(globalDiscountPercent) || 0;
-      if (percentToApply <= 0) return;
-
-      setProducts(currentProducts => currentProducts.map(p => {
-          if (p.product && p.qty > 0) {
-              const lineTotal = p.product.price * Number(p.qty);
-              const fixedDiscount = lineTotal * (percentToApply / 100);
-              return {
-                  ...p,
-                  discountPercent: percentToApply.toFixed(2),
-                  discountFixed: fixedDiscount.toFixed(2)
-              };
-          }
-          return p;
-      }));
   }
 
   function handleProductSelect(lineId, selectedProduct) {
@@ -215,6 +233,8 @@ export default function Add_Orders({ onBack, onCreated }) {
           <button type="submit" form="add-order-form" className="add-order-btn add-order-btn-primary">Create Order</button>
         </div>
       </header>
+      
+      <OrderStatusTrail currentStatus={status} />
 
       <form id="add-order-form" className="add-order-form-container" onSubmit={onSubmit} noValidate>
         
@@ -320,7 +340,6 @@ export default function Add_Orders({ onBack, onCreated }) {
                             <FiPercent />
                             <input type="number" placeholder="Percentage" value={globalDiscountPercent} onChange={e => handleGlobalDiscountChange('percent', e.target.value)} />
                         </div>
-                        <button type="button" className="add-order-btn" onClick={applyGlobalDiscount}>Apply</button>
                     </div>
                 </div>
             </div>
@@ -363,6 +382,13 @@ export default function Add_Orders({ onBack, onCreated }) {
                   </div>
                 </div>
               )}
+               <div className="add-order-card">
+                  <h2 className="add-order-card-title">Notes</h2>
+                  <div className="add-order-field">
+                      <label htmlFor="notes"><FiEdit2 /> Add a note for this order</label>
+                      <textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows="4" placeholder="e.g., Customer requested gift wrapping..."></textarea>
+                  </div>
+              </div>
             </div>
         </div>
 

@@ -103,7 +103,7 @@ export default function Add_Orders({ onBack, onCreated }) {
   const navigate = useNavigate();
   // --- Core States ---
   const [orderId, setOrderId] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState('2025-11-11');
   const [customerName, setCustomerName] = useState('');
   const [customerId, setCustomerId] = useState('');
   const [address, setAddress] = useState('');
@@ -113,6 +113,7 @@ export default function Add_Orders({ onBack, onCreated }) {
   const [advanceAmount, setAdvanceAmount] = useState('');
   const [marketingOptIn, setMarketingOptIn] = useState(true);
   const [notes, setNotes] = useState('');
+  const [hiddenCharge, setHiddenCharge] = useState('');
   const [errors, setErrors] = useState({});
   const [globalDiscountFixed, setGlobalDiscountFixed] = useState('');
   const [globalDiscountPercent, setGlobalDiscountPercent] = useState('');
@@ -161,10 +162,11 @@ export default function Add_Orders({ onBack, onCreated }) {
       
       const totalDiscount = totalLineItemDiscount + globalDiscountAmount;
       const subtotalAfterTotalDiscount = subtotal - totalDiscount;
-      const grandTotal = subtotalAfterTotalDiscount + totalDelivery;
+      const parsedHiddenCharge = Number(hiddenCharge) || 0;
+      const grandTotal = subtotalAfterTotalDiscount + totalDelivery + parsedHiddenCharge;
       
-      return { subtotal, totalDiscount, grandTotal, totalDelivery, subtotalAfterDiscount: subtotalAfterTotalDiscount };
-  }, [products, globalDiscountFixed, globalDiscountPercent]);
+      return { subtotal, totalDiscount, grandTotal, totalDelivery, subtotalAfterDiscount: subtotalAfterTotalDiscount, hiddenCharge: parsedHiddenCharge };
+  }, [products, globalDiscountFixed, globalDiscountPercent, hiddenCharge]);
 
 
   function validate() { /* Validation logic remains the same */ return {}; }
@@ -382,14 +384,25 @@ export default function Add_Orders({ onBack, onCreated }) {
                   </div>
                 </div>
               )}
-               <div className="add-order-card">
-                  <h2 className="add-order-card-title">Notes</h2>
-                  <div className="add-order-field">
-                      <label htmlFor="notes"><FiEdit2 /> Add a note for this order</label>
-                      <textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows="4" placeholder="e.g., Customer requested gift wrapping..."></textarea>
-                  </div>
-              </div>
             </div>
+        </div>
+        
+        {/* --- New Row for Charges and Notes --- */}
+        <div className="add-order-section-grid two-col">
+            <div className="add-order-card">
+              <h2 className="add-order-card-title">Additional Charges</h2>
+              <div className="add-order-field">
+                  <label htmlFor="hiddenCharge"><FiDollarSign /> Hidden Charge</label>
+                  <input id="hiddenCharge" type="number" value={hiddenCharge} onChange={(e) => setHiddenCharge(e.target.value)} placeholder="e.g., 100" />
+              </div>
+          </div>
+           <div className="add-order-card">
+              <h2 className="add-order-card-title">Notes</h2>
+              <div className="add-order-field">
+                  <label htmlFor="notes"><FiEdit2 /> Add a note for this order</label>
+                  <textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows="4" placeholder="e.g., Customer requested gift wrapping..."></textarea>
+              </div>
+          </div>
         </div>
 
         {/* --- Bottom Section: Price Summary --- */}
@@ -411,6 +424,10 @@ export default function Add_Orders({ onBack, onCreated }) {
                 <div className="summary-item">
                     <span>Delivery</span>
                     <span className="summary-value">{priceSummary.totalDelivery.toFixed(2)}</span>
+                </div>
+                <div className="summary-item">
+                    <span>Hidden Charge</span>
+                    <span className="summary-value">{priceSummary.hiddenCharge.toFixed(2)}</span>
                 </div>
                 <div className="summary-item grand-total">
                     <span>Grand Total</span>

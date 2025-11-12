@@ -99,6 +99,15 @@ const initialCostCategories = [
   }
 ];
 
+/* Demo Main Money Data */
+const initialMainMoney = [
+    { member: 'Badhon', solidCash: 16200, loan: 0,    lastUpdate: '2025-11-12T16:03:18Z' },
+    { member: 'Mahin',  solidCash: 2760,  loan: 0,    lastUpdate: '2025-11-12T16:03:18Z' },
+    { member: 'Samir',  solidCash: 2330,  loan: 300,  lastUpdate: '2025-11-12T16:03:18Z' },
+    { member: 'Shamim', solidCash: 2760,  loan: 130,  lastUpdate: '2025-11-12T16:03:18Z' },
+];
+
+
 /* Helpers */
 const toBase = (currency, amount) =>
   currency === BASE_CURRENCY ? amount : (FX_RATES[currency] || 1) * amount;
@@ -106,6 +115,17 @@ const toBase = (currency, amount) =>
 function formatMoney(v) {
   return `${Number(v || 0).toLocaleString('en-IN')} TK`;
 }
+
+function formatLastUpdate(dateString) {
+    if (!dateString) return '';
+    try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    } catch (e) {
+        return '';
+    }
+}
+
 
 function aggregate(list){
   const pivot = {};
@@ -132,7 +152,7 @@ function aggregate(list){
 }
 
 /* Inline editable value component (simple, consistent) */
-function EditableValue({ value, onChange, type='number', disabled=false, format=(v)=>v }) {
+function EditableValue({ value, onChange, type='number', disabled=false, format=(v)=>v, className='' }) {
   const [editing, setEditing] = useState(false);
   const [temp, setTemp] = useState(value);
 
@@ -159,7 +179,7 @@ function EditableValue({ value, onChange, type='number', disabled=false, format=
   };
 
   if (disabled) {
-    return <span>{format(value)}</span>;
+    return <span className={className}>{format(value)}</span>;
   }
 
   return editing ? (
@@ -178,7 +198,7 @@ function EditableValue({ value, onChange, type='number', disabled=false, format=
   ) : (
     <button
       type="button"
-      className="editable-button"
+      className={`editable-button ${className}`}
       onClick={()=>setEditing(true)}
       title="Click to edit"
       tabIndex={0}
@@ -192,11 +212,10 @@ export default function Finance() {
   /* State */
   const [tx, setTx] = useState(initialTransactions);
   const [costs, setCosts] = useState(initialCostCategories);
-  const [profitOverride, setProfitOverride] = useState(null);
-  const [salesProfitFactor] = useState(SALES_PROFIT_FACTOR_DEFAULT);
+  const [mainMoney, setMainMoney] = useState(initialMainMoney);
 
   /* Aggregations */
-  const { pivot, memberBucketTotals, bucketTotals } = useMemo(
+  const { pivot, bucketTotals } = useMemo(
     ()=>aggregate(tx),
     [tx]
   );
@@ -216,27 +235,26 @@ export default function Finance() {
     });
   };
 
-  /* Total Money logic (read-only) */
-  const memberMainBase = (member) => {
-    const mainObj = memberBucketTotals[member]?.main || {};
-    return Object.entries(mainObj).reduce(
-      (s,[cur,amt]) => s + toBase(cur, amt), 0
+  /* Total Money logic */
+    const updateMainMoney = (member, field, value) => {
+        setMainMoney(prev => prev.map(m =>
+            m.member === member
+                ? { ...m, [field]: value, lastUpdate: new Date().toISOString() }
+                : m
+        ));
+    };
+
+    const solidCashTotal = mainMoney.reduce((s, r) => s + r.solidCash, 0);
+    const loanTotal = mainMoney.reduce((s, r) => s + r.loan, 0);
+    const expectedTotal = solidCashTotal + loanTotal;
+    const mainTotal = expectedTotal; // Use Expected Total for the info card
+
+    const salesTotal = Object.entries(bucketTotals.sales || {}).reduce(
+        (s, [cur, amt]) => s + toBase(cur, amt), 0
     );
-  };
 
-  const mainRows = [
-    { label: 'Badhon',  value: memberMainBase('Badhon') },
-    { label: 'Mahin',   value: memberMainBase('Mahin') },
-    { label: 'Samir',   value: memberMainBase('Samir') },
-    { label: 'Shamim',  value: memberMainBase('Shamim') },
-  ];
-  const mainTotal = mainRows.reduce((s,r)=>s + r.value,0);
-
-  const salesTotal = Object.entries(bucketTotals.sales || {}).reduce(
-    (s,[cur,amt]) => s + toBase(cur, amt), 0
-  );
-  const profitComputed = Math.round(salesTotal * salesProfitFactor);
-  const profitTotal = profitOverride ?? profitComputed;
+  const profitComputed = Math.round(salesTotal * SALES_PROFIT_FACTOR_DEFAULT);
+  const profitTotal = profitComputed; // Simplified, remove override for now
   const sellsRows = [
     { label: 'Basic',  value: salesTotal },
     { label: 'Profit', value: profitTotal }
@@ -274,7 +292,7 @@ export default function Finance() {
 
       <div className="info-cards-grid">
           <div className="finance-card info-card" title="Main Total + Sales Basic">
-            <div className="info-card-title">Base Total Money</div>
+            <div className="info-card-title"> Total Capital</div>
             <div className="info-card-value">{formatMoney(mainTotal + salesTotal)}</div>
           </div>
           <div className="finance-card info-card" title="Grand total of Cost Counter">
@@ -294,18 +312,51 @@ export default function Finance() {
             <div className="main-money-section">
                 <div className="tm-section-head tm-main-head">Main</div>
                 <table className="tm-table">
+                    <thead>
+                        <tr>
+                            <th className="tm-label">Member</th>
+                            <th className="tm-value">Solid Cash</th>
+                            <th className="tm-value">Loan</th>
+                        </tr>
+                    </thead>
                     <tbody>
-                    {mainRows.map((row, i) => (
-                        <tr key={`main-${i}`}>
-                        <td className="tm-label">{row.label}</td>
-                        <td className="tm-value">{formatMoney(row.value)}</td>
+                    {mainMoney.map((row) => (
+                        <tr key={`main-${row.member}`}>
+                            <td className="tm-label">
+                                {row.member}
+                                <span className="tm-last-updated">({formatLastUpdate(row.lastUpdate)})</span>
+                            </td>
+                            <td className="tm-value">
+                                <EditableValue
+                                    value={row.solidCash}
+                                    onChange={(v) => updateMainMoney(row.member, 'solidCash', v)}
+                                    format={formatMoney}
+                                />
+                            </td>
+                            <td className="tm-value">
+                                <EditableValue
+                                    value={row.loan}
+                                    onChange={(v) => updateMainMoney(row.member, 'loan', v)}
+                                    format={formatMoney}
+                                    className={row.loan > 0 ? "loan-value" : ""}
+                                />
+                            </td>
                         </tr>
                     ))}
-                    <tr className="tm-total-row">
-                        <td className="tm-label total">Total</td>
-                        <td className="tm-value total main-total">{formatMoney(mainTotal)}</td>
-                    </tr>
                     </tbody>
+                    <tfoot>
+                        <tr className="tm-total-row">
+                            <td></td>
+                            <td className="tm-value total main-total">
+                                <span className="tm-label total">Total :</span>
+                                {formatMoney(solidCashTotal)}
+                            </td>
+                            <td className="tm-value total main-total">
+                                <span className="tm-label total">Exp Total :</span>
+                                {formatMoney(expectedTotal)}
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
             <div className="sales-info-box">
@@ -397,10 +448,10 @@ export default function Finance() {
                       return (
                         <React.Fragment key={cat.key + '-' + rowIdx}>
                           <td className={`cc-item-cell cat-border-${cat.key}`}>
-                            <EditableValue value={entry?.item ?? ''} onChange={(v)=>{ setCosts(prev=>{ const copy = [...prev]; if (!copy[ci].rows[rowIdx]) copy[ci].rows[rowIdx] = { item:'', amount:0 }; copy[ci].rows[rowIdx].item = v; return copy; }); }} type="text" format={(v)=>String(v || '')}/>
+                            <EditableValue value={entry?.item ?? ''} onChange={(v)=>{ setCosts(prev=>{ const copy = [...prev]; if (!copy[ci].rows[rowIdx]) copy[ci].rows[rowIdx] = { item:'', amount:0 }; copy[ci].rows[rowIdx].item = v; return copy; })}} type="text" />
                           </td>
                           <td className={`cc-amt-cell cat-border-${cat.key}`}>
-                            <EditableValue value={entry?.amount ?? 0} onChange={(v)=>{ setCosts(prev=>{ const copy = [...prev]; if (!copy[ci].rows[rowIdx]) copy[ci].rows[rowIdx] = { item:'', amount:0 }; copy[ci].rows[rowIdx].amount = Math.max(0, Number(v)||0); return copy; }); }} type="number" format={formatMoney} />
+                            <EditableValue value={entry?.amount ?? 0} onChange={(v)=>{ setCosts(prev=>{ const copy = [...prev]; if (!copy[ci].rows[rowIdx]) copy[ci].rows[rowIdx] = { item:'', amount:0 }; copy[ci].rows[rowIdx].amount = v; return copy; })}} type="number" format={formatMoney} />
                           </td>
                         </React.Fragment>
                       );

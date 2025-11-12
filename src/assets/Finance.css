@@ -12,6 +12,7 @@
   --finance-accent-primary: #f97316;
   --finance-accent-primary-dark: #ea580c;
   --finance-accent-primary-light: rgba(249, 115, 22, 0.1);
+  --finance-loan-color: #ef4444; /* Red for loans */
 
   /* New Category Border Colors */
   --cat-marketing-color: #facc15; /* Yellow */
@@ -87,8 +88,8 @@
     box-shadow: none !important;
 }
 
-.total-money-card { grid-column: 1 / span 5; }
-.money-tracker-card { grid-column: 6 / span 7; }
+.total-money-card { grid-column: 1 / span 12; }
+.money-tracker-card { grid-column: 1 / span 12; }
 .cost-counter-card { grid-column: 1 / span 12; }
 
 /* ------------ Total Money Section ------------- */
@@ -102,11 +103,25 @@
   border-collapse: collapse;
   font-size: 0.9rem;
 }
+.tm-table th,
 .tm-table td {
   border: 1px solid var(--finance-border-color);
   padding: 0.75rem;
   text-align: left;
 }
+.tm-table th {
+    background-color: var(--finance-table-header-bg);
+    color: var(--finance-text-secondary);
+    font-weight: 600;
+}
+.tm-table tfoot td {
+    background-color: var(--finance-table-header-bg);
+    font-weight: 700;
+}
+.tm-table tfoot .tm-value {
+    text-align: left;
+}
+
 .tm-section-head {
   font-weight: 700;
   letter-spacing: .05em;
@@ -116,15 +131,24 @@
   border-bottom-color: var(--finance-border-color);
   padding: 0.75rem;
 }
-.tm-label { color: var(--finance-text-secondary); width: 60%; }
+.tm-label { color: var(--finance-text-secondary); width: 50%; }
+.tm-last-updated {
+    font-size: 0.8rem;
+    color: var(--finance-text-secondary);
+    margin-left: 0.5rem;
+}
 .tm-value { text-align: right; font-weight: 600; }
+.loan-value { color: var(--finance-loan-color) !important; }
+
 .tm-total-row td {
   font-weight: 700;
   background-color: var(--finance-table-header-bg);
 }
-.tm-total-row .main-total,
-.sales-info-total .sales-total { 
-    color: var(--finance-accent-primary); 
+.tm-total-row .main-total {
+    color: var(--finance-accent-primary);
+}
+.sales-info-total .sales-total {
+    color: var(--finance-accent-primary);
 }
 
 /* Sales Info Box */

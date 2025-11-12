@@ -1,18 +1,14 @@
 import React, { useMemo, useState, useEffect } from 'react';
+import { Plus } from 'lucide-react';
 import './Finance.css';
 
 /**
  * Finance Page
- *
- * Fixes:
- * - Money Tracker editor now strictly fits inside the cell (min-width:0, max-width:100%, block).
- * - Cells are overflow:hidden to prevent any spillover.
- * - Editor styling is identical across Money Tracker and Cost Counter.
- *
- * Update:
- * - Make the entire cell clickable even when it looks "blank"/black by using a full-width/height
- *   button hit area (.editable-button). This ensures empty cells also enter edit mode on click.
- * - Prevent column stretching on edit by using <colgroup> with fixed widths for Source/Sales/Main.
+ * Redesigned for the modern black, orange, and white theme.
+ * - All components are wrapped in a standardized `finance-card`.
+ * - Tables are redesigned for a dark theme, using borders and accent colors instead of multiple bright backgrounds.
+ * - Category color-coding is preserved using colored left borders.
+ * - Editable inputs and buttons are styled to match the site-wide theme.
  */
 
 const BASE_CURRENCY = 'BDT';
@@ -108,7 +104,7 @@ const toBase = (currency, amount) =>
   currency === BASE_CURRENCY ? amount : (FX_RATES[currency] || 1) * amount;
 
 function formatMoney(v) {
-  return `${Number(v || 0).toLocaleString()} TK`;
+  return `${Number(v || 0).toLocaleString('en-IN')} TK`;
 }
 
 function aggregate(list){
@@ -180,7 +176,6 @@ function EditableValue({ value, onChange, type='number', disabled=false, format=
       placeholder={type === 'number' ? String(value ?? 0) : String(value ?? '')}
     />
   ) : (
-    // Full-width/height clickable area so even "blank-looking" cells enter edit mode
     <button
       type="button"
       className="editable-button"
@@ -188,7 +183,7 @@ function EditableValue({ value, onChange, type='number', disabled=false, format=
       title="Click to edit"
       tabIndex={0}
     >
-      {format(value)}
+      {format(value) || (type === 'text' ? '...' : '0 TK')}
     </button>
   );
 }
@@ -275,81 +270,74 @@ export default function Finance() {
 
   return (
     <section className="finance-page">
-      <h1 className="finance-title">Finance</h1>
+      <h1 className="finance-page-title">Finance Overview</h1>
 
-      {/* Row: Total Money (narrow) + KPI Cards + Money Tracker */}
-      <div className="finance-top-row">
-        <div className="tm-card merged narrow">
-          <h2 className="tm-title">Total Money</h2>
-          <table className="tm-table merged narrow">
-            <thead>
-              <tr className="tm-group-row">
-                <td colSpan={2} className="tm-section-head tm-main-head">Main</td>
-                <td colSpan={2} className="tm-section-head tm-sells-head">Sales</td>
-              </tr>
-            </thead>
-            <tbody>
-              {Array.from({length: Math.max(mainRows.length, sellsRows.length)}).map((_,i)=>{
-                const L = mainRows[i];
-                const R = sellsRows[i];
-                return (
-                  <tr key={i}>
-                    <td className="tm-left-label">{L?.label || ''}</td>
-                    <td className="tm-left-val">{L ? formatMoney(L.value) : ''}</td>
-                    <td className="tm-right-label">{R?.label || ''}</td>
-                    <td className="tm-right-val">{R ? formatMoney(R.value) : ''}</td>
-                  </tr>
-                );
-              })}
-              <tr className="tm-total-row">
-                <td className="tm-left-label total">Total :</td>
-                <td className="tm-left-val total">{formatMoney(mainTotal)}</td>
-                <td className="tm-right-label total">Total :</td>
-                <td className="tm-right-val total">{formatMoney(sellsTotal)}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* KPI Info Cards */}
-        <div className="info-cards">
-          <div className="info-card" title="Main Total + Sales Basic">
+      <div className="info-cards-grid">
+          <div className="finance-card info-card" title="Main Total + Sales Basic">
             <div className="info-card-title">Base Total Money</div>
             <div className="info-card-value">{formatMoney(mainTotal + salesTotal)}</div>
           </div>
-          <div className="info-card" title="Grand total of Cost Counter">
+          <div className="finance-card info-card" title="Grand total of Cost Counter">
             <div className="info-card-title">Total Cost</div>
             <div className="info-card-value">{formatMoney(grandCost)}</div>
           </div>
-          <div className="info-card" title="Profit">
+          <div className="finance-card info-card" title="Profit">
             <div className="info-card-title">Total Profit</div>
-            <div className="info-card-value">{formatMoney(profitTotal)}</div>
+            <div className="info-card-value accent">{formatMoney(profitTotal)}</div>
           </div>
         </div>
 
-        <div className="finance-matrix-card slim-version inline">
-          <h2 className="matrix-title small">Money Tracker</h2>
-          <div className="mt-scroll">
-            <table className="mt-table no-totals compact">
-              {/* Fixed column sizes to prevent stretching */}
-              <colgroup>
-                <col className="col-source" />
-                {filteredMembers.map(m => (
-                  <React.Fragment key={`cg-${m}`}>
-                    <col className="col-sales" />
-                    <col className="col-main" />
-                  </React.Fragment>
-                ))}
-              </colgroup>
+      <div className="finance-grid">
+        <div className="finance-card total-money-card">
+          <h2 className="finance-card-title">Total Money</h2>
+          <div className="total-money-content">
+            <div className="main-money-section">
+                <div className="tm-section-head tm-main-head">Main</div>
+                <table className="tm-table">
+                    <tbody>
+                    {mainRows.map((row, i) => (
+                        <tr key={`main-${i}`}>
+                        <td className="tm-label">{row.label}</td>
+                        <td className="tm-value">{formatMoney(row.value)}</td>
+                        </tr>
+                    ))}
+                    <tr className="tm-total-row">
+                        <td className="tm-label total">Total</td>
+                        <td className="tm-value total main-total">{formatMoney(mainTotal)}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div className="sales-info-box">
+                <div className="tm-section-head tm-sales-head">Sales</div>
+                <div className="sales-info-content">
+                    {sellsRows.map((row, i) => (
+                        <div className="sales-info-item" key={`sales-info-${i}`}>
+                            <span className="tm-label">{row.label}</span>
+                            <span className="tm-value">{formatMoney(row.value)}</span>
+                        </div>
+                    ))}
+                </div>
+                <div className="sales-info-total">
+                    <span className="tm-label total">Total</span>
+                    <span className="tm-value total sales-total">{formatMoney(sellsTotal)}</span>
+                </div>
+            </div>
+          </div>
+        </div>
 
+        <div className="finance-card money-tracker-card">
+          <h2 className="finance-card-title">Money Tracker</h2>
+          <div className="mt-scroll">
+            <table className="mt-table">
               <thead>
-                <tr className="mt-row tier-1">
+                <tr className="mt-row-tier-1">
                   <th rowSpan={2} className="mt-source-col sticky-col">Source</th>
                   {filteredMembers.map(m => (
                     <th key={m} colSpan={2} className="mt-member-group">{m}</th>
                   ))}
                 </tr>
-                <tr className="mt-row tier-2">
+                <tr className="mt-row-tier-2">
                   {filteredMembers.map(m=>(
                     <React.Fragment key={'sub-'+m}>
                       <th className="mt-sub sales">Sales</th>
@@ -368,20 +356,10 @@ export default function Finance() {
                       return (
                         <React.Fragment key={`${src.key}-${m}`}>
                           <td className="mt-cell sales">
-                            <EditableValue
-                              value={salesAmt}
-                              onChange={(v)=>setComboAmount(m, src.key, 'sales', v)}
-                              type="number"
-                              format={formatMoney}
-                            />
+                            <EditableValue value={salesAmt} onChange={(v)=>setComboAmount(m, src.key, 'sales', v)} type="number" format={formatMoney}/>
                           </td>
                           <td className="mt-cell main">
-                            <EditableValue
-                              value={mainAmt}
-                              onChange={(v)=>setComboAmount(m, src.key, 'main', v)}
-                              type="number"
-                              format={formatMoney}
-                            />
+                            <EditableValue value={mainAmt} onChange={(v)=>setComboAmount(m, src.key, 'main', v)} type="number" format={formatMoney}/>
                           </td>
                         </React.Fragment>
                       );
@@ -392,93 +370,63 @@ export default function Finance() {
             </table>
           </div>
         </div>
-      </div>
 
-      {/* Cost Counter below full width */}
-      <div className="cc-card full-width">
-        <div className="cc-header">
-          <h2 className="cc-title">Cost Counter</h2>
-          <button type="button" className="cc-add-row-btn" onClick={addCostRow}>+ Add Row</button>
+        <div className="finance-card cost-counter-card">
+        <div className="finance-card-header">
+          <h2 className="finance-card-title">Cost Counter</h2>
+          <button type="button" className="finance-btn" onClick={addCostRow}>
+            <Plus size={16} /> Add Row
+          </button>
         </div>
-        <table className="cc-table">
-          <thead>
-            <tr className="cc-cat-row">
-              {costs.map(cat => (
-                <th key={cat.key} colSpan={2} className={`cc-cat-head cat-${cat.key}`}>
-                  {cat.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {Array.from({length: costRowCount}).map((_,rowIdx)=>(
-              <tr key={rowIdx}>
-                {costs.map((cat, ci) => {
-                  const entry = cat.rows[rowIdx];
-                  const itemVal = entry?.item ?? '';
-                  const amtVal = entry?.amount ?? 0;
-
-                  return (
-                    <React.Fragment key={cat.key + '-' + rowIdx}>
-                      <td className={`cc-item-cell cat-${cat.key}`}>
-                        <EditableValue
-                          value={itemVal}
-                          onChange={(v)=>{
-                            setCosts(prev=>{
-                              const copy = prev.map(c => ({...c, rows: c.rows.slice()}));
-                              if (!copy[ci].rows[rowIdx]) copy[ci].rows[rowIdx] = { item:'', amount:0 };
-                              copy[ci].rows[rowIdx].item = v;
-                              return copy;
-                            });
-                          }}
-                          type="text"
-                          format={(v)=>String(v || '')}
-                        />
-                      </td>
-                      <td className={`cc-amt-cell cat-${cat.key}`}>
-                        <EditableValue
-                          value={amtVal}
-                          onChange={(v)=>{
-                            setCosts(prev=>{
-                              const copy = prev.map(c => ({...c, rows: c.rows.slice()}));
-                              if (!copy[ci].rows[rowIdx]) copy[ci].rows[rowIdx] = { item:'', amount:0 };
-                              copy[ci].rows[rowIdx].amount = Math.max(0, Number(v)||0);
-                              return copy;
-                            });
-                          }}
-                          type="number"
-                          format={formatMoney}
-                        />
-                      </td>
+        <div className='cc-scroll'>
+            <table className="cc-table">
+              <thead>
+                <tr className="cc-cat-row">
+                  {costs.map(cat => (
+                    <th key={cat.key} colSpan={2} className={`cc-cat-head`}>
+                      {cat.label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({length: costRowCount}).map((_,rowIdx)=>(
+                  <tr key={rowIdx}>
+                    {costs.map((cat, ci) => {
+                      const entry = cat.rows[rowIdx];
+                      return (
+                        <React.Fragment key={cat.key + '-' + rowIdx}>
+                          <td className={`cc-item-cell cat-border-${cat.key}`}>
+                            <EditableValue value={entry?.item ?? ''} onChange={(v)=>{ setCosts(prev=>{ const copy = [...prev]; if (!copy[ci].rows[rowIdx]) copy[ci].rows[rowIdx] = { item:'', amount:0 }; copy[ci].rows[rowIdx].item = v; return copy; }); }} type="text" format={(v)=>String(v || '')}/>
+                          </td>
+                          <td className={`cc-amt-cell cat-border-${cat.key}`}>
+                            <EditableValue value={entry?.amount ?? 0} onChange={(v)=>{ setCosts(prev=>{ const copy = [...prev]; if (!copy[ci].rows[rowIdx]) copy[ci].rows[rowIdx] = { item:'', amount:0 }; copy[ci].rows[rowIdx].amount = Math.max(0, Number(v)||0); return copy; }); }} type="number" format={formatMoney} />
+                          </td>
+                        </React.Fragment>
+                      );
+                    })}
+                  </tr>
+                ))}
+                {/* Per-category totals (locked) */}
+                <tr className="cc-total-row">
+                  {costs.map((cat, i) => (
+                    <React.Fragment key={cat.key + '-total'}>
+                      <td className="cc-item-cell total">Total</td>
+                      <td className="cc-amt-cell total">{formatMoney(categoryTotals[i])}</td>
                     </React.Fragment>
-                  );
-                })}
-              </tr>
-            ))}
-            {/* Per-category totals (locked) */}
-            <tr className="cc-total-row">
-              {costs.map((cat, i) => {
-                const total = categoryTotals[i];
-                return (
-                  <React.Fragment key={cat.key + '-total'}>
-                    <td className={`cc-item-cell total cat-${cat.key}`}>Total :</td>
-                    <td className={`cc-amt-cell total cat-${cat.key}`}>{formatMoney(total)}</td>
-                  </React.Fragment>
-                );
-              })}
-            </tr>
-            {/* Grand Total Cost Row (locked) */}
-            <tr className="cc-grand-row">
-              <td
-                className="cc-grand-label"
-                colSpan={costs.length * 2 - 1}
-              >
-                Total Cost :
-              </td>
-              <td className="cc-grand-value">{formatMoney(grandCost)}</td>
-            </tr>
-          </tbody>
-        </table>
+                  ))}
+                </tr>
+                {/* Grand Total Cost Row (locked) */}
+                <tr className="cc-grand-row">
+                  <td className="cc-grand-label" colSpan={costs.length * 2 - 1}>
+                    Total Cost
+                  </td>
+                  <td className="cc-grand-value">{formatMoney(grandCost)}</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+      </div>
       </div>
     </section>
   );

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Phone, Home, Star, Tag, Link as LinkIcon, Edit3, UserCircle, Briefcase, MapPin } from 'lucide-react';
+import { User, Mail, Phone, Home, Star, Tag, Link as LinkIcon, Edit3, UserCircle, Briefcase, MapPin, Calendar, Users } from 'lucide-react';
 import './Add_Customers.css';
 
 export default function AddCustomersPage() {
@@ -101,12 +101,20 @@ export default function AddCustomersPage() {
                 <input id="address" name="address" value={formData.address} onChange={handleChange} placeholder="123 Main Street" />
             </div>
             <div className="cvc-field-group-row">
-                 <input name="city" value={formData.city} onChange={handleChange} placeholder="City"/>
-                 <input name="state" value={formData.state} onChange={handleChange} placeholder="State / Province"/>
+                 <div className="cvc-field-group">
+                    <input name="city" value={formData.city} onChange={handleChange} placeholder="City"/>
+                 </div>
+                 <div className="cvc-field-group">
+                    <input name="state" value={formData.state} onChange={handleChange} placeholder="State / Province"/>
+                 </div>
             </div>
              <div className="cvc-field-group-row">
-                 <input name="zip" value={formData.zip} onChange={handleChange} placeholder="ZIP / Postal Code"/>
-                 <select name="country" value={formData.country} onChange={handleChange}><option>USA</option><option>Canada</option><option>UK</option></select>
+                 <div className="cvc-field-group">
+                    <input name="zip" value={formData.zip} onChange={handleChange} placeholder="ZIP / Postal Code"/>
+                 </div>
+                 <div className="cvc-field-group">
+                    <select name="country" value={formData.country} onChange={handleChange}><option>USA</option><option>Canada</option><option>UK</option></select>
+                 </div>
             </div>
           </div>
         );
@@ -156,37 +164,52 @@ export default function AddCustomersPage() {
     </button>
   );
 
+  const selectedCategories = Object.keys(formData.interestedCategories).filter(k => formData.interestedCategories[k]);
+  const fullAddress = [formData.address, formData.city, formData.state, formData.zip].filter(Boolean).join(', ');
+
+
   return (
     <form onSubmit={handleSubmit} className="cvc-profile-builder" noValidate>
       <div className="cvc-builder-card">
         <div className="cvc-left-panel">
           <div className="cvc-profile-preview">
-            <div className="cvc-avatar-placeholder">
-              <UserCircle size={64} strokeWidth={1} />
+            <div className="cvc-profile-header">
+                <div className="cvc-avatar-placeholder">
+                  <UserCircle size={64} strokeWidth={1} />
+                </div>
+                <h3>{formData.name || "New Customer"}</h3>
+                <p>{formData.id}</p>
+                <span className={`cvc-tier-badge cvc-tier-${formData.loyaltyTier.toLowerCase()}`}>{formData.loyaltyTier}</span>
             </div>
-            <h3>{formData.name || "New Customer"}</h3>
-            <p>{formData.id}</p>
-            <span className={`cvc-tier-badge cvc-tier-${formData.loyaltyTier.toLowerCase()}`}>{formData.loyaltyTier}</span>
 
             <div className="cvc-profile-details">
-              {formData.email && (
+              <div className="cvc-details-section">
+                <div className="cvc-detail-item"><span className="cvc-detail-label">Email:</span><span className="cvc-detail-value">{formData.email || '...'}</span></div>
+                <div className="cvc-detail-item"><span className="cvc-detail-label">Phone:</span><span className="cvc-detail-value">{formData.phone || '...'}</span></div>
+                <div className="cvc-detail-item"><span className="cvc-detail-label">Address:</span><span className="cvc-detail-value">{fullAddress || '...'}</span></div>
+                <div className="cvc-detail-item"><span className="cvc-detail-label">Gender:</span><span className="cvc-detail-value">{formData.gender}</span></div>
+                <div className="cvc-detail-item"><span className="cvc-detail-label">Birthday:</span><span className="cvc-detail-value">{formData.dateOfBirth || '...'}</span></div>
                 <div className="cvc-detail-item">
-                  <Mail size={14} />
-                  <span>{formData.email}</span>
+                  <span className="cvc-detail-label">Social:</span>
+                  <span className="cvc-detail-value">
+                    {formData.socialMediaLink ? <a href={formData.socialMediaLink} target="_blank" rel="noopener noreferrer">View Profile</a> : '...'}
+                  </span>
+                </div>
+              </div>
+              
+              {selectedCategories.length > 0 && (
+                <div className="cvc-details-section">
+                  <h4 className="cvc-details-title">Interests</h4>
+                  <div className="cvc-interests-preview">
+                    {selectedCategories.map(cat => <span key={cat} className="cvc-interest-tag">{cat}</span>)}
+                  </div>
                 </div>
               )}
-              {formData.phone && (
-                <div className="cvc-detail-item">
-                  <Phone size={14} />
-                  <span>{formData.phone}</span>
-                </div>
-              )}
-              {(formData.city || formData.country) && (
-                 <div className="cvc-detail-item">
-                    <MapPin size={14} />
-                    <span>
-                        {formData.city}{formData.city && formData.country ? ', ' : ''}{formData.country}
-                    </span>
+
+              {formData.customerNotes && (
+                <div className="cvc-details-section">
+                  <h4 className="cvc-details-title">Notes</h4>
+                  <p className="cvc-notes-preview">{formData.customerNotes}</p>
                 </div>
               )}
             </div>

@@ -1,11 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiHash, FiCalendar, FiUser, FiHome, FiPhone, FiArchive, FiDollarSign, FiPlus, FiClipboard, FiPackage, FiSearch, FiPercent, FiEdit2 } from 'react-icons/fi';
-import { CheckCircle, Circle, Package, Send, ShoppingCart, Truck } from 'lucide-react';
+import { FiHash, FiCalendar, FiUser, FiHome, FiPhone, FiArchive, FiDollarSign, FiPlus, FiClipboard, FiPackage, FiSearch, FiPercent, FiEdit2, FiMail, FiStar, FiShoppingBag } from 'react-icons/fi';
+import { CheckCircle, Circle, Package, Send, ShoppingCart, Truck, UserPlus } from 'lucide-react';
 import { Trash2 } from 'lucide-react';
 import './Add_Orders.css';
 
-// --- SIMULATED PRODUCT INVENTORY ---
+// --- SIMULATED DATABASES ---
 const inventoryProducts = [
   { id: 'P-1001', name: 'Sazule Action Figure (Big)', price: 1260 },
   { id: 'P-1002', name: 'Halo Kitty Bricks', price: 215 },
@@ -14,6 +14,13 @@ const inventoryProducts = [
   { id: 'P-1005', name: 'Vehicle Figure', price: 450 },
   { id: 'P-1006', name: 'Cute Dolls', price: 350 },
 ];
+
+const simulatedCustomers = [
+  { id: 'CUST-101', name: 'Noor Zahan', email: 'noor.zahan@example.com', phone: '555-0101', address: '123 Main St, Anytown, USA', orderHistoryCount: 12, loyaltyTier: 'Gold' },
+  { id: 'CUST-102', name: 'Kabir Singh', email: 'kabir.s@example.com', phone: '555-0102', address: '456 Oak Ave, Sometown, USA', orderHistoryCount: 3, loyaltyTier: 'Bronze' },
+  { id: 'CUST-103', name: 'Alia Bhatt', email: 'alia.b@example.com', phone: '555-0103', address: '789 Pine Ln, Otherville, USA', orderHistoryCount: 1, loyaltyTier: 'Basic' },
+];
+
 
 const deliveryOptions = [
     { label: 'Free', value: 0 },
@@ -28,14 +35,11 @@ const orderStatusSteps = [
     { name: 'Delivered', icon: <Truck size={24}/> },
 ];
 
-// --- STABLE ProductSearch COMPONENT ---
+// --- Reusable Search Components ---
 function ProductSearch({ lineId, selectedProduct, onProductSelect }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [isFocused, setIsFocused] = useState(false);
-
-    const filteredProducts = inventoryProducts.filter(p => 
-        p.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredProducts = inventoryProducts.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const handleSelect = (product) => {
         onProductSelect(lineId, product);
@@ -53,28 +57,56 @@ function ProductSearch({ lineId, selectedProduct, onProductSelect }) {
     }
     
     return (
-        <div className="product-search-container" onBlur={() => setTimeout(() => setIsFocused(false), 150)}>
-            <div className="product-search-input-wrapper">
+        <div className="search-container" onBlur={() => setTimeout(() => setIsFocused(false), 150)}>
+            <div className="search-input-wrapper">
                 <FiSearch className="search-icon" />
-                <input 
-                    type="text" 
-                    value={searchTerm}
-                    onChange={e => setSearchTerm(e.target.value)}
-                    onFocus={() => setIsFocused(true)}
-                    placeholder="Search for a product..."
-                />
+                <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onFocus={() => setIsFocused(true)} placeholder="Search for a product..."/>
             </div>
             {isFocused && searchTerm && (
-                <div className="product-search-results">
+                <div className="search-results">
                     {filteredProducts.length > 0 ? (
                         filteredProducts.map(p => (
-                            <div key={p.id} className="search-result-item" onClick={() => handleSelect(p)}>
-                                {p.name}
+                            <div key={p.id} className="search-result-item" onClick={() => handleSelect(p)}>{p.name}</div>
+                        ))
+                    ) : ( <div className="search-result-item none">No products found</div> )}
+                </div>
+            )}
+        </div>
+    );
+}
+
+function CustomerSearch({ onCustomerSelect }) {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [isFocused, setIsFocused] = useState(false);
+    
+    const filteredCustomers = simulatedCustomers.filter(c =>
+        c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        c.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        c.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const handleSelect = (customer) => {
+        onCustomerSelect(customer);
+        setSearchTerm('');
+        setIsFocused(false);
+    };
+
+    return (
+        <div className="search-container" onBlur={() => setTimeout(() => setIsFocused(false), 150)}>
+            <div className="search-input-wrapper">
+                <FiSearch className="search-icon" />
+                <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onFocus={() => setIsFocused(true)} placeholder="Search by name, email, or phone..."/>
+            </div>
+            {isFocused && searchTerm && (
+                <div className="search-results">
+                    {filteredCustomers.length > 0 ? (
+                        filteredCustomers.map(c => (
+                            <div key={c.id} className="search-result-item" onClick={() => handleSelect(c)}>
+                                <span className="customer-name">{c.name}</span>
+                                <span className="customer-contact">{c.email}</span>
                             </div>
                         ))
-                    ) : (
-                        <div className="search-result-item none">No products found</div>
-                    )}
+                    ) : (<div className="search-result-item none">No customers found</div>)}
                 </div>
             )}
         </div>
@@ -103,11 +135,7 @@ export default function Add_Orders({ onBack, onCreated }) {
   const navigate = useNavigate();
   // --- Core States ---
   const [orderId, setOrderId] = useState('');
-  const [date, setDate] = useState('2025-11-11');
-  const [customerName, setCustomerName] = useState('');
-  const [customerId, setCustomerId] = useState('');
-  const [address, setAddress] = useState('');
-  const [phone, setPhone] = useState('');
+  const [date, setDate] = useState('2025-11-12');
   const [status, setStatus] = useState('Pending');
   const [paymentStatus, setPaymentStatus] = useState('Unpaid');
   const [advanceAmount, setAdvanceAmount] = useState('');
@@ -118,8 +146,42 @@ export default function Add_Orders({ onBack, onCreated }) {
   const [globalDiscountFixed, setGlobalDiscountFixed] = useState('');
   const [globalDiscountPercent, setGlobalDiscountPercent] = useState('');
 
+  // --- Customer States ---
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [customerDetails, setCustomerDetails] = useState({ name: '', email: '', phone: '', address: '' });
+  const [modifiedFields, setModifiedFields] = useState({ name: false, email: false, phone: false, address: false });
 
-  // --- Products State with Discount ---
+  // Effect to update form when a customer is selected
+  useEffect(() => {
+    if (selectedCustomer) {
+      setCustomerDetails({
+        name: selectedCustomer.name,
+        email: selectedCustomer.email,
+        phone: selectedCustomer.phone,
+        address: selectedCustomer.address,
+      });
+      // Reset modified indicators on new customer selection
+      setModifiedFields({ name: false, email: false, phone: false, address: false });
+    } else {
+      setCustomerDetails({ name: '', email: '', phone: '', address: '' });
+    }
+  }, [selectedCustomer]);
+  
+  // Handle changes and track modifications
+  const handleCustomerDetailChange = (e) => {
+    const { name, value } = e.target;
+    setCustomerDetails(prev => ({ ...prev, [name]: value }));
+
+    if (selectedCustomer) {
+        setModifiedFields(prev => ({
+            ...prev,
+            [name]: value !== selectedCustomer[name]
+        }));
+    }
+  };
+
+
+  // --- Products State ---
   const [products, setProducts] = useState([{ 
       id: 1, 
       product: null,
@@ -169,24 +231,18 @@ export default function Add_Orders({ onBack, onCreated }) {
   }, [products, globalDiscountFixed, globalDiscountPercent, hiddenCharge]);
 
 
-  function validate() { /* Validation logic remains the same */ return {}; }
   function generateOrderId() { setOrderId(`ORD-${Date.now().toString().slice(-8)}`); }
+  function handleProductUpdate(lineId, field, value) { setProducts(products.map(p => p.id === lineId ? { ...p, [field]: value } : p)); }
+  function addProduct() { setProducts([...products, { id: Date.now(), product: null, qty: '1', deliveryCharge: '60', discountFixed: '', discountPercent: '' }]); }
+  function removeProduct(id) { setProducts(products.filter(p => p.id !== id)); }
+  function onSubmit(e) { e.preventDefault(); onCreated?.(); }
 
-  // --- Handlers ---
-  function handleProductUpdate(lineId, field, value) {
-    setProducts(products.map(p => p.id === lineId ? { ...p, [field]: value } : p));
-  }
-  
+  // --- Discount Handlers ---
   function handleDiscountChange(lineId, type, value) {
       setProducts(currentProducts => currentProducts.map(p => {
           if (p.id === lineId) {
-              if (!p.product || !p.qty || Number(p.qty) <= 0) {
-                  return type === 'fixed' ? { ...p, discountFixed: value, discountPercent: '' } : { ...p, discountFixed: '', discountPercent: value };
-              }
-
-              const lineTotal = p.product.price * Number(p.qty);
+              const lineTotal = p.product ? p.product.price * Number(p.qty) : 0;
               const numericValue = Number(value) || 0;
-
               if (type === 'fixed') {
                   const percent = lineTotal > 0 ? (numericValue / lineTotal) * 100 : 0;
                   return { ...p, discountFixed: value, discountPercent: percent > 0 ? percent.toFixed(2) : '' };
@@ -201,14 +257,13 @@ export default function Add_Orders({ onBack, onCreated }) {
 
   function handleGlobalDiscountChange(type, value) {
       const numericValue = Number(value) || 0;
-      // Use subtotal *after* line item discounts for percent calculation
       const baseSubtotal = priceSummary.subtotal - (priceSummary.totalDiscount - (Number(globalDiscountFixed) || 0));
 
       if (type === 'fixed') {
           const percent = baseSubtotal > 0 ? (numericValue / baseSubtotal) * 100 : 0;
           setGlobalDiscountFixed(value);
           setGlobalDiscountPercent(percent > 0 ? percent.toFixed(2) : '');
-      } else { // percent
+      } else {
           const fixed = baseSubtotal * (numericValue / 100);
           setGlobalDiscountFixed(fixed > 0 ? fixed.toFixed(2) : '');
           setGlobalDiscountPercent(value);
@@ -218,13 +273,6 @@ export default function Add_Orders({ onBack, onCreated }) {
   function handleProductSelect(lineId, selectedProduct) {
       setProducts(products.map(p => p.id === lineId ? { ...p, product: selectedProduct, discountFixed: '', discountPercent: '' } : p));
   }
-
-  function addProduct() {
-    setProducts([...products, { id: Date.now(), product: null, qty: '1', deliveryCharge: '60', discountFixed: '', discountPercent: '' }]);
-  }
-
-  function removeProduct(id) { setProducts(products.filter(p => p.id !== id)); }
-  function onSubmit(e) { /* Submission logic remains the same */ e.preventDefault(); onCreated?.(); }
 
   return (
     <section className="add-order-page">
@@ -243,15 +291,65 @@ export default function Add_Orders({ onBack, onCreated }) {
         {/* --- Top Section: Customer & Order Details --- */}
         <div className="add-order-section-grid two-col">
             <div className="add-order-card">
-              <h2 className="add-order-card-title">Customer Information</h2>
-              <div className="add-order-field">
-                <label htmlFor="customerName"><FiUser /> Customer Name</label>
-                <input id="customerName" type="text" value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="e.g., Noor Zahan" />
+              <div className="customer-card-header">
+                <h2 className="add-order-card-title">Customer Information</h2>
+                {selectedCustomer && (
+                  <button type="button" className="change-customer-btn" onClick={() => setSelectedCustomer(null)}>Change</button>
+                )}
               </div>
-              <div className="add-order-field">
-                <label htmlFor="address"><FiHome /> Full Address</label>
-                <textarea id="address" rows={3} value={address} onChange={(e) => setAddress(e.target.value)} placeholder="e.g., 123 Main St, Anytown"></textarea>
-              </div>
+
+              {!selectedCustomer ? (
+                <div className="customer-search-area">
+                    <CustomerSearch onCustomerSelect={setSelectedCustomer} />
+                    <div className="customer-search-divider">
+                        <span>OR</span>
+                    </div>
+                    <button type="button" className="add-order-btn add-order-btn-ghost" onClick={() => navigate('/users/add')}>
+                        <UserPlus size={16} /> Create New Customer
+                    </button>
+                </div>
+              ) : (
+                <div className="inline-editable-customer-details">
+                    <div className="customer-stats-grid">
+                        <div className="customer-stat-item">
+                            <span>Customer ID</span>
+                            <strong>{selectedCustomer.id}</strong>
+                        </div>
+                         <div className="customer-stat-item">
+                            <span>Prev. Orders</span>
+                            <strong>{selectedCustomer.orderHistoryCount}</strong>
+                        </div>
+                        <div className="customer-stat-item">
+                            <span>Loyalty Tier</span>
+                            <strong className={`cvc-tier-${selectedCustomer.loyaltyTier.toLowerCase()}`}>{selectedCustomer.loyaltyTier}</strong>
+                        </div>
+                    </div>
+                    <div className="customer-details-row">
+                        <div className="inline-field">
+                            <FiUser />
+                            <input name="name" type="text" value={customerDetails.name} onChange={handleCustomerDetailChange} className="info-display-input" />
+                            {modifiedFields.name && <span className="modified-indicator"></span>}
+                        </div>
+                        <div className="inline-field">
+                            <FiMail />
+                            <input name="email" type="email" value={customerDetails.email} onChange={handleCustomerDetailChange} className="info-display-input" />
+                             {modifiedFields.email && <span className="modified-indicator"></span>}
+                        </div>
+                    </div>
+                     <div className="customer-details-row">
+                        <div className="inline-field">
+                            <FiPhone />
+                            <input name="phone" type="tel" value={customerDetails.phone} onChange={handleCustomerDetailChange} className="info-display-input" />
+                             {modifiedFields.phone && <span className="modified-indicator"></span>}
+                        </div>
+                        <div className="inline-field">
+                            <FiHome />
+                            <input name="address" type="text" value={customerDetails.address} onChange={handleCustomerDetailChange} className="info-display-input" />
+                             {modifiedFields.address && <span className="modified-indicator"></span>}
+                        </div>
+                    </div>
+                </div>
+              )}
             </div>
             <div className="add-order-card">
               <h2 className="add-order-card-title">Order Details</h2>
@@ -267,16 +365,6 @@ export default function Add_Orders({ onBack, onCreated }) {
                   <label htmlFor="date"><FiCalendar /> Order Date</label>
                   <input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
                 </div>
-              </div>
-               <div className="add-order-field-row">
-                  <div className="add-order-field">
-                      <label htmlFor="customerId"><FiHash /> Customer ID</label>
-                      <input id="customerId" type="text" value={customerId} onChange={(e) => setCustomerId(e.target.value)} placeholder="Optional" />
-                  </div>
-                  <div className="add-order-field">
-                      <label htmlFor="phone"><FiPhone /> Contact Phone</label>
-                      <input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Optional" />
-                  </div>
               </div>
             </div>
         </div>

@@ -1,30 +1,13 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { FiSearch } from 'react-icons/fi';
-import { Plus, LayoutGrid, List, Edit, Trash2 } from 'lucide-react';
+import { Plus, LayoutGrid, List, Edit } from 'lucide-react';
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, subWeeks, subMonths, isWithinInterval, parseISO } from 'date-fns';
 import './Admin_Orders.css';
 
-// --- OPTIONS & ABBREVIATIONS ---
+// --- OPTIONS ---
 const PAYMENT_OPTIONS = ['Advance', 'Paid', 'Unpaid'];
 const STATUS_OPTIONS = ['Pending', 'Packed', 'Send', 'Delivered', 'Cancelled', 'Pre-order'];
 const TIME_FILTER_OPTIONS = ['All Time', 'Recent', 'This Week', 'Last Week', 'This Month', 'Last Month'];
-
-
-const PAYMENT_ABBREVIATIONS = {
-  Advance: 'ADV',
-  Paid: 'PD',
-  Unpaid: 'UNP',
-};
-
-const STATUS_ABBREVIATIONS = {
-  Pending: 'PND',
-  Packed: 'PAC',
-  Send: 'SND',
-  Delivered: 'DEL',
-  Cancelled: 'CNC',
-  'Pre-order': 'PRE',
-};
-
 
 const initialOrders = [
   {
@@ -122,7 +105,7 @@ function Admin_Orders({ onAddNew }) {
   
   const filteredOrders = useMemo(() => {
     const term = search.trim().toLowerCase();
-    const now = new Date('2025-11-11T09:14:17Z'); // Using provided current time
+    const now = new Date('2025-11-13T10:03:31Z'); // Using provided current time
     
     return enriched.filter(order => {
       // Text Search Filter
@@ -215,12 +198,6 @@ function Admin_Orders({ onAddNew }) {
     }));
   }
 
-  const handleDelete = (orderNumber) => {
-    if (window.confirm(`Are you sure you want to delete order ${orderNumber}?`)) {
-      setOrders(orders.filter(o => o.orderNumber !== orderNumber));
-    }
-  };
-
   const handleEdit = (order) => {
     // In a real app, this would open a modal or new page to edit order details
     // For now, we can simulate changing the advance amount for demonstration
@@ -240,7 +217,7 @@ function Admin_Orders({ onAddNew }) {
         <div className="card-grid-header">
             <span className="card-grid-ordernum">#{order.orderNumber}</span>
             <span className={`card-grid-status-badge ${statusSelectClass[order.status]}`}>
-                {STATUS_ABBREVIATIONS[order.status]}
+                {order.status}
             </span>
         </div>
         <div className="card-grid-body">
@@ -264,11 +241,10 @@ function Admin_Orders({ onAddNew }) {
         </div>
         <div className="card-grid-footer">
             <span className={`card-grid-payment-badge ${paymentSelectClass[order.paymentStatus]}`}>
-                {PAYMENT_ABBREVIATIONS[order.paymentStatus]}
+                {order.paymentStatus}
             </span>
             <div className="card-actions">
                 <button onClick={() => handleEdit(order)} title="Edit"><Edit size={14} /></button>
-                <button onClick={() => handleDelete(order.orderNumber)} className="delete" title="Delete"><Trash2 size={14} /></button>
             </div>
         </div>
     </div>
@@ -401,20 +377,19 @@ function Admin_Orders({ onAddNew }) {
                           value={order.paymentStatus}
                           onChange={(e) => handlePaymentChange(order.orderNumber, e.target.value)}
                         >
-                          {PAYMENT_OPTIONS.map(p => <option key={p} value={p}>{PAYMENT_ABBREVIATIONS[p]}</option>)}
+                          {PAYMENT_OPTIONS.map(p => <option key={p} value={p}>{p}</option>)}
                         </select>
                        <select
                           className={`order-status-select ${statusSelectClass[order.status]}`}
                           value={order.status}
                           onChange={(e) => handleStatusChange(order.orderNumber, e.target.value)}
                         >
-                          {STATUS_OPTIONS.map(s => <option key={s} value={s}>{STATUS_ABBREVIATIONS[s]}</option>)}
+                          {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
                         </select>
                     </td>
                     <td data-label="Actions" className="cell-actions">
                       <div className="list-actions">
                         <button onClick={() => handleEdit(order)} title="Edit"><Edit size={16} /></button>
-                        <button onClick={() => handleDelete(order.orderNumber)} className="delete" title="Delete"><Trash2 size={16} /></button>
                       </div>
                     </td>
                   </tr>

@@ -44,7 +44,7 @@
 }
 .search-wrapper { position: relative; flex-grow: 1; min-width: 250px; max-width: 400px; }
 .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
-.search-wrapper input { width: 100%; padding: 0.75rem 1rem 0.75rem 3rem; background: var(--dark-bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem; }
+.search-wrapper input { width: 100%; padding: 0.75rem 1rem 0.75rem 3rem; background: var(--dark-bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.95rem; }
 .search-wrapper input:focus { outline: none; border-color: var(--brand-color); box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2); }
 
 .filter-group { display: flex; gap: 1rem; flex-wrap: wrap; }
@@ -100,7 +100,7 @@
 }
 .card-grid-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; }
 .card-grid-ordernum { font-size: 1rem; font-weight: 700; color: var(--text-secondary); }
-.card-grid-status-badge { font-size: 0.7rem; font-weight: 900; padding: 2px 7px; border-radius: 5px; border: 1px solid; }
+.card-grid-status-badge { font-size: 0.8rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; border: 1px solid; }
 
 .card-grid-body { margin-bottom: 1rem; flex-grow: 1; }
 .card-grid-customer { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin: 0 0 4px; }
@@ -127,7 +127,7 @@
 
 
 .card-grid-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-color); }
-.card-grid-payment-badge { font-size: 0.7rem; font-weight: 900; padding: 2px 7px; border-radius: 5px; border: 1px solid; }
+.card-grid-payment-badge { font-size: 0.8rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; border: 1px solid; }
 
 .card-actions { display: flex; gap: 0.5rem; }
 .card-actions button { background: var(--dark-bg-tertiary); border: none; border-radius: 6px; padding: 0.4rem; color: var(--text-secondary); cursor: pointer; line-height: 0; }
@@ -151,7 +151,7 @@
 
 .cell-contact { font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); }
 
-.cell-items .item-header { display: flex; justify-content: space-between; font-weight: 600; color: var(--text-secondary); font-size: 0.75rem; border-bottom: 1px solid var(--border-color); margin-bottom: 4px; padding-bottom: 4px; }
+.cell-items .item-header { display: flex; justify-content: space-between; font-weight: 600; color: var(--text-secondary); font-size: 0.75rem; border-bottom: 1px solid var(--border-color); margin-bottom: 4px; }
 .cell-items .item-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
 .cell-items .item-row span:first-child { color: var(--text-primary); }
 .cell-items .item-row span:last-child { color: var(--text-secondary); font-variant-numeric: tabular-nums; }
@@ -171,8 +171,8 @@
 .advance-group .financial-row.advance span:last-child { color: var(--advance-color); }
 .advance-group .financial-row.due span:last-child { color: var(--due-color); }
 
-.cell-status { width: 120px; vertical-align: middle; }
-.cell-status select { width: 100%; max-width: 110px; font-size: 0.75rem; }
+.cell-status { width: 150px; vertical-align: middle; }
+.cell-status select { width: 100%; max-width: 130px; font-size: 0.85rem; }
 .cell-status select:not(:last-child) { margin-bottom: 0.5rem; }
 
 .cell-actions { width: 80px; vertical-align: middle; }
@@ -185,22 +185,26 @@
 /* --- Status & Payment Colors --- */
 .payment-select, .order-status-select {
   font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer; background: var(--dark-bg-tertiary); color: var(--text-primary);
-  padding: 0.4rem 0.6rem; font-size: 0.75rem;
+  padding: 0.5rem 0.8rem; font-size: 0.85rem;
 }
 .payment-select:focus, .order-status-select:focus { outline: none; border-color: var(--brand-color); box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2); }
 
 /* Remove Backgrounds, apply text and border colors */
-.paid, .payment-select.paid { color: var(--paid-color); border-color: var(--paid-color); background: none; }
-.unpaid, .payment-select.unpaid { color: var(--unpaid-color); border-color: var(--unpaid-color); background: none;}
-.advance, .payment-select.advance { color: var(--advance-color); border-color: var(--advance-color); background: none;}
+.paid, .payment-select.paid { color: var(--paid-color); border-color: var(--paid-color); }
+.unpaid, .payment-select.unpaid { color: var(--unpaid-color); border-color: var(--unpaid-color); }
+.advance, .payment-select.advance { color: var(--advance-color); border-color: var(--advance-color); }
 
-.delivered, .order-status-select.delivered { color: var(--paid-color); border-color: var(--paid-color); background: none;}
-.shipped, .order-status-select.shipped { color: var(--shipped-color); border-color: var(--shipped-color); background: none;}
+.delivered, .order-status-select.delivered { color: var(--paid-color); border-color: var(--paid-color); }
+.shipped, .order-status-select.shipped { color: var(--shipped-color); border-color: var(--shipped-color); }
 .pending, .order-status-select.pending,
-.packed, .order-status-select.packed { color: var(--due-color); border-color: var(--due-color); background: none;}
-.cancelled, .order-status-select.cancelled { color: var(--cancelled-color); border-color: var(--cancelled-color); background: none;}
-.preorder, .order-status-select.preorder { color: var(--preorder-color); border-color: var(--preorder-color); background: none;}
+.packed, .order-status-select.packed { color: var(--due-color); border-color: var(--due-color); }
+.cancelled, .order-status-select.cancelled { color: var(--cancelled-color); border-color: var(--cancelled-color); }
+.preorder, .order-status-select.preorder { color: var(--preorder-color); border-color: var(--preorder-color); }
 
+.payment-select, .order-status-select {
+    background-color: #1f2937;
+    border-color: white;
+}
 /* --- Row/Card Left Border Colors --- */
 .list-view tr.delivered, .order-card-grid.delivered { border-left-color: var(--paid-color); }
 .list-view tr.unpaid, .order-card-grid.unpaid { border-left-color: var(--unpaid-color); }

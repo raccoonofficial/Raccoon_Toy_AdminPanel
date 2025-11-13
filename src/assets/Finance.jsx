@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, CircleDollarSign, Receipt, Landmark, LineChart, Save, RefreshCw, Trash2 } from 'lucide-react';
 import './Finance.css';
 
 /**
@@ -101,10 +101,18 @@ const initialCostCategories = [
 
 /* Demo Main Money Data */
 const initialMainMoney = [
-    { member: 'Badhon', solidCash: 16200, loan: 0,    lastUpdate: '2025-11-12T16:03:18Z' },
-    { member: 'Mahin',  solidCash: 2760,  loan: 0,    lastUpdate: '2025-11-12T16:03:18Z' },
-    { member: 'Samir',  solidCash: 2330,  loan: 300,  lastUpdate: '2025-11-12T16:03:18Z' },
-    { member: 'Shamim', solidCash: 2760,  loan: 130,  lastUpdate: '2025-11-12T16:03:18Z' },
+    { member: 'Badhon', solidCash: 16200, loan: 0,    lastUpdate: '2025-11-13T15:39:48Z' },
+    { member: 'Mahin',  solidCash: 2760,  loan: 0,    lastUpdate: '2025-11-13T15:39:48Z' },
+    { member: 'Samir',  solidCash: 2330,  loan: 300,  lastUpdate: '2025-11-13T15:39:48Z' },
+    { member: 'Shamim', solidCash: 2760,  loan: 130,  lastUpdate: '2025-11-13T15:39:48Z' },
+];
+
+/* Demo Investment Data */
+const initialInvestments = [
+    { member: 'Badhon', amount: 0 },
+    { member: 'Mahin',  amount: 0 },
+    { member: 'Samir',  amount: 0 },
+    { member: 'Shamim', amount: 0 },
 ];
 
 
@@ -126,6 +134,18 @@ function formatLastUpdate(dateString) {
     }
 }
 
+function formatDateTime(dateString) {
+    if (!dateString) return 'N/A';
+    try {
+        const date = new Date(dateString);
+        return date.toLocaleString('en-GB', {
+            day: '2-digit', month: 'short', year: 'numeric',
+            hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+        }).replace(/,/, '');
+    } catch (e) {
+        return 'Invalid Date';
+    }
+}
 
 function aggregate(list){
   const pivot = {};
@@ -213,6 +233,9 @@ export default function Finance() {
   const [tx, setTx] = useState(initialTransactions);
   const [costs, setCosts] = useState(initialCostCategories);
   const [mainMoney, setMainMoney] = useState(initialMainMoney);
+  const [investments, setInvestments] = useState(initialInvestments);
+  const [moneyTrackerLastUpdate, setMoneyTrackerLastUpdate] = useState(new Date().toISOString());
+  const [costCounterLastUpdate, setCostCounterLastUpdate] = useState(new Date().toISOString());
 
   /* Aggregations */
   const { pivot, bucketTotals } = useMemo(
@@ -262,11 +285,25 @@ export default function Finance() {
   const sellsTotal = sellsRows.reduce((s,r)=>s + r.value, 0);
 
   /* Cost Counter dynamic rows & totals */
-  const costRowCount = Math.max(...costs.map(c => c.rows.length));
-  const categoryTotals = costs.map(c =>
-    c.rows.reduce((s,r)=> s + (Number(r.amount)||0), 0)
-  );
-  const grandCost = categoryTotals.reduce((a,b)=>a+b,0);
+  const costRowCount = useMemo(() => Math.max(0, ...costs.map(c => c.rows.length)), [costs]);
+
+  const categoryTotals = useMemo(() => costs.map(c =>
+      c.rows.reduce((s, r) => s + (Number(r?.amount) || 0), 0)
+  ), [costs]);
+
+  const grandCost = useMemo(() => categoryTotals.reduce((a, b) => a + b, 0), [categoryTotals]);
+
+    /* Investment logic */
+    const updateInvestment = (member, value) => {
+        setInvestments(prev => prev.map(inv =>
+            inv.member === member
+                ? { ...inv, amount: value }
+                : inv
+        ));
+    };
+    const totalMemberInvestment = investments.reduce((s, r) => s + r.amount, 0);
+
+    const totalCapital = mainTotal + salesTotal;
 
   /* Money Tracker amounts */
   function getAmount(member, sourceKey, bucketKey){
@@ -276,7 +313,7 @@ export default function Finance() {
     );
   }
 
-  /* Cost Counter: add a new row across all categories */
+  /* Cost Counter: add/delete/update a row */
   const addCostRow = () => {
     setCosts(prev =>
       prev.map(cat => ({
@@ -284,7 +321,41 @@ export default function Finance() {
         rows: [...cat.rows, { item: '', amount: 0 }]
       }))
     );
+    setCostCounterLastUpdate(new Date().toISOString());
   };
+
+  const deleteCostRow = (rowIndex) => {
+    setCosts(prev =>
+      prev.map(cat => ({
+        ...cat,
+        rows: cat.rows.filter((_, idx) => idx !== rowIndex)
+      }))
+    );
+    setCostCounterLastUpdate(new Date().toISOString());
+  };
+
+  const updateCostCell = (catIndex, rowIndex, field, value) => {
+      setCosts(prev => {
+          const newCosts = JSON.parse(JSON.stringify(prev));
+          const category = newCosts[catIndex];
+          // Ensure the row exists before trying to update it
+          if (!category.rows[rowIndex]) {
+              category.rows[rowIndex] = { item: '', amount: 0 };
+          }
+          category.rows[rowIndex][field] = value;
+          return newCosts;
+      });
+  };
+
+  const handleMoneyTrackerAction = () => {
+      // In a real app, "Save" would POST data, and "Refresh" would GET it.
+      // For this demo, we just update the timestamp.
+      setMoneyTrackerLastUpdate(new Date().toISOString());
+  }
+
+  const handleCostCounterAction = () => {
+      setCostCounterLastUpdate(new Date().toISOString());
+  }
 
   return (
     <section className="finance-page">
@@ -292,16 +363,32 @@ export default function Finance() {
 
       <div className="info-cards-grid">
           <div className="finance-card info-card" title="Main Total + Sales Basic">
-            <div className="info-card-title"> Total Capital</div>
-            <div className="info-card-value">{formatMoney(mainTotal + salesTotal)}</div>
+            <CircleDollarSign className="info-card-icon" />
+            <div className="info-card-details">
+              <div className="info-card-title">Total Capital</div>
+              <div className="info-card-value">{formatMoney(totalCapital)}</div>
+            </div>
           </div>
           <div className="finance-card info-card" title="Grand total of Cost Counter">
-            <div className="info-card-title">Total Cost</div>
-            <div className="info-card-value">{formatMoney(grandCost)}</div>
+            <Receipt className="info-card-icon" />
+            <div className="info-card-details">
+              <div className="info-card-title">Total Cost</div>
+              <div className="info-card-value">{formatMoney(grandCost)}</div>
+            </div>
+          </div>
+          <div className="finance-card info-card" title="Total Investment">
+            <Landmark className="info-card-icon" />
+            <div className="info-card-details">
+                <div className="info-card-title">Total Investment</div>
+                <div className="info-card-value">{formatMoney(63000)}</div>
+            </div>
           </div>
           <div className="finance-card info-card" title="Profit">
-            <div className="info-card-title">Total Profit</div>
-            <div className="info-card-value accent">{formatMoney(profitTotal)}</div>
+            <LineChart className="info-card-icon" />
+            <div className="info-card-details">
+              <div className="info-card-title">Total Profit</div>
+              <div className="info-card-value accent">{formatMoney(profitTotal)}</div>
+            </div>
           </div>
         </div>
 
@@ -378,7 +465,18 @@ export default function Finance() {
         </div>
 
         <div className="finance-card money-tracker-card">
-          <h2 className="finance-card-title">Money Tracker</h2>
+            <div className="finance-card-header">
+              <h2 className="finance-card-title">Money Tracker</h2>
+              <div className="card-header-controls">
+                <span className="last-updated-text">Last updated: {formatDateTime(moneyTrackerLastUpdate)}</span>
+                <button type="button" className="finance-btn" onClick={handleMoneyTrackerAction} title="Save Changes">
+                    <Save size={16} /> Save
+                </button>
+                <button type="button" className="finance-btn secondary" onClick={handleMoneyTrackerAction} title="Refresh Data">
+                    <RefreshCw size={16} /> Refresh
+                </button>
+              </div>
+            </div>
           <div className="mt-scroll">
             <table className="mt-table">
               <thead>
@@ -423,60 +521,107 @@ export default function Finance() {
         </div>
 
         <div className="finance-card cost-counter-card">
-        <div className="finance-card-header">
-          <h2 className="finance-card-title">Cost Counter</h2>
-          <button type="button" className="finance-btn" onClick={addCostRow}>
-            <Plus size={16} /> Add Row
-          </button>
+            <div className="finance-card-header">
+              <h2 className="finance-card-title">Cost Counter</h2>
+              <div className="card-header-controls">
+                 <span className="last-updated-text">Last modified: {formatDateTime(costCounterLastUpdate)}</span>
+                 <button type="button" className="finance-btn secondary" onClick={handleCostCounterAction} title="Refresh Data">
+                    <RefreshCw size={16} /> Refresh
+                 </button>
+                 <button type="button" className="finance-btn" onClick={handleCostCounterAction} title="Save Changes">
+                    <Save size={16} /> Save
+                 </button>
+                 <button type="button" className="finance-btn" onClick={addCostRow}>
+                    <Plus size={16} /> Add Row
+                 </button>
+              </div>
+            </div>
+            <div className='cc-scroll'>
+                <table className="cc-table">
+                  <thead>
+                    <tr className="cc-cat-row">
+                      {costs.map(cat => (
+                        <th key={cat.key} colSpan={2} className={`cc-cat-head`}>
+                          {cat.label}
+                        </th>
+                      ))}
+                      <th className="cc-action-col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Array.from({length: costRowCount}).map((_,rowIdx)=>(
+                      <tr key={rowIdx}>
+                        {costs.map((cat, ci) => {
+                          const entry = cat.rows[rowIdx];
+                          return (
+                            <React.Fragment key={cat.key + '-' + rowIdx}>
+                              <td className={`cc-item-cell cat-border-${cat.key}`}>
+                                <EditableValue value={entry?.item ?? ''} onChange={(v) => updateCostCell(ci, rowIdx, 'item', v)} type="text" />
+                              </td>
+                              <td className={`cc-amt-cell cat-border-${cat.key}`}>
+                                <EditableValue value={entry?.amount ?? 0} onChange={(v) => updateCostCell(ci, rowIdx, 'amount', v)} type="number" format={formatMoney} />
+                              </td>
+                            </React.Fragment>
+                          );
+                        })}
+                        <td className="cc-action-cell">
+                            <button type="button" className="finance-btn delete-btn" onClick={() => deleteCostRow(rowIdx)} title="Delete Row">
+                                <Trash2 size={16} />
+                            </button>
+                        </td>
+                      </tr>
+                    ))}
+                    {/* Per-category totals (locked) */}
+                    <tr className="cc-total-row">
+                      {costs.map((cat, i) => (
+                        <React.Fragment key={cat.key + '-total'}>
+                          <td className="cc-item-cell total">Total</td>
+                          <td className="cc-amt-cell total">{formatMoney(categoryTotals[i])}</td>
+                        </React.Fragment>
+                      ))}
+                      <td></td>
+                    </tr>
+                    {/* Grand Total Cost Row (locked) */}
+                    <tr className="cc-grand-row">
+                      <td className="cc-grand-label" colSpan={costs.length * 2}>
+                        Total Cost
+                      </td>
+                      <td className="cc-grand-value">{formatMoney(grandCost)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
         </div>
-        <div className='cc-scroll'>
-            <table className="cc-table">
+      <div className="finance-card investment-card">
+          <h2 className="finance-card-title">Member Investment</h2>
+          <table className="tm-table">
               <thead>
-                <tr className="cc-cat-row">
-                  {costs.map(cat => (
-                    <th key={cat.key} colSpan={2} className={`cc-cat-head`}>
-                      {cat.label}
-                    </th>
-                  ))}
-                </tr>
+                  <tr>
+                      <th className="tm-label">Member</th>
+                      <th className="tm-value">Amount</th>
+                  </tr>
               </thead>
               <tbody>
-                {Array.from({length: costRowCount}).map((_,rowIdx)=>(
-                  <tr key={rowIdx}>
-                    {costs.map((cat, ci) => {
-                      const entry = cat.rows[rowIdx];
-                      return (
-                        <React.Fragment key={cat.key + '-' + rowIdx}>
-                          <td className={`cc-item-cell cat-border-${cat.key}`}>
-                            <EditableValue value={entry?.item ?? ''} onChange={(v)=>{ setCosts(prev=>{ const copy = [...prev]; if (!copy[ci].rows[rowIdx]) copy[ci].rows[rowIdx] = { item:'', amount:0 }; copy[ci].rows[rowIdx].item = v; return copy; })}} type="text" />
-                          </td>
-                          <td className={`cc-amt-cell cat-border-${cat.key}`}>
-                            <EditableValue value={entry?.amount ?? 0} onChange={(v)=>{ setCosts(prev=>{ const copy = [...prev]; if (!copy[ci].rows[rowIdx]) copy[ci].rows[rowIdx] = { item:'', amount:0 }; copy[ci].rows[rowIdx].amount = v; return copy; })}} type="number" format={formatMoney} />
-                          </td>
-                        </React.Fragment>
-                      );
-                    })}
+              {investments.map((row) => (
+                  <tr key={`investment-${row.member}`}>
+                      <td className="tm-label">{row.member}</td>
+                      <td className="tm-value">
+                          <EditableValue
+                              value={row.amount}
+                              onChange={(v) => updateInvestment(row.member, v)}
+                              format={formatMoney}
+                          />
+                      </td>
                   </tr>
-                ))}
-                {/* Per-category totals (locked) */}
-                <tr className="cc-total-row">
-                  {costs.map((cat, i) => (
-                    <React.Fragment key={cat.key + '-total'}>
-                      <td className="cc-item-cell total">Total</td>
-                      <td className="cc-amt-cell total">{formatMoney(categoryTotals[i])}</td>
-                    </React.Fragment>
-                  ))}
-                </tr>
-                {/* Grand Total Cost Row (locked) */}
-                <tr className="cc-grand-row">
-                  <td className="cc-grand-label" colSpan={costs.length * 2 - 1}>
-                    Total Cost
-                  </td>
-                  <td className="cc-grand-value">{formatMoney(grandCost)}</td>
-                </tr>
+              ))}
               </tbody>
-            </table>
-        </div>
+              <tfoot>
+                  <tr className="tm-total-row">
+                      <td className="tm-label total">Total Investment</td>
+                      <td className="tm-value total main-total">{formatMoney(totalMemberInvestment)}</td>
+                  </tr>
+              </tfoot>
+          </table>
       </div>
       </div>
     </section>

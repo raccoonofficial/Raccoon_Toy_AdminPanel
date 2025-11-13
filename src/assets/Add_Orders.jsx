@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiHash, FiCalendar, FiUser, FiHome, FiPhone, FiArchive, FiDollarSign, FiPlus, FiClipboard, FiPackage, FiSearch, FiPercent, FiEdit2, FiMail, FiStar, FiShoppingBag } from 'react-icons/fi';
+import { FiHash, FiCalendar, FiUser, FiHome, FiPhone, FiArchive, FiDollarSign, FiPlus, FiClipboard, FiPackage, FiSearch, FiPercent, FiEdit2, FiMail, FiStar, FiShoppingBag, FiGlobe } from 'react-icons/fi';
 import { CheckCircle, Circle, Package, Send, ShoppingCart, Truck, UserPlus } from 'lucide-react';
+import { FaFacebook, FaInstagram } from 'react-icons/fa';
 import { Trash2 } from 'lucide-react';
 import './Add_Orders.css';
 
@@ -136,7 +137,10 @@ export default function Add_Orders({ onBack, onCreated }) {
   // --- Core States ---
   const [orderId, setOrderId] = useState('');
   const [date, setDate] = useState('2025-11-12');
+  const [stdId, setStdId] = useState('');
+  const [orderSource, setOrderSource] = useState('Facebook');
   const [status, setStatus] = useState('Pending');
+  const [deliveryCharge, setDeliveryCharge] = useState('60');
   const [paymentStatus, setPaymentStatus] = useState('Unpaid');
   const [advanceAmount, setAdvanceAmount] = useState('');
   const [marketingOptIn, setMarketingOptIn] = useState(true);
@@ -185,8 +189,7 @@ export default function Add_Orders({ onBack, onCreated }) {
   const [products, setProducts] = useState([{ 
       id: 1, 
       product: null,
-      qty: '1', 
-      deliveryCharge: '60',
+      qty: '1',
       discountFixed: '',
       discountPercent: ''
   }]);
@@ -195,7 +198,6 @@ export default function Add_Orders({ onBack, onCreated }) {
   const priceSummary = useMemo(() => {
       let subtotal = 0;
       let totalLineItemDiscount = 0;
-      let totalDelivery = 0;
 
       products.forEach(p => {
           if (p.product) {
@@ -210,7 +212,6 @@ export default function Add_Orders({ onBack, onCreated }) {
               }
               totalLineItemDiscount += lineDiscount;
           }
-          totalDelivery += Number(p.deliveryCharge) || 0;
       });
 
       const subtotalAfterLineItemDiscount = subtotal - totalLineItemDiscount;
@@ -225,15 +226,16 @@ export default function Add_Orders({ onBack, onCreated }) {
       const totalDiscount = totalLineItemDiscount + globalDiscountAmount;
       const subtotalAfterTotalDiscount = subtotal - totalDiscount;
       const parsedHiddenCharge = Number(hiddenCharge) || 0;
+      const totalDelivery = Number(deliveryCharge) || 0;
       const grandTotal = subtotalAfterTotalDiscount + totalDelivery + parsedHiddenCharge;
       
       return { subtotal, totalDiscount, grandTotal, totalDelivery, subtotalAfterDiscount: subtotalAfterTotalDiscount, hiddenCharge: parsedHiddenCharge };
-  }, [products, globalDiscountFixed, globalDiscountPercent, hiddenCharge]);
+  }, [products, globalDiscountFixed, globalDiscountPercent, hiddenCharge, deliveryCharge]);
 
 
   function generateOrderId() { setOrderId(`ORD-${Date.now().toString().slice(-8)}`); }
   function handleProductUpdate(lineId, field, value) { setProducts(products.map(p => p.id === lineId ? { ...p, [field]: value } : p)); }
-  function addProduct() { setProducts([...products, { id: Date.now(), product: null, qty: '1', deliveryCharge: '60', discountFixed: '', discountPercent: '' }]); }
+  function addProduct() { setProducts([...products, { id: Date.now(), product: null, qty: '1', discountFixed: '', discountPercent: '' }]); }
   function removeProduct(id) { setProducts(products.filter(p => p.id !== id)); }
   function onSubmit(e) { e.preventDefault(); onCreated?.(); }
 
@@ -366,6 +368,30 @@ export default function Add_Orders({ onBack, onCreated }) {
                   <input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
                 </div>
               </div>
+              <div className="add-order-field">
+                  <label htmlFor="stdId"><FiUser /> STD ID</label>
+                  <input id="stdId" type="text" value={stdId} onChange={(e) => setStdId(e.target.value)} placeholder="Enter Student ID" />
+              </div>
+              <div className="add-order-field">
+                  <label>Order Source</label>
+                  <div className="radio-button-group">
+                      <label className="radio-option">
+                          <input type="radio" name="orderSource" value="Facebook" checked={orderSource === 'Facebook'} onChange={(e) => setOrderSource(e.target.value)} />
+                          <FaFacebook />
+                          <span>Facebook</span>
+                      </label>
+                      <label className="radio-option">
+                          <input type="radio" name="orderSource" value="Instagram" checked={orderSource === 'Instagram'} onChange={(e) => setOrderSource(e.target.value)} />
+                          <FaInstagram />
+                          <span>Instagram</span>
+                      </label>
+                      <label className="radio-option">
+                          <input type="radio" name="orderSource" value="Website" checked={orderSource === 'Website'} onChange={(e) => setOrderSource(e.target.value)} />
+                          <FiGlobe />
+                          <span>Website</span>
+                      </label>
+                  </div>
+              </div>
             </div>
         </div>
 
@@ -401,12 +427,6 @@ export default function Add_Orders({ onBack, onCreated }) {
                                         <input type="number" placeholder="Percent" value={p.discountPercent} onChange={e => handleDiscountChange(p.id, 'percent', e.target.value)} />
                                     </div>
                                 </div>
-                            </div>
-                            <div className="product-delivery-details">
-                               <label>Delivery</label>
-                               <select value={p.deliveryCharge} onChange={e => handleProductUpdate(p.id, 'deliveryCharge', e.target.value)}>
-                                 {deliveryOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
-                               </select>
                             </div>
                             <div className="product-actions">
                                 {products.length > 1 && (
@@ -455,7 +475,7 @@ export default function Add_Orders({ onBack, onCreated }) {
                     <option value="Pre-order">Pre-order</option>
                   </select>
                 </div>
-                <div className="add-order-field">
+                 <div className="add-order-field">
                     <label>Marketing</label>
                     <div className="toggle-switch">
                         <input type="checkbox" id="marketing" checked={marketingOptIn} onChange={() => setMarketingOptIn(!marketingOptIn)} />
@@ -479,6 +499,12 @@ export default function Add_Orders({ onBack, onCreated }) {
         <div className="add-order-section-grid two-col">
             <div className="add-order-card">
               <h2 className="add-order-card-title">Additional Charges</h2>
+               <div className="add-order-field">
+                  <label>Delivery</label>
+                   <select value={deliveryCharge} onChange={e => setDeliveryCharge(e.target.value)}>
+                     {deliveryOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+                   </select>
+                </div>
               <div className="add-order-field">
                   <label htmlFor="hiddenCharge"><FiDollarSign /> Hidden Charge</label>
                   <input id="hiddenCharge" type="number" value={hiddenCharge} onChange={(e) => setHiddenCharge(e.target.value)} placeholder="e.g., 100" />

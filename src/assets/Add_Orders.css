@@ -74,7 +74,7 @@
   background-color: var(--add-order-card-bg); border: 1px solid var(--add-order-border); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column;
 }
 .add-order-card-title {
-  font-size: 1.25rem; font-weight: 600; margin-bottom: 0;
+  font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--add-order-border);
 }
 .right-panel-stack { display: flex; flex-direction: column; gap: 1.5rem; }
 
@@ -88,7 +88,7 @@
 .add-order-form-container input, 
 .add-order-form-container select, 
 .add-order-form-container textarea {
-  width: 100%; box-sizing: border-box; background: var(--add-order-bg); border: 1px solid var(--add-order-border); border-radius: 8px; color: var(--add-order-text-primary); padding: 0.75rem 1rem; font-size: 1rem;
+  width: 100%; box-sizing: border-box; background: var(--add-order-bg); border: 1px solid var(--add-order-border); border-radius: 8px; color: var(--add-order-text-primary); padding: 0.75rem 1rem; font-size: 0.95rem; transition: all 0.2s ease;
 }
 .add-order-form-container input:focus, 
 .add-order-form-container select:focus, 
@@ -106,14 +106,56 @@
 .add-order-input-with-btn { display: flex; gap: 0.5rem; }
 .add-order-input-with-btn input { flex-grow: 1; }
 .add-order-input-with-btn button {
-  background-color: var(--add-order-border); color: var(--add-order-text-primary); border: none; border-radius: 8px; padding: 0 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s;
+  background-color: var(--add-order-border); color: var(--add-order-text-primary); border: none; border-radius: 8px; padding: 0 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease;
 }
 .add-order-input-with-btn button:hover { background-color: #4b5563; }
 .add-order-err { color: #ef4444; font-size: 0.8rem; margin-top: 0.25rem; }
 
+/* --- Radio Button Group --- */
+.radio-button-group {
+    display: flex;
+    gap: 1rem;
+    background-color: var(--add-order-bg);
+    border-radius: 8px;
+    padding: 0.5rem;
+    border: 1px solid var(--add-order-border);
+}
+.radio-option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-weight: 600;
+}
+.radio-option input[type="radio"] {
+    display: none;
+}
+.radio-option span {
+    color: var(--add-order-text-secondary);
+}
+.radio-option svg {
+    color: var(--add-order-text-secondary);
+    transition: color 0.2s ease;
+}
+.radio-option:hover {
+    background-color: #374151;
+}
+.radio-option input[type="radio"]:checked + svg {
+    color: var(--add-order-accent);
+}
+.radio-option input[type="radio"]:checked + svg + span {
+    color: var(--add-order-accent);
+}
+
+
 /* --- Product Row --- */
 .product-list-body { display: flex; flex-direction: column; gap: 1.5rem; }
-.product-list-row { display: grid; grid-template-columns: 2fr 1fr 1fr 50px; gap: 1.5rem; align-items: flex-start; padding-bottom: 1.5rem; border-bottom: 1px solid var(--add-order-border); }
+.product-list-row { display: grid; grid-template-columns: 2fr 1fr 50px; gap: 1.5rem; align-items: flex-start; padding-bottom: 1.5rem; border-bottom: 1px solid var(--add-order-border); }
 .product-list-body .product-list-row:last-child { border-bottom: none; padding-bottom: 0; }
 .product-main-details { display: flex; flex-direction: column; gap: 1rem; }
 .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -138,7 +180,7 @@ input.price-display { background-color: var(--add-order-card-bg) !important; bor
 .search-result-item { padding: 0.75rem 1rem; cursor: pointer; display: flex; flex-direction: column; }
 .search-result-item:hover { background-color: var(--add-order-accent); color: white; }
 .product-search-selected {
-  display: flex; justify-content: space-between; align-items: center; background: var(--add-order-bg); border: 1px solid var(--add-order-border); border-radius: 8px; padding: 0.75rem 1rem; font-size: 1rem;
+  display: flex; justify-content: space-between; align-items: center; background: var(--add-order-bg); border: 1px solid var(--add-order-border); border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.95rem; font-weight: 600;
 }
 .product-search-selected button { background: none; border: none; color: var(--add-order-text-secondary); cursor: pointer; }
 .product-search-selected button:hover { color: #ef4444; }

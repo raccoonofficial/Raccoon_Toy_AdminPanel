@@ -4,7 +4,7 @@
 
 /* --- Main Container --- */
 .admin-dashboard { width: 100%; padding: 0; box-sizing: border-box; }
-.admin-dashboard-inner { width: 100%; max-width: 1600px; margin: 0 auto; padding: 1.5rem; }
+.admin-dashboard-inner { width: 100%; max-width: 1800px; /* Increased max-width for larger screens */ margin: 0 auto; padding: clamp(1rem, 2vw, 1.5rem); /* Responsive padding */ }
 
 /* --- Dashboard Header --- */
 .dashboard-header { margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; }
@@ -18,12 +18,12 @@
 .notification-badge { position: absolute; top: 0; right: 0; background: #ef4444; color: white; font-size: 0.75rem; font-weight: 600; border-radius: 50%; padding: 2px 6px; min-width: 20px; text-align: center; border: 2px solid var(--dark-bg-secondary); }
 
 /* --- Card Base Style --- */
-.card { background: var(--dark-bg-secondary, #1f2937); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color, #374151); transition: border-color 0.3s ease, transform 0.3s ease; width: 100%; }
+.card { background: var(--dark-bg-secondary, #1f2937); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color, #374151); transition: border-color 0.3s ease, transform 0.3s ease; width: 100%; display: flex; flex-direction: column; }
 .card:hover { border-color: var(--brand-color, #f97316); transform: translateY(-2px); }
 
 /* --- Summary Cards --- */
-.summary-cards { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
-.summary-card { display: flex; align-items: center; gap: 1rem; padding: 1rem; flex: 1 1 160px; min-width: 160px; }
+.summary-cards { display: grid; /* Switched to grid for more control */ grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Responsive columns */ gap: 1rem; margin-bottom: 2rem; }
+.summary-card { display: flex; align-items: center; gap: 1rem; padding: 1rem; flex-direction: row; }
 .card-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #ffffff; }
 .card-content p { margin: 0 0 0.25rem 0; font-size: 0.8rem; color: var(--text-secondary, #9ca3af); font-weight: 500; white-space: nowrap; }
 .card-content h2 { margin: 0; font-size: clamp(1.25rem, 3vw, 1.75rem); font-weight: 700; color: var(--text-primary, #f9fafb); }
@@ -31,7 +31,7 @@
 /* --- Orders Section --- */
 .orders-section { margin-bottom: 2rem; }
 .order-filter-cards { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem; }
-.filter-card { position: relative; display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 1.25rem; border-radius: 8px; background: var(--dark-bg-secondary, #1f2937); color: var(--text-secondary, #9ca3af); font-weight: 600; cursor: pointer; transition: all 0.3s ease; flex-grow: 1; }
+.filter-card { position: relative; display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 1rem 1.25rem; border-radius: 8px; background: var(--dark-bg-secondary, #1f2937); color: var(--text-secondary, #9ca3af); font-weight: 600; cursor: pointer; transition: all 0.3s ease; flex-grow: 1; }
 .filter-card-content { display: flex; align-items: center; gap: 0.75rem; }
 .filter-card:hover { background: var(--dark-bg-tertiary, #374151); color: var(--text-primary, #f9fafb); }
 .filter-card.active { background-color: var(--brand-color, #f97316); border-color: var(--brand-color, #f97316); color: #ffffff; }
@@ -47,23 +47,11 @@
 .card-header h3 { color: var(--text-primary, #f9fafb); font-size: 1.125rem; font-weight: 600; margin: 0; }
 
 /* --- User Stats Section --- */
-.user-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-.user-stat-title-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.active-user-dot {
-  width: 8px;
-  height: 8px;
-  background-color: #4ade80; /* Green color */
-  border-radius: 50%;
-  animation: bipAnimation 1.5s infinite;
-}
+.user-stats-card .summary-card { padding: 0.75rem; } /* Make internal cards slightly smaller */
+.user-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* More responsive grid */ gap: 1rem; height: 100%; }
+.user-stat-title-wrapper { display: flex; align-items: center; gap: 0.5rem; }
+.active-user-dot { width: 8px; height: 8px; background-color: #4ade80; border-radius: 50%; animation: bipAnimation 1.5s infinite; }
+.chart-card { min-height: 400px; /* Ensure chart has enough space */ }
 
 /* --- Orders Table Styling --- */
 .table-wrap { overflow-x: auto; width: 100%; }
@@ -83,21 +71,27 @@
 .status-cancelled { background-color: rgba(248, 113, 113, 0.2); color: #f87171; }
 
 /* --- Keyframes for Animation --- */
-@keyframes bipAnimation {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.2; }
-}
+@keyframes bipAnimation { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
 /* --- Responsive Design --- */
-@media (max-width: 1149px) { .admin-dashboard-inner { padding: 1rem; } }
-@media (min-width: 500px) { .filter-card { flex-grow: 0; } }
-
-@media (min-width: 1150px) {
-  .dashboard-main-section {
-    grid-template-columns: 2fr 1fr;
-  }
+/* Mobile & small tablets */
+@media (max-width: 767px) {
+  .dashboard-header { justify-content: center; text-align: center; }
+  .filter-card { flex-grow: 1; }
 }
 
+/* Tablet to small desktop */
+@media (min-width: 768px) and (max-width: 1149px) {
+  .filter-card { flex-grow: 0; }
+}
+
+/* Standard desktop layout */
+@media (min-width: 1150px) {
+  .dashboard-main-section { grid-template-columns: minmax(0, 2.5fr) minmax(0, 1fr); } /* Flexible ratio */
+  .filter-card { flex-grow: 0; }
+}
+
+/* Very large screens */
 @media (min-width: 1400px) {
   .large-screen-column { display: table-cell; }
   .orders-card table { min-width: 800px; }

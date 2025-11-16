@@ -1,273 +1,104 @@
 /* ============================================
-   ADMIN DASHBOARD - Advanced & Modern Theme
+   ADMIN DASHBOARD - Fluid & Modern Theme
    ============================================ */
 
 /* --- Main Container --- */
-.admin-dashboard {
-  width: 100%;
-  padding: 0; /* Padding is handled by admin_panel.css */
-  box-sizing: border-box;
-}
-
-.admin-dashboard-inner {
-  max-width: 1600px;
-  margin: 0 auto;
-}
+.admin-dashboard { width: 100%; padding: 0; box-sizing: border-box; }
+.admin-dashboard-inner { width: 100%; max-width: 1600px; margin: 0 auto; padding: 1.5rem; }
 
 /* --- Dashboard Header --- */
-.dashboard-header {
-  margin-bottom: 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.dashboard-header h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--text-primary, #f9fafb);
-  letter-spacing: -0.025em;
-  margin: 0 0 0.25rem 0;
-}
-
-.dashboard-header p {
-  font-size: 1rem;
-  color: var(--text-secondary, #9ca3af);
-  margin: 0;
-}
+.dashboard-header { margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; }
+.dashboard-header h1 { font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 700; color: var(--text-primary, #f9fafb); letter-spacing: -0.025em; margin: 0; }
+.dashboard-header p { font-size: clamp(0.875rem, 2vw, 1rem); color: var(--text-secondary, #9ca3af); margin: 0; }
 
 /* --- Notification Button --- */
-.notification-wrapper {
-  position: relative;
-}
-
-.notification-btn {
-  background: var(--dark-bg-secondary, #1f2937);
-  border: 1px solid var(--border-color, #374151);
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--text-secondary, #9ca3af);
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.notification-btn:hover {
-  background: var(--dark-bg-tertiary, #374151);
-  border-color: var(--brand-color, #f97316);
-  color: var(--text-primary, #f9fafb);
-}
-
-.notification-badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: #ef4444; /* Red for notifications */
-  color: white;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 10px;
-  padding: 2px 6px;
-  min-width: 20px;
-  text-align: center;
-}
+.notification-wrapper { position: relative; }
+.notification-btn { background: var(--dark-bg-secondary, #1f2937); border: 1px solid var(--border-color, #374151); border-radius: 50%; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary, #9ca3af); transition: all 0.3s ease; }
+.notification-btn:hover { background: var(--dark-bg-tertiary, #374151); border-color: var(--brand-color, #f97316); color: var(--text-primary, #f9fafb); }
+.notification-badge { position: absolute; top: 0; right: 0; background: #ef4444; color: white; font-size: 0.75rem; font-weight: 600; border-radius: 50%; padding: 2px 6px; min-width: 20px; text-align: center; border: 2px solid var(--dark-bg-secondary); }
 
 /* --- Card Base Style --- */
-.card {
-  background: var(--dark-bg-secondary, #1f2937);
-  border-radius: 12px;
-  padding: 1.5rem;
-  border: 1px solid var(--border-color, #374151);
-  transition: border-color 0.3s ease, transform 0.3s ease;
-}
+.card { background: var(--dark-bg-secondary, #1f2937); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color, #374151); transition: border-color 0.3s ease, transform 0.3s ease; width: 100%; }
+.card:hover { border-color: var(--brand-color, #f97316); transform: translateY(-2px); }
 
-.card:hover {
-  border-color: var(--brand-color, #f97316);
-  transform: translateY(-2px);
-}
+/* --- Summary Cards --- */
+.summary-cards { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+.summary-card { display: flex; align-items: center; gap: 1rem; padding: 1rem; flex: 1 1 160px; min-width: 160px; }
+.card-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #ffffff; }
+.card-content p { margin: 0 0 0.25rem 0; font-size: 0.8rem; color: var(--text-secondary, #9ca3af); font-weight: 500; white-space: nowrap; }
+.card-content h2 { margin: 0; font-size: clamp(1.25rem, 3vw, 1.75rem); font-weight: 700; color: var(--text-primary, #f9fafb); }
 
-/* --- Summary Cards Grid --- */
-.summary-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Default responsive behavior */
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.summary-card {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.card-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: #ffffff;
-}
-
-.card-content p {
-  margin: 0 0 0.5rem 0;
-  font-size: 0.875rem;
-  color: var(--text-secondary, #9ca3af);
-  font-weight: 500;
-}
-
-.card-content h2 {
-  margin: 0;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--text-primary, #f9fafb);
-}
+/* --- Orders Section --- */
+.orders-section { margin-bottom: 2rem; }
+.order-filter-cards { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem; }
+.filter-card { position: relative; display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 1.25rem; border-radius: 8px; background: var(--dark-bg-secondary, #1f2937); color: var(--text-secondary, #9ca3af); font-weight: 600; cursor: pointer; transition: all 0.3s ease; flex-grow: 1; }
+.filter-card-content { display: flex; align-items: center; gap: 0.75rem; }
+.filter-card:hover { background: var(--dark-bg-tertiary, #374151); color: var(--text-primary, #f9fafb); }
+.filter-card.active { background-color: var(--brand-color, #f97316); border-color: var(--brand-color, #f97316); color: #ffffff; }
+.filter-count-badge { position: absolute; top: -8px; right: -8px; background-color: #ef4444; color: white; font-size: 0.8rem; font-weight: 700; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--dark-bg-secondary); transition: transform 0.3s ease; }
+.filter-card:hover .filter-count-badge { transform: scale(1.1); }
 
 /* --- Main Dashboard Section Layout --- */
-.dashboard-main-section {
-  display: grid;
-  grid-template-columns: 1fr; /* Full width by default */
-  gap: 2rem;
-}
+.dashboard-main-section { display: grid; grid-template-columns: 1fr; gap: 2rem; }
 
-/* Card Headers for Chart & Table */
-.card-header {
+/* --- Card Headers --- */
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color, #374151); }
+.header-icon { color: var(--text-secondary, #9ca3af); }
+.card-header h3 { color: var(--text-primary, #f9fafb); font-size: 1.125rem; font-weight: 600; margin: 0; }
+
+/* --- User Stats Section --- */
+.user-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+.user-stat-title-wrapper {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-color, #374151);
+  gap: 0.5rem;
 }
-
-.header-icon {
-  color: var(--text-secondary, #9ca3af);
-}
-
-.card-header h3 {
-  color: var(--text-primary, #f9fafb);
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin: 0;
+.active-user-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #4ade80; /* Green color */
+  border-radius: 50%;
+  animation: bipAnimation 1.5s infinite;
 }
 
 /* --- Orders Table Styling --- */
-.table-wrap {
-  overflow-x: auto;
-}
-
-.orders-card table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 600px;
-}
-
-.orders-card th, .orders-card td {
-  text-align: left;
-  padding: 1rem 1.25rem;
-  vertical-align: middle;
-}
-
-.orders-card th {
-  font-weight: 600;
-  color: var(--text-secondary, #9ca3af);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--border-color, #374151);
-}
-
-.orders-card td {
-  color: var(--text-primary, #f9fafb);
-  font-size: 0.875rem;
-}
-
-.orders-card tbody tr {
-  transition: background-color 0.2s ease;
-}
-
-.orders-card tbody tr:hover {
-  background-color: var(--dark-bg-tertiary, #374151);
-}
-
-.orders-card td .cell-label {
-  display: none; /* Hide for desktop */
-}
+.table-wrap { overflow-x: auto; width: 100%; }
+.orders-card table { width: 100%; border-collapse: collapse; min-width: 400px; }
+.orders-card th, .orders-card td { text-align: left; padding: 0.75rem 1rem; vertical-align: middle; white-space: nowrap; border-bottom: 1px solid var(--border-color, #374151); }
+.orders-card th { font-weight: 600; color: var(--text-secondary, #9ca3af); font-size: 0.75rem; text-transform: uppercase; }
+.orders-card tr td:last-child { border-bottom: none; }
+.orders-card tbody tr:hover { background-color: var(--dark-bg-tertiary, #374151); }
+.no-orders-message { text-align: center; color: var(--text-secondary, #9ca3af); padding: 2rem; }
+.large-screen-column { display: none; }
 
 /* --- Status Indicator --- */
-.status-indicator {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-align: center;
+.status-indicator { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-align: center; }
+.status-pending { background-color: rgba(251, 146, 60, 0.2); color: #fb923c; }
+.status-packed, .status-sent { background-color: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+.status-delivered { background-color: rgba(74, 222, 128, 0.2); color: #4ade80; }
+.status-cancelled { background-color: rgba(248, 113, 113, 0.2); color: #f87171; }
+
+/* --- Keyframes for Animation --- */
+@keyframes bipAnimation {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
 }
-
-.status-pending { background-color: rgba(251, 146, 60, 0.2); color: #fb923c; } /* Orange */
-.status-packed { background-color: rgba(96, 165, 250, 0.2); color: #60a5fa; } /* Blue */
-.status-sent { background-color: rgba(167, 139, 250, 0.2); color: #a78bfa; } /* Purple */
-.status-delivered { background-color: rgba(74, 222, 128, 0.2); color: #4ade80; } /* Green */
-.status-cancelled { background-color: rgba(248, 113, 113, 0.2); color: #f87171; } /* Red */
-.status-preorder { background-color: rgba(250, 204, 21, 0.2); color: #facc15; } /* Yellow */
-
 
 /* --- Responsive Design --- */
-/* Consistent Desktop Layout from 900px upwards */
-@media (min-width: 900px) {
-  .summary-cards {
-    grid-template-columns: repeat(3, 1fr);
-  }
+@media (max-width: 1149px) { .admin-dashboard-inner { padding: 1rem; } }
+@media (min-width: 500px) { .filter-card { flex-grow: 0; } }
+
+@media (min-width: 1150px) {
   .dashboard-main-section {
-    grid-template-columns: 1.5fr 1fr;
+    grid-template-columns: 2fr 1fr;
   }
 }
 
-/* Mobile Layout */
-@media (max-width: 899px) {
-  .admin-dashboard-inner {
-    padding: 1rem;
-  }
-
-  .dashboard-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  .dashboard-header h1 {
-    font-size: 1.5rem;
-  }
-  
-  /* Responsive table for mobile */
-  .orders-card thead { display: none; }
-  .orders-card tr { display: block; border: 1px solid var(--border-color, #374151); border-radius: 8px; margin-bottom: 1rem; }
-  .orders-card td { 
-    display: flex; 
-    justify-content: space-between; 
-    padding: 0.6rem 1rem; /* Reduced padding for shorter rows */
-    border-bottom: 1px solid var(--border-color, #374151); 
-    align-items: center; 
-    min-width: 0; /* Allow flex shrinking */
-  }
-  .orders-card tr td:last-child { border-bottom: none; }
-  .orders-card td .cell-label { 
-    display: inline; 
-    font-weight: 600; 
-    color: var(--text-secondary, #9ca3af);
-    flex-shrink: 0; /* Prevent label from shrinking */
-    margin-right: 1rem;
-  }
-  .orders-card td .cell-value {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: right;
-  }
+@media (min-width: 1400px) {
+  .large-screen-column { display: table-cell; }
+  .orders-card table { min-width: 800px; }
 }

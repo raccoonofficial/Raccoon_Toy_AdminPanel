@@ -29,10 +29,11 @@ body {
   position: fixed;
   background-color: var(--sidebar-bg-color);
   color: var(--sidebar-text-color);
-  padding: 16px;
+  padding: 1rem;
   overflow: hidden;
   z-index: 1000;
-  height: 85vh;
+  height: auto; /* Allow height to be determined by content */
+  min-height: 90vh; /* Set a minimum height */
   top: 50%;
   left: 1rem;
   border-radius: 16px;
@@ -88,7 +89,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  overflow-y: auto; /* Add scroll for smaller heights */
+  /* Removed overflow-y: auto */
 }
 
 .sidebar-link {

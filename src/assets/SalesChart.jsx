@@ -11,11 +11,10 @@ function SalesChart({
   tickStep,
   desiredTickCount = 6,
   height = 260,
-  barColorFrom = '#C9BBFF',
-  barColorTo = '#5B2FCF',
-  trackColor = 'rgba(91,47,207,0.08)',
+  barColorFrom = '#fb923c', // Light Orange
+  barColorTo = '#f97316',   // Main Orange
+  trackColor = 'rgba(249, 115, 22, 0.1)',
   forceSample = false,
-  fixedFiveKAxis = false
 }) {
   // Sanitize incoming data
   const safeMonths = Array.isArray(months) ? months : [];
@@ -34,20 +33,18 @@ function SalesChart({
 
   const rawMax = Math.max(...finalValues, 1);
 
-  // Axis max logic
+  // Axis max logic (simplified)
   const computedMax = useMemo(() => {
-    if (fixedFiveKAxis) return yMax && yMax > 0 ? yMax : 20000;
     if (yMax && yMax > 0) return yMax;
     const expanded = rawMax * 1.05;
     return Math.ceil(expanded / 5000) * 5000;
-  }, [rawMax, yMax, fixedFiveKAxis]);
+  }, [rawMax, yMax]);
 
   // Tick step logic
   const effectiveTick = useMemo(() => {
-    if (fixedFiveKAxis) return 5000;
     if (tickStep && tickStep > 0) return tickStep;
     return Math.max(Math.ceil(computedMax / desiredTickCount / 5000) * 5000, 5000);
-  }, [computedMax, tickStep, desiredTickCount, fixedFiveKAxis]);
+  }, [computedMax, tickStep, desiredTickCount]);
 
   // Build ticks
   const ticks = useMemo(() => {
@@ -61,7 +58,7 @@ function SalesChart({
 
   return (
     <div
-      className="sales-chart-card card sales-chart--no-outline"
+      className="sales-chart-card"
       style={{
         '--chart-height': `${height}px`,
         '--bar-color-from': barColorFrom,

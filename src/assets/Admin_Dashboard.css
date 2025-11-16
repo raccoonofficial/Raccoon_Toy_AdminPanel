@@ -93,7 +93,7 @@
 /* --- Summary Cards Grid --- */
 .summary-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Default responsive behavior */
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -171,6 +171,7 @@
 .orders-card th, .orders-card td {
   text-align: left;
   padding: 1rem 1.25rem;
+  vertical-align: middle;
 }
 
 .orders-card th {
@@ -199,48 +200,74 @@
   display: none; /* Hide for desktop */
 }
 
+/* --- Status Indicator --- */
+.status-indicator {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.status-pending { background-color: rgba(251, 146, 60, 0.2); color: #fb923c; } /* Orange */
+.status-packed { background-color: rgba(96, 165, 250, 0.2); color: #60a5fa; } /* Blue */
+.status-sent { background-color: rgba(167, 139, 250, 0.2); color: #a78bfa; } /* Purple */
+.status-delivered { background-color: rgba(74, 222, 128, 0.2); color: #4ade80; } /* Green */
+.status-cancelled { background-color: rgba(248, 113, 113, 0.2); color: #f87171; } /* Red */
+.status-preorder { background-color: rgba(250, 204, 21, 0.2); color: #facc15; } /* Yellow */
+
+
 /* --- Responsive Design --- */
-@media (min-width: 1400px) {
+/* Consistent Desktop Layout from 900px upwards */
+@media (min-width: 900px) {
+  .summary-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
   .dashboard-main-section {
     grid-template-columns: 1.5fr 1fr;
   }
 }
 
-@media (max-width: 1200px) {
-  .summary-cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
+/* Mobile Layout */
+@media (max-width: 899px) {
   .admin-dashboard-inner {
     padding: 1rem;
   }
 
-  .dashboard-header h1 {
-    font-size: 1.5rem;
-  }
-
-  .summary-cards {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-  
-  /* Responsive table */
-  .orders-card thead { display: none; }
-  .orders-card tr { display: block; border: 1px solid var(--border-color, #374151); border-radius: 8px; margin-bottom: 1rem; }
-  .orders-card td { display: flex; justify-content: space-between; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color, #374151); }
-  .orders-card tr td:last-child { border-bottom: none; }
-  .orders-card td .cell-label { display: inline; font-weight: 600; color: var(--text-secondary, #9ca3af); }
-}
-
-@media (max-width: 480px) {
   .dashboard-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
   }
-  .summary-cards {
-    grid-template-columns: 1fr;
+
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  /* Responsive table for mobile */
+  .orders-card thead { display: none; }
+  .orders-card tr { display: block; border: 1px solid var(--border-color, #374151); border-radius: 8px; margin-bottom: 1rem; }
+  .orders-card td { 
+    display: flex; 
+    justify-content: space-between; 
+    padding: 0.6rem 1rem; /* Reduced padding for shorter rows */
+    border-bottom: 1px solid var(--border-color, #374151); 
+    align-items: center; 
+    min-width: 0; /* Allow flex shrinking */
+  }
+  .orders-card tr td:last-child { border-bottom: none; }
+  .orders-card td .cell-label { 
+    display: inline; 
+    font-weight: 600; 
+    color: var(--text-secondary, #9ca3af);
+    flex-shrink: 0; /* Prevent label from shrinking */
+    margin-right: 1rem;
+  }
+  .orders-card td .cell-value {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
   }
 }

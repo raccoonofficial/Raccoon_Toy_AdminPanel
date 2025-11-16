@@ -16,10 +16,12 @@ const summaryData = [
 
 function AdminDashboard() {
   const orders = [
-    { id: 'P_1101', name: 'Badhon shikder', phone: '01712345789', location: 'Nilambar sha Road-Dhaka, Hajaribag', price: '260 Taka' },
-    { id: 'P_1102', name: 'Sara Ahmed', phone: '01798765432', location: 'Mirpur, Dhaka', price: '420 Taka' },
-    { id: 'P_1103', name: 'John Doe', phone: '01711223344', location: 'Gulshan, Dhaka', price: '150 Taka' },
-    { id: 'P_1104', name: 'Aisha Khan', phone: '01755667788', location: 'Dhanmondi, Dhaka', price: '320 Taka' },
+    { id: 'P_1101', name: 'Badhon shikder', phone: '01712345789', location: 'Nilambar sha Road-Dhaka, Hajaribag', price: '260 Taka', status: 'Delivered' },
+    { id: 'P_1102', name: 'Sara Ahmed', phone: '01798765432', location: 'Mirpur, Dhaka', price: '420 Taka', status: 'Pending' },
+    { id: 'P_1103', name: 'John Doe', phone: '01711223344', location: 'Gulshan, Dhaka', price: '150 Taka', status: 'Cancelled' },
+    { id: 'P_1104', name: 'Aisha Khan', phone: '01755667788', location: 'Dhanmondi, Dhaka', price: '320 Taka', status: 'Packed' },
+    { id: 'P_1105', name: 'Kabir Singh', phone: '01711111111', location: 'Banani, Dhaka', price: '500 Taka', status: 'Sent' },
+    { id: 'P_1106', name: 'Mina Raju', phone: '01722222222', location: 'Uttara, Dhaka', price: '1000 Taka', status: 'Preorder' },
   ];
   
   // Get today's date formatted nicely
@@ -74,7 +76,6 @@ function AdminDashboard() {
             </div>
             <SalesChart
               forceSample={true}
-              fixedFiveKAxis={true}
               height={280}
             />
           </div>
@@ -94,16 +95,23 @@ function AdminDashboard() {
                     <th>Phone</th>
                     <th>Location</th>
                     <th>Price</th>
+                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {orders.map((order, idx) => (
                     <tr key={idx}>
-                      <td><span className="cell-label">P_id</span>{order.id}</td>
-                      <td><span className="cell-label">Name</span>{order.name}</td>
-                      <td><span className="cell-label">Phone</span>{order.phone}</td>
-                      <td><span className="cell-label">Location</span>{order.location}</td>
-                      <td><span className="cell-label">Price</span>{order.price}</td>
+                      <td><span className="cell-label">P_id</span><span className="cell-value">{order.id}</span></td>
+                      <td><span className="cell-label">Name</span><span className="cell-value">{order.name}</span></td>
+                      <td><span className="cell-label">Phone</span><span className="cell-value">{order.phone}</span></td>
+                      <td><span className="cell-label">Location</span><span className="cell-value">{order.location}</span></td>
+                      <td><span className="cell-label">Price</span><span className="cell-value">{order.price}</span></td>
+                      <td>
+                        <span className="cell-label">Status</span>
+                        <span className={`status-indicator status-${order.status.toLowerCase()}`}>
+                          {order.status}
+                        </span>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

@@ -1,11 +1,10 @@
-/* Root card adjustments (no blue outline, subtle border) */
-.sales-chart-card.sales-chart--no-outline {
-  border: 1px solid #e5e7eb;
-  border-radius: 18px;
-  padding: 18px 22px 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-  background: #fff;
-  outline: none;
+/* Root card adjustments for dark theme */
+.sales-chart-card {
+  background-color: #1f2937; /* finance-card-bg */
+  border: 1px solid #374151;  /* finance-border-color */
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 4px 10px -5px rgba(0, 0, 0, 0.2);
 }
 
 /* Header */
@@ -14,33 +13,36 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 0 0 4px 0;
+  padding: 0;
 }
 .sales-chart-card .chart-header h3 {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  letter-spacing: .5px;
-  color: #333;
+  color: #f97316; /* finance-accent-primary */
 }
 .sales-chart-card .chart-header select {
-  font-size: 0.75rem;
-  border: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid #374151; /* finance-border-color */
   padding: 6px 10px;
-  background: #f3f4f6;
-  border-radius: 8px;
-  color: #333;
+  background: #111827; /* finance-table-header-bg */
+  border-radius: 6px;
+  color: #f9fafb; /* finance-text-primary */
   cursor: pointer;
   appearance: none;
   outline: none;
+}
+.sales-chart-card .chart-header select:focus {
+    border-color: #f97316;
 }
 
 /* Divider */
 .chart-divider {
   width: 100%;
   height: 1px;
-  background: #ececef;
-  margin: 0 0 8px 0;
+  background: #374151; /* finance-border-color */
+  margin: 0.75rem 0;
 }
 
 /* Shell (axis + plot) */
@@ -48,32 +50,38 @@
   display: flex;
   position: relative;
   height: var(--chart-height, 260px);
-  gap: 5px;
+  gap: 1rem; /* Increased gap */
   user-select: none;
 }
 
 /* Y Axis */
 .chart-y-axis {
-    margin-top: 0px;
-    margin-bottom: 20px;
+  margin-top: -10px;
+  margin-bottom: 20px;
   position: relative;
-  width: 46px;
-  flex: 0 0 20px;
-  font-size: 0.56rem;
+  width: 40px;
+  flex: 0 0 30px;
+  font-size: 0.75rem; /* Increased font size */
   font-weight: 500;
-  color: #6b6f76;
+  color: #9ca3af; /* finance-text-secondary */
 }
 .chart-y-tick {
   position: absolute;
   left: 0;
   transform: translateY(50%);
   width: 100%;
+  border-top: 1px dashed #374151;
 }
 .chart-y-tick span {
   position: absolute;
   left: 0;
   transform: translateY(-50%);
   white-space: nowrap;
+  background: #1f2937; /* Match card bg to hide line behind text */
+  padding-right: 4px;
+}
+.chart-y-tick:first-child {
+    border-top: none; /* No line for the zero tick */
 }
 
 /* Plot area */
@@ -84,11 +92,9 @@
   align-items: flex-end;
   height: 100%;
   overflow: visible;
-  padding: 0 4px;
+  padding: 0;
   box-sizing: border-box;
 }
-
-
 
 /* Bars container */
 .chart-bars-row {
@@ -97,12 +103,12 @@
   align-items: flex-end;
   width: 100%;
   height: 100%;
-  gap: 22px;
+  gap: 1rem;
   z-index: 2;
-  padding: 0 4px;
+  padding: 0;
 }
 
-/* Bar group – FIX: add height:100% */
+/* Bar group */
 .chart-bar-group {
   flex: 1 1 0;
   min-width: 0;
@@ -110,16 +116,16 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  height: 100%; /* critical so the track inherits a real height */
+  height: 100%;
 }
 
 /* Track */
 .chart-bar-track {
   position: relative;
-  width: 10px;
+  width: 12px;
   height: 100%;
-  background: linear-gradient(180deg, rgba(91,47,207,0.08), rgba(91,47,207,0.03));
-  border-radius: 12px;
+  background: var(--track-color, rgba(249, 115, 22, 0.1));
+  border-radius: 8px;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
@@ -128,27 +134,26 @@
 /* Fill */
 .chart-bar-fill {
   width: 100%;
-  background: linear-gradient(180deg, var(--bar-color-from, #C9BBFF), var(--bar-color-to, #5B2FCF));
-  border-radius: 12px 12px 10px 10px;
-  box-shadow: 0 2px 4px rgba(91,47,207,0.25);
+  background: linear-gradient(180deg, var(--bar-color-from), var(--bar-color-to));
+  border-radius: 8px 8px 6px 6px;
+  box-shadow: none; /* Removed shadow */
   transform-origin: bottom;
   animation: barGrow .6s cubic-bezier(.42,.65,.34,1.15);
-  transition: height .35s ease, transform .25s ease, box-shadow .25s ease;
+  transition: height .35s ease, opacity .25s ease;
 }
 
-.chart-bar-fill:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 10px rgba(91,47,207,0.35);
+.chart-bar-group:hover .chart-bar-fill {
+  opacity: 0.85;
 }
 
 /* Labels */
 .chart-bar-label {
-  margin-top: 6px;
-  font-size: 0.58rem;
+  margin-top: 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
   letter-spacing: .4px;
-  color: #5d6268;
+  color: #9ca3af; /* finance-text-secondary */
 }
-
 
 /* Animation */
 @keyframes barGrow {

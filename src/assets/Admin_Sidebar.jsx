@@ -9,6 +9,7 @@ import {
   Settings,
   LogOut,
   Landmark,
+  Music, // Import the Music icon
 } from 'lucide-react';
 import logo from '../assets/images/logo.png'; // Import the logo
 import './Admin_Sidebar.css';
@@ -19,6 +20,7 @@ const navLinks = [
   { label: 'Products', icon: Package, href: '/products' },
   { label: 'Orders', icon: ShoppingCart, href: '/orders' },
   { label: 'Finance', icon: Landmark, href: '/finance' },
+  { label: 'Music Player', icon: Music, href: '/music' }, // Added Music Player link
   { label: 'Analytics', icon: BarChart3, href: '/analytics' },
   { label: 'Settings', icon: Settings, href: '/settings' },
 ];

@@ -3,6 +3,7 @@ import { DollarSign, ShoppingBag, BarChart3, Wallet, Users, Package, Bell, Eye, 
 import './Admin_Dashboard.css';
 import SalesChart from './SalesChart';
 import './SalesChart.css';
+import AdminNotifications from './Admin_Notifications';
 
 // Data for summary cards
 const summaryData = [
@@ -27,6 +28,7 @@ function AdminDashboard() {
   const [isOrderSheetVisible, setOrderSheetVisible] = useState(false);
   const [activeLogFilter, setActiveLogFilter] = useState('All Logs'); // Default to 'All Logs'
   const [logSearchTerm, setLogSearchTerm] = useState('');
+  const [isNotificationsVisible, setNotificationsVisible] = useState(false);
 
   const allOrders = [
     { id: 'P_1101', productId: 'T-001', name: 'Badhon shikder', phone: '01712345789', location: 'Nilambar sha Road-Dhaka, Hajaribag', price: '260 Taka', status: 'Delivered' },
@@ -89,6 +91,10 @@ function AdminDashboard() {
     setOrderSheetVisible(true);
   };
 
+  const toggleNotifications = () => {
+    setNotificationsVisible(!isNotificationsVisible);
+  };
+
   const today = new Date('2025-11-16 20:29:25Z').toLocaleDateString('en-US', {
     year: 'numeric', month: 'long', day: 'numeric'
   });
@@ -105,10 +111,11 @@ function AdminDashboard() {
             <p>Here's your business snapshot as of {today}.</p>
           </div>
           <div className="notification-wrapper">
-            <button className="notification-btn" aria-label="Notifications">
+            <button className="notification-btn" aria-label="Notifications" onClick={toggleNotifications}>
               <Bell size={28} />
               {notificationCount > 0 && <span className="notification-badge">{notificationCount}</span>}
             </button>
+            {isNotificationsVisible && <AdminNotifications onClose={toggleNotifications} />}
           </div>
         </div>
 

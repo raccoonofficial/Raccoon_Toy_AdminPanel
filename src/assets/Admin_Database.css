@@ -1,0 +1,30 @@
+/* ============================================
+   ADMIN DATABASE PAGE - Placeholder
+   ============================================ */
+
+.database-page {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+  color: var(--text-secondary, #9ca3af);
+}
+
+.database-header-section .header-icon {
+  margin-bottom: 1rem;
+  color: var(--brand-color, #f97316);
+}
+
+.database-header-section h1 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  color: var(--text-primary, #f9fafb);
+  margin: 0 0 0.5rem 0;
+}
+
+.database-header-section p {
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  margin: 0;
+}

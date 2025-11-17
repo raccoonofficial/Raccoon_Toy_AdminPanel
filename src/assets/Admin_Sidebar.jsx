@@ -5,12 +5,11 @@ import {
   Users,
   Package,
   ShoppingCart,
-  BarChart3,
-  Settings,
   LogOut,
   Landmark,
   Music,
   User, // Import the User icon
+  Database // Import the Database icon
 } from 'lucide-react';
 import logo from '../assets/images/logo.png'; // Import the logo
 import './Admin_Sidebar.css';
@@ -21,9 +20,8 @@ const navLinks = [
   { label: 'Products', icon: Package, href: '/products' },
   { label: 'Orders', icon: ShoppingCart, href: '/orders' },
   { label: 'Finance', icon: Landmark, href: '/finance' },
-  { label: 'Music Player', icon: Music, href: '/music' }, // Added Music Player link
-  { label: 'Analytics', icon: BarChart3, href: '/analytics' },
-  { label: 'Settings', icon: Settings, href: '/settings' },
+  { label: 'Music Player', icon: Music, href: '/music' },
+  { label: 'Database', icon: Database, href: '/database' },
 ];
 
 const Admin_Sidebar = ({ onNavigate, className }) => {

@@ -126,6 +126,9 @@
 .notifications-footer { padding: 1rem 1.5rem; text-align: center; border-top: 1px solid var(--border-color, #374151); background: var(--dark-bg-secondary, #1f2937); }
 .footer-action-btn { background: none; border: none; color: var(--brand-color, #f97316); font-weight: 600; font-size: 0.875rem; cursor: pointer; text-decoration: none; transition: opacity 0.2s ease; padding: 0; }
 .footer-action-btn:hover { opacity: 0.8; }
+.footer-action-btn:focus {
+  outline: none; /* Removes the border on click */
+}
 
 /* Responsive Adjustments */
 @media (max-width: 640px) {

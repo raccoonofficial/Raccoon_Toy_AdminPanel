@@ -1,5 +1,5 @@
 /* =========================================================
-   CVC ADVANCED PROFILE BUILDER - DARK, ORANGE & WHITE THEME
+   CVC CUSTOMER ADD/EDIT PAGE - DARK, ORANGE & WHITE THEME
    ========================================================= */
 
 :root {
@@ -14,6 +14,7 @@
   --cvc-accent-primary-dark: #ea580c;
 }
 
+/* --- Base Layout --- */
 .cvc-profile-builder {
   background-color: var(--cvc-builder-bg);
 }
@@ -41,219 +42,83 @@
   flex-direction: column;
   justify-content: space-between;
 }
-
-.cvc-profile-preview {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow-y: auto; /* Make preview scrollable */
-}
-
-.cvc-profile-header {
-  text-align: center;
-  flex-shrink: 0;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--cvc-border-color);
-}
-.cvc-avatar-placeholder {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background: var(--cvc-builder-bg);
-  color: var(--cvc-text-secondary);
-  border: 1px solid var(--cvc-border-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1rem;
-}
+.cvc-profile-preview { display: flex; flex-direction: column; height: 100%; overflow-y: auto; }
+.cvc-profile-header { text-align: center; flex-shrink: 0; padding-bottom: 1.5rem; border-bottom: 1px solid var(--cvc-border-color); }
+.cvc-avatar-placeholder { width: 100px; height: 100px; border-radius: 50%; background: var(--cvc-builder-bg); color: var(--cvc-text-secondary); border: 1px solid var(--cvc-border-color); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
 .cvc-profile-header h3 { font-size: 1.4rem; color: var(--cvc-text-primary); margin: 0 0 0.25rem; word-break: break-word; }
 .cvc-profile-header p { font-size: 0.9rem; color: var(--cvc-text-secondary); margin: 0 0 1rem; font-family: monospace; }
-
-.cvc-tier-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-}
+.cvc-tier-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
 .cvc-tier-badge.cvc-tier-basic { background: rgba(107, 114, 128, 0.2); color: var(--cvc-text-secondary); }
 .cvc-tier-badge.cvc-tier-bronze { background: rgba(205, 127, 50, 0.2); color: #cd7f32; }
 .cvc-tier-badge.cvc-tier-silver { background: rgba(192, 192, 192, 0.2); color: #c0c0c0; }
 .cvc-tier-badge.cvc-tier-gold { background: rgba(255, 215, 0, 0.2); color: #ffd700; }
-
-.cvc-profile-details {
-  margin-top: 1.5rem;
-  text-align: left;
-  flex-grow: 1;
-}
-
-.cvc-details-section {
-  margin-bottom: 1.25rem;
-}
-.cvc-details-section:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-}
-.cvc-details-title {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: var(--cvc-text-secondary);
-  letter-spacing: 0.5px;
-  margin: 0 0 1rem 0;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--cvc-border-color);
-}
-
-.cvc-detail-item {
-  display: grid;
-  grid-template-columns: 70px 1fr;
-  align-items: flex-start;
-  gap: 0.5rem;
-  font-size: 0.85rem;
-  margin-bottom: 0.7rem;
-}
-.cvc-detail-label {
-  font-weight: 600;
-  color: var(--cvc-text-secondary);
-  text-align: right;
-}
-.cvc-detail-value {
-  color: var(--cvc-text-primary);
-  word-break: break-word;
-}
-.cvc-detail-value a { color: var(--cvc-accent-primary); text-decoration: none; }
-.cvc-detail-value a:hover { text-decoration: underline; }
-
-
-/* --- NEW: Styling for Preview Tags & Notes --- */
-.cvc-interests-preview {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-.cvc-interest-tag {
-  background-color: var(--cvc-builder-bg);
-  color: var(--cvc-text-secondary);
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-.cvc-notes-preview {
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: var(--cvc-text-secondary);
-  font-style: italic;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  padding-left: 0.5rem;
-  border-left: 2px solid var(--cvc-border-color);
-}
-
+.cvc-profile-details { margin-top: 1.5rem; text-align: left; flex-grow: 1; }
+.cvc-details-section { margin-bottom: 1.25rem; }
+.cvc-details-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--cvc-text-secondary); letter-spacing: 0.5px; margin: 0 0 1rem 0; padding-bottom: 0.5rem; border-bottom: 1px solid var(--cvc-border-color); }
+.cvc-detail-item { display: grid; grid-template-columns: 70px 1fr; align-items: flex-start; gap: 0.5rem; font-size: 0.85rem; margin-bottom: 0.7rem; }
+.cvc-detail-label { font-weight: 600; color: var(--cvc-text-secondary); text-align: right; }
+.cvc-detail-value { color: var(--cvc-text-primary); word-break: break-word; }
+.cvc-interests-preview { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.cvc-interest-tag { background-color: var(--cvc-builder-bg); color: var(--cvc-text-secondary); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500; }
+.cvc-notes-preview { font-size: 0.85rem; line-height: 1.5; color: var(--cvc-text-secondary); font-style: italic; white-space: pre-wrap; word-wrap: break-word; padding-left: 0.5rem; border-left: 2px solid var(--cvc-border-color); }
+.cvc-form-actions-vertical { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; flex-shrink: 0; }
 
 /* --- Right Panel: Tabs and Content --- */
 .cvc-right-panel { flex-grow: 1; display: flex; flex-direction: column; }
-
-.cvc-tab-navigation {
-  display: flex;
-  border-bottom: 1px solid var(--cvc-border-color);
-  padding: 0 2rem;
-  flex-shrink: 0;
-}
+.cvc-tab-navigation { display: flex; border-bottom: 1px solid var(--cvc-border-color); padding: 0 2rem; flex-shrink: 0; flex-wrap: wrap; }
+/* --- UPDATED TAB BUTTON STYLE --- */
 .cvc-tab-navigation button {
-  background: none; border: none;
-  padding: 1.25rem 0; margin-right: 2rem;
-  font-size: 0.95rem; font-weight: 600;
+  background: none;
+  border: none;
+  /* Removed border-bottom styling */
+  padding: 1.25rem 0;
+  margin-right: 2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
   color: var(--cvc-text-secondary);
   cursor: pointer;
-  display: flex; align-items: center; gap: 0.5rem;
-  position: relative;
-  transition: color 0.2s;
-  outline: none; /* This was already here but we will ensure focus state is clean */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.2s ease;
+  /* Explicitly remove outline for focus states */
+  outline: none;
+  box-shadow: none;
 }
-
-/* This is the key change to remove the focus outline */
 .cvc-tab-navigation button:focus,
 .cvc-tab-navigation button:focus-visible {
   outline: none;
   box-shadow: none;
 }
-
-
-.cvc-tab-navigation button:hover { color: var(--cvc-text-primary); }
-.cvc-tab-navigation button.cvc-active { color: var(--cvc-accent-primary); }
-.cvc-tab-navigation button::after {
-  content: '';
-  position: absolute;
-  bottom: -1px; left: 0; right: 0;
-  height: 2px;
-  background: var(--cvc-accent-primary);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
+.cvc-tab-navigation button:hover {
+  color: var(--cvc-text-primary);
 }
-.cvc-tab-navigation button.cvc-active::after { transform: scaleX(1); }
-
+.cvc-tab-navigation button.cvc-active {
+  color: var(--cvc-accent-primary);
+}
 .cvc-tab-content-container { padding: 2rem; flex-grow: 1; overflow-y: auto; }
+
+
+/* --- Form Fields --- */
 .cvc-field-group { margin-bottom: 1.5rem; }
 .cvc-field-group-row { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
 .cvc-field-group-row > .cvc-field-group { flex: 1; margin: 0; }
-
-.cvc-field-group label {
-  display: flex; align-items: center; gap: 0.5rem;
-  font-weight: 600; color: var(--cvc-text-secondary);
-  font-size: 0.9rem; margin-bottom: 0.5rem;
-}
-
-.cvc-field-group input, .cvc-field-group textarea, .cvc-field-group select {
-  width: 100%; box-sizing: border-box;
-  background: var(--cvc-builder-bg);
-  border: 1px solid var(--cvc-border-color);
-  color: var(--cvc-text-primary);
-  border-radius: 6px;
-  padding: 0.75rem 1rem;
-  font-size: 0.95rem;
-  transition: all 0.2s;
-}
-.cvc-field-group input:focus, .cvc-field-group textarea:focus, .cvc-field-group select:focus {
-  outline: none;
-  border-color: var(--cvc-accent-primary);
-  background: var(--cvc-builder-bg);
-  box-shadow: 0 0 0 2px var(--cvc-accent-primary-light);
-}
-
+.cvc-field-group label { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--cvc-text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem; }
+.cvc-field-group input, .cvc-field-group textarea, .cvc-field-group select { width: 100%; box-sizing: border-box; background: var(--cvc-builder-bg); border: 1px solid var(--cvc-border-color); color: var(--cvc-text-primary); border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.95rem; transition: all 0.2s; }
+.cvc-field-group input:focus, .cvc-field-group textarea:focus, .cvc-field-group select:focus { outline: none; border-color: var(--cvc-accent-primary); background: var(--cvc-builder-bg); box-shadow: 0 0 0 2px var(--cvc-accent-primary-light); }
+.cvc-field-group input:disabled { background: #2a3546; color: var(--cvc-text-secondary); cursor: not-allowed; opacity: 0.7; }
 .cvc-err { margin-top: 0.25rem; color: #ef4444; font-size: 0.8rem; }
+.cvc-field-hint { font-size: 0.8rem; color: var(--cvc-text-secondary); margin-top: 0.5rem; }
 
 /* --- Modern Checkbox Buttons --- */
 .cvc-checkbox-grid-modern { display: flex; flex-wrap: wrap; gap: 0.75rem; }
 .cvc-checkbox-grid-modern div { display: inline-block; }
 .cvc-checkbox-grid-modern input[type="checkbox"] { display: none; }
-.cvc-checkbox-grid-modern label {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  background: var(--cvc-builder-bg);
-  color: var(--cvc-text-secondary);
-  border: 1px solid var(--cvc-border-color);
-  cursor: pointer;
-  font-weight: 500; font-size: 0.85rem;
-  transition: all 0.2s;
-}
-.cvc-checkbox-grid-modern input:checked + label {
-  background: var(--cvc-accent-primary-light);
-  color: var(--cvc-accent-primary);
-  border-color: var(--cvc-accent-primary);
-}
+.cvc-checkbox-grid-modern label { display: inline-block; padding: 0.5rem 1rem; border-radius: 20px; background: var(--cvc-builder-bg); color: var(--cvc-text-secondary); border: 1px solid var(--cvc-border-color); cursor: pointer; font-weight: 500; font-size: 0.85rem; transition: all 0.2s; }
+.cvc-checkbox-grid-modern input:checked + label { background: var(--cvc-accent-primary-light); color: var(--cvc-accent-primary); border-color: var(--cvc-accent-primary); }
 
-/* --- Vertical Buttons --- */
-.cvc-form-actions-vertical { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; flex-shrink: 0; }
-.cvc-btn-form {
-  width: 100%; border: 1px solid transparent; border-radius: 8px;
-  padding: 0.8rem; font-weight: 600; cursor: pointer;
-  font-size: 0.95rem; transition: all 0.2s;
-}
+/* --- Buttons --- */
+.cvc-btn-form { width: 100%; border: 1px solid transparent; border-radius: 8px; padding: 0.8rem; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: all 0.2s; }
 .cvc-btn-form.cvc-primary { background: var(--cvc-accent-primary); color: white; }
 .cvc-btn-form.cvc-primary:hover { background-color: var(--cvc-accent-primary-dark); }
 .cvc-btn-form.cvc-muted { background: var(--cvc-card-bg); color: var(--cvc-text-secondary); border-color: var(--cvc-border-color); }

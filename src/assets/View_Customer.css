@@ -1,5 +1,7 @@
 /* =========================================================
    CVC CUSTOMER VIEW PAGE - DARK, ORANGE & WHITE THEME
+   This file is designed to mirror Add_Customers.css for
+   maximum visual consistency.
    ========================================================= */
 
 :root {
@@ -14,43 +16,13 @@
   --cvc-accent-primary-dark: #ea580c;
 }
 
-/* --- Base Layout --- */
-.cvc-profile-builder {
-  background-color: var(--cvc-builder-bg);
-}
-
-.cvc-builder-card {
-  display: flex;
-  width: 100%;
-  margin: 0;
-  background: var(--cvc-card-bg);
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
-  border: 1px solid var(--cvc-border-color);
-  min-height: 85vh;
-}
-
-/* --- Loading State --- */
-.cvc-loading {
-    text-align: center;
-    padding: 4rem;
-    font-size: 1.2rem;
-    color: var(--cvc-text-secondary);
-    width: 100%;
-}
+/* --- Base Layout & Loading State --- */
+.cvc-profile-builder { background-color: var(--cvc-builder-bg); }
+.cvc-builder-card { display: flex; width: 100%; margin: 0; background: var(--cvc-card-bg); border-radius: 12px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4); overflow: hidden; border: 1px solid var(--cvc-border-color); min-height: 85vh; }
+.cvc-loading { text-align: center; padding: 4rem; font-size: 1.2rem; color: var(--cvc-text-secondary); width: 100%; }
 
 /* --- Left Panel: Profile Preview --- */
-.cvc-left-panel {
-  width: 320px;
-  flex-shrink: 0;
-  background: var(--cvc-left-panel-bg);
-  border-right: 1px solid var(--cvc-border-color);
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+.cvc-left-panel { width: 320px; flex-shrink: 0; background: var(--cvc-left-panel-bg); border-right: 1px solid var(--cvc-border-color); padding: 2rem; display: flex; flex-direction: column; justify-content: space-between; }
 .cvc-profile-preview { display: flex; flex-direction: column; height: 100%; overflow-y: auto; }
 .cvc-profile-header { text-align: center; flex-shrink: 0; padding-bottom: 1.5rem; border-bottom: 1px solid var(--cvc-border-color); }
 .cvc-avatar-placeholder { width: 100px; height: 100px; border-radius: 50%; background: var(--cvc-builder-bg); color: var(--cvc-text-secondary); border: 1px solid var(--cvc-border-color); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
@@ -70,29 +42,63 @@
 .cvc-interests-preview { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .cvc-interest-tag { background-color: var(--cvc-builder-bg); color: var(--cvc-text-secondary); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500; }
 .cvc-notes-preview { font-size: 0.85rem; line-height: 1.5; color: var(--cvc-text-secondary); font-style: italic; white-space: pre-wrap; word-wrap: break-word; padding-left: 0.5rem; border-left: 2px solid var(--cvc-border-color); }
-.cvc-form-actions-vertical { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; flex-shrink: 0; }
 
-/* --- Right Panel: Tabs and Content --- */
+/* --- Right Panel --- */
 .cvc-right-panel { flex-grow: 1; display: flex; flex-direction: column; }
 .cvc-tab-navigation { display: flex; border-bottom: 1px solid var(--cvc-border-color); padding: 0 2rem; flex-shrink: 0; flex-wrap: wrap; }
-.cvc-tab-navigation button { background: none; border: none; padding: 1.25rem 0; margin-right: 2rem; font-size: 0.95rem; font-weight: 600; color: var(--cvc-text-secondary); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; position: relative; transition: color 0.2s; outline: none; }
-.cvc-tab-navigation button:hover { color: var(--cvc-text-primary); }
-.cvc-tab-navigation button.cvc-active { color: var(--cvc-accent-primary); }
-.cvc-tab-navigation button::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--cvc-accent-primary); transform: scaleX(0); transition: transform 0.3s ease; }
-.cvc-tab-navigation button.cvc-active::after { transform: scaleX(1); }
+/* --- UPDATED TAB BUTTON STYLE --- */
+.cvc-tab-navigation button {
+  background: none;
+  border: none;
+  /* Removed border-bottom styling */
+  padding: 1.25rem 0;
+  margin-right: 2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--cvc-text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.2s ease;
+  /* Explicitly remove outline for focus states */
+  outline: none;
+  box-shadow: none;
+}
+.cvc-tab-navigation button:focus,
+.cvc-tab-navigation button:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+.cvc-tab-navigation button:hover {
+  color: var(--cvc-text-primary);
+}
+.cvc-tab-navigation button.cvc-active {
+  color: var(--cvc-accent-primary);
+}
 .cvc-tab-content-container { padding: 2rem; flex-grow: 1; overflow-y: auto; }
 
-/* --- NEW: Read-Only Field Styles --- */
-.cvc-ro-group { margin-bottom: 1.5rem; }
-.cvc-ro-group label { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--cvc-text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem; }
-.cvc-ro-value { width: 100%; box-sizing: border-box; background: var(--cvc-builder-bg); border: 1px solid var(--cvc-border-color); color: var(--cvc-text-primary); border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.95rem; min-height: 44px; display: flex; align-items: center; }
-.cvc-ro-value a { color: var(--cvc-accent-primary); text-decoration: none; }
-.cvc-ro-value a:hover { text-decoration: underline; }
-.cvc-ro-value.cvc-notes-view { white-space: pre-wrap; line-height: 1.6; min-height: 100px; align-items: flex-start; }
-
-/* --- Re-used styles from Add_Customers for consistency --- */
+/* --- Field Groups & Labels --- */
 .cvc-field-group { margin-bottom: 1.5rem; }
+.cvc-field-group-row { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+.cvc-field-group-row > .cvc-field-group { flex: 1; margin: 0; }
 .cvc-field-group label { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--cvc-text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem; }
+
+/* --- Styling for "View" Look --- */
+.cvc-field-group input, .cvc-field-group textarea, .cvc-field-group select { width: 100%; box-sizing: border-box; background: var(--cvc-builder-bg); border: 1px solid var(--cvc-border-color); color: var(--cvc-text-primary); border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.95rem; }
+.cvc-field-group input:disabled, .cvc-field-group textarea:disabled, .cvc-field-group select:disabled { background: var(--cvc-builder-bg); color: var(--cvc-text-primary); opacity: 0.9; cursor: default; border-color: var(--cvc-border-color); }
+.cvc-field-group textarea { line-height: 1.6; }
+.cvc-field-hint { font-size: 0.8rem; color: var(--cvc-text-secondary); margin-top: 0.5rem; }
+
+/* --- Checkbox Grid (for disabled view) --- */
+.cvc-checkbox-grid-modern { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.cvc-checkbox-grid-modern div { display: inline-block; }
+.cvc-checkbox-grid-modern input[type="checkbox"] { display: none; }
+.cvc-checkbox-grid-modern label { display: inline-block; padding: 0.5rem 1rem; border-radius: 20px; background: var(--cvc-builder-bg); color: var(--cvc-text-secondary); border: 1px solid var(--cvc-border-color); font-weight: 500; font-size: 0.85rem; }
+.cvc-checkbox-grid-modern input:checked + label { background: var(--cvc-accent-primary-light); color: var(--cvc-accent-primary); border-color: var(--cvc-accent-primary); }
+.cvc-checkbox-grid-modern input:disabled + label { cursor: default; opacity: 0.8; }
+
+/* --- Account Info & History Table --- */
 .cvc-info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; background-color: var(--cvc-builder-bg); padding: 1rem; border-radius: 6px; border: 1px solid var(--cvc-border-color); }
 .cvc-info-grid > div { display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; color: var(--cvc-text-secondary); }
 .cvc-info-grid > div span { color: var(--cvc-text-primary); font-weight: 500; }
@@ -104,6 +110,7 @@
 .cvc-history-table tr:last-child td { border-bottom: none; }
 
 /* --- Buttons --- */
+.cvc-form-actions-vertical { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; flex-shrink: 0; }
 .cvc-btn-form { width: 100%; border: 1px solid transparent; border-radius: 8px; padding: 0.8rem; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: all 0.2s; }
 .cvc-btn-form.cvc-primary { background: var(--cvc-accent-primary); color: white; }
 .cvc-btn-form.cvc-primary:hover { background-color: var(--cvc-accent-primary-dark); }

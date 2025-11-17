@@ -16,13 +16,11 @@ export default function ViewCustomerPage() {
     if (customerData) {
       setCustomer({
         ...customerData,
-        // Ensure interestedCategories is an object to avoid errors
         interestedCategories: customerData.interestedCategories || {},
       });
     }
   }, [customerId]);
 
-  // Display a loading state while fetching data
   if (!customer) {
     return <div className="cvc-loading">Loading Customer Details...</div>;
   }
@@ -41,42 +39,72 @@ export default function ViewCustomerPage() {
     switch (activeTab) {
       case 'Identity':
         return (
-            <div className="cvc-tab-content">
-                <div className="cvc-ro-group"><label>Full Name</label><div className="cvc-ro-value">{customer.name}</div></div>
-                <div className="cvc-ro-group"><label>Date of Birth</label><div className="cvc-ro-value">{customer.dateOfBirth || 'N/A'}</div></div>
-                <div className="cvc-ro-group"><label>Gender</label><div className="cvc-ro-value">{customer.gender}</div></div>
+          <div className="cvc-tab-content">
+            <div className="cvc-field-group">
+              <label><User size={16} /> Full Name</label>
+              <input value={customer.name} disabled />
             </div>
+            <div className="cvc-field-group-row">
+              <div className="cvc-field-group">
+                <label>Date of Birth</label>
+                <input value={customer.dateOfBirth || 'N/A'} disabled />
+              </div>
+              <div className="cvc-field-group">
+                <label>Gender</label>
+                <input value={customer.gender} disabled />
+              </div>
+            </div>
+          </div>
         );
       case 'Contact':
         return (
-            <div className="cvc-tab-content">
-                <div className="cvc-ro-group"><label>Email Address</label><div className="cvc-ro-value">{customer.email}</div></div>
-                <div className="cvc-ro-group"><label>Phone Number</label><div className="cvc-ro-value">{customer.phone || 'N/A'}</div></div>
-                <div className="cvc-ro-group"><label>Full Address</label><div className="cvc-ro-value">{fullAddress || 'N/A'}</div></div>
+           <div className="cvc-tab-content">
+            <div className="cvc-field-group">
+              <label><Mail size={16} /> Email Address</label>
+              <input value={customer.email} disabled/>
             </div>
+            <div className="cvc-field-group">
+              <label><Phone size={16} /> Phone Number</label>
+              <input value={customer.phone || 'N/A'} disabled/>
+            </div>
+             <div className="cvc-field-group">
+                <label><Home size={16}/> Full Address</label>
+                <input value={fullAddress || 'N/A'} disabled />
+            </div>
+          </div>
         );
       case 'Profile':
-        return (
-            <div className="cvc-tab-content">
-                <div className="cvc-ro-group"><label>Loyalty Tier</label><div className="cvc-ro-value">{customer.loyaltyTier}</div></div>
-                <div className="cvc-ro-group"><label>Social Media</label><div className="cvc-ro-value">{customer.socialMediaLink ? <a href={customer.socialMediaLink} target="_blank" rel="noopener noreferrer">{customer.socialMediaLink}</a> : 'N/A'}</div></div>
-                <div className="cvc-ro-group"><label>Interested Categories</label><div className="cvc-ro-value">{selectedCategories.join(', ') || 'N/A'}</div></div>
+         return (
+          <div className="cvc-tab-content">
+             <div className="cvc-field-group">
+                <label><Star size={16} /> Loyalty Tier</label>
+                <input value={customer.loyaltyTier} disabled />
             </div>
-        );
-      case 'Notes':
-        return (
-            <div className="cvc-tab-content">
-                <div className="cvc-ro-group">
-                    <label>Customer Notes</label>
-                    <div className="cvc-ro-value cvc-notes-view">{customer.customerNotes || 'No notes added.'}</div>
-                </div>
+            <div className="cvc-field-group">
+              <label><LinkIcon size={16} /> Social Media URL</label>
+              <input value={customer.socialMediaLink || 'N/A'} disabled />
             </div>
+            <div className="cvc-field-group">
+              <label><Tag size={16} /> Interested Categories</label>
+              <div className="cvc-checkbox-grid-modern">
+                {selectedCategories.length > 0 ? selectedCategories.map(cat => (
+                  <div key={cat}>
+                    <input type="checkbox" id={cat} checked readOnly disabled />
+                    <label htmlFor={cat}>{cat}</label>
+                  </div>
+                )) : <p className="cvc-field-hint">No interests specified.</p>}
+              </div>
+            </div>
+          </div>
         );
       case 'Account':
         if (customer.userType === 'Registered User') {
           return (
             <div className="cvc-tab-content">
-              <div className="cvc-ro-group"><label>User Type</label><div className="cvc-ro-value">Registered User</div></div>
+              <div className="cvc-field-group">
+                <label><Users size={16} /> User Type</label>
+                <input value="Registered User" disabled />
+              </div>
               <div className="cvc-field-group"><label><Info size={16} /> Last Login Details</label><div className="cvc-info-grid">
                   <div><Calendar size={14}/><span>{customer.accountInfo?.lastLogin.date}</span></div>
                   <div><Monitor size={14}/><span>{customer.accountInfo?.lastLogin.device}</span></div>
@@ -91,13 +119,30 @@ export default function ViewCustomerPage() {
             </div>
           );
         }
-        // For Social Media users
-        return (
+        return ( // For Social Media users
             <div className="cvc-tab-content">
-                <div className="cvc-ro-group"><label>User Type</label><div className="cvc-ro-value">Social Media</div></div>
-                <div className="cvc-ro-group"><label>Original Source</label><div className="cvc-ro-value">{customer.source}</div></div>
-                <div className="cvc-ro-group"><label>Admin Creator</label><div className="cvc-ro-value">{customer.adminCreator}</div></div>
+                <div className="cvc-field-group">
+                    <label><Users size={16}/> User Type</label>
+                    <input value="Social Media" disabled />
+                </div>
+                <div className="cvc-field-group">
+                    <label><AtSign size={16}/> Original Source</label>
+                    <input value={customer.source} disabled />
+                </div>
+                <div className="cvc-field-group">
+                    <label><UserCircle size={16}/> Admin Creator</label>
+                    <input value={customer.adminCreator} disabled />
+                </div>
             </div>
+        );
+      case 'Notes':
+        return (
+          <div className="cvc-tab-content">
+            <div className="cvc-field-group">
+              <label><Edit3 size={16} /> Customer Notes</label>
+              <textarea value={customer.customerNotes || 'No notes added.'} rows={8} disabled></textarea>
+            </div>
+          </div>
         );
       default: return null;
     }

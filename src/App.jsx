@@ -10,13 +10,14 @@ import AdminDashboard from './assets/Admin_Dashboard';
 import AdminProducts from './assets/Admin_Products';
 import AdminCustomersPage from './assets/Admin_Customers';
 import AddCustomersPage from './assets/Add_Customers';
+import ViewCustomerPage from './assets/View_Customer'; // IMPORT THE VIEW PAGE
 import Admin_Orders from './assets/Admin_Orders';
 import Finance from './assets/Finance';
 import Add_Products from './assets/Add_Products';
 import Add_Orders from './assets/Add_Orders';
 import MusicPlayer from './assets/MusicPlayer';
 import Admin_Profile from './assets/Admin_Profile';
-import Admin_Database from './assets/Admin_Database'; // Import the new Database component
+import Admin_Database from './assets/Admin_Database';
 import './App.css';
 
 const initialPlaylist = [
@@ -33,7 +34,7 @@ const PrivateRoute = ({ children }) => {
 
 function App() {
   const userName = "ninjashamimkabirkazim";
-  const currentDate = new Date('2025-11-17T07:23:55Z');
+  const currentDate = new Date('2025-11-17T13:23:03Z');
   const navigate = useNavigate();
 
   const getInitialState = (key, defaultValue) => {
@@ -273,8 +274,11 @@ function App() {
             <Route path="products/add" element={<Add_Products />} />
             <Route path="users" element={<AdminCustomersPage />} />
             <Route path="users/add" element={<AddCustomersPage />} />
-            {/* THIS IS THE NEW ROUTE FOR EDITING A CUSTOMER */}
+            
+            {/* --- CORE ROUTES FOR VIEWING AND EDITING --- */}
+            <Route path="users/view/:customerId" element={<ViewCustomerPage />} />
             <Route path="users/edit/:customerId" element={<AddCustomersPage />} />
+            
             <Route path="orders" element={<Admin_Orders onAddNew={() => navigate('/orders/add')} />} />
             <Route path="orders/add" element={<Add_Orders onBack={() => navigate('/orders')} onCreated={() => navigate('/orders')} />} />
             <Route path="finance" element={<Finance />} />

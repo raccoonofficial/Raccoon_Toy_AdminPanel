@@ -22,7 +22,9 @@
 .search-wrapper { position: relative; flex-grow: 1; min-width: 250px; }
 .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
 .search-wrapper input { width: 100%; padding: 0.75rem 1rem 0.75rem 3rem; background: var(--dark-bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 1rem; }
-.filter-wrapper { display: flex; align-items: center; gap: 1rem; }
+.search-wrapper input:focus { outline: none; border-color: var(--brand-color); }
+
+.filter-wrapper { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .filter-wrapper select { padding: 0.75rem 1rem; background: var(--dark-bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px; }
 .view-toggle { display: flex; background: var(--dark-bg-secondary); border-radius: 8px; padding: 4px; }
 .view-toggle button { background: transparent; border: none; color: var(--text-secondary); padding: 0.4rem 0.6rem; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
@@ -31,7 +33,7 @@
 /* --- Card View --- */
 .card-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem; }
 .customer-card { background: var(--dark-bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; transition: all 0.2s; }
-.customer-card:hover { border-color: var(--brand-color); transform: translateY(-2px); }
+.customer-card:hover { border-color: var(--brand-color); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 .customer-card .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
 .customer-card h3 { margin: 0; font-size: 1.25rem; }
 .customer-card p { margin: 0.3rem 0; color: var(--text-secondary); font-size: 0.9rem; }
@@ -44,7 +46,7 @@
 
 /* --- List View --- */
 .list-view { background: var(--dark-bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; overflow: auto; }
-.list-view table { width: 100%; border-collapse: collapse; min-width: 800px; }
+.list-view table { width: 100%; border-collapse: collapse; min-width: 900px; }
 .list-view th, .list-view td { padding: 1rem 1.5rem; text-align: left; }
 .list-view th { background: var(--dark-bg-tertiary); color: var(--text-secondary); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; }
 .list-view tr:not(:last-child) td { border-bottom: 1px solid var(--border-color); }
@@ -59,24 +61,28 @@
 .status-badge.loyal { background: rgba(249, 115, 22, 0.2); color: var(--brand-color); }
 .status-badge.basic { background: rgba(107, 114, 128, 0.2); color: var(--text-secondary); }
 
-/* --- Add/Edit Customer Modal --- */
-.customer-form-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
-.modal-content { background: var(--dark-bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; width: 100%; max-width: 550px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--border-color); }
-.modal-header h2 { margin: 0; }
-.modal-close-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; }
-.ap-form { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-.modal-actions { display: flex; justify-content: flex-end; gap: 0.75rem; padding-top: 0.5rem; }
-.no-results { text-align: center; padding: 3rem; color: var(--text-secondary); }
+/* --- NEW: User Type Badges --- */
+.user-type-badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.user-type-badge.user-type-registered {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+.user-type-badge.user-type-social {
+  background: rgba(232, 121, 249, 0.2);
+  color: #e879f9;
+}
+.customer-card p .user-type-badge {
+  font-size: 0.8rem;
+  vertical-align: middle;
+}
 
-/* --- General Form Fields --- */
-.field { display: flex; flex-direction: column; gap: 0.5rem; }
-.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.field label { font-weight: 600; color: var(--text-secondary); font-size: 0.9rem; }
-.field input, .field textarea, .field select { width: 100%; box-sizing: border-box; background: var(--dark-bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px; padding: 0.75rem; font-size: 0.95rem; }
-.field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--brand-color); box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2); }
-.field input:disabled { background: var(--dark-bg-tertiary); cursor: not-allowed; }
-.err { margin-top: 2px; color: #ef4444; font-size: 0.8rem; }
+.no-results { text-align: center; padding: 3rem; color: var(--text-secondary); }
 
 /* --- Buttons --- */
 .btn { border: none; border-radius: 8px; padding: 0.75rem 1.25rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s; }

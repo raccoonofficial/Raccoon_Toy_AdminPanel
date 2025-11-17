@@ -15,6 +15,7 @@ import Finance from './assets/Finance';
 import Add_Products from './assets/Add_Products';
 import Add_Orders from './assets/Add_Orders';
 import MusicPlayer from './assets/MusicPlayer';
+import Admin_Profile from './assets/Admin_Profile'; // Import the new Profile component
 import './App.css';
 
 const initialPlaylist = [
@@ -279,6 +280,7 @@ function App() {
             <Route path="orders/add" element={<Add_Orders onBack={() => navigate('/orders')} onCreated={() => navigate('/orders')} />} />
             <Route path="finance" element={<Finance />} />
             <Route path="music" element={<MusicPlayer />} />
+            <Route path="profile" element={<Admin_Profile userName={userName} />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

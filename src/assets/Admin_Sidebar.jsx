@@ -9,7 +9,8 @@ import {
   Settings,
   LogOut,
   Landmark,
-  Music, // Import the Music icon
+  Music,
+  User, // Import the User icon
 } from 'lucide-react';
 import logo from '../assets/images/logo.png'; // Import the logo
 import './Admin_Sidebar.css';
@@ -62,6 +63,14 @@ const Admin_Sidebar = ({ onNavigate, className }) => {
       </ul>
 
       <div className="sidebar-footer">
+        <Link
+          to="/profile"
+          className={`sidebar-link ${location.pathname.startsWith('/profile') ? 'active' : ''}`}
+          onClick={() => handleLinkClick('/profile')}
+        >
+          <User className="sidebar-icon" />
+          <span className="sidebar-label">Profile</span>
+        </Link>
         <a href="#" className="sidebar-link" onClick={(e) => { e.preventDefault(); handleLinkClick('/logout'); }}>
           <LogOut className="sidebar-icon" />
           <span className="sidebar-label">Logout</span>

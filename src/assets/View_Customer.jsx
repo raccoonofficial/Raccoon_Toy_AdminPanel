@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { User, Mail, Phone, Home, Star, Tag, Link as LinkIcon, Edit3, UserCircle, Briefcase, Key, Users, Info, AtSign, Globe, Smartphone, Monitor, Calendar } from 'lucide-react';
 import { findCustomerById } from './Admin_Customers';
-import './View_Customer.css'; // Using its own dedicated CSS file
+import './View_Customer.css';
 
 export default function ViewCustomerPage() {
   const navigate = useNavigate();
@@ -81,9 +81,15 @@ export default function ViewCustomerPage() {
                 <input value={customer.loyaltyTier} disabled />
             </div>
             <div className="cvc-field-group">
-              <label><LinkIcon size={16} /> Social Media URL</label>
-              <input value={customer.socialMediaLink || 'N/A'} disabled />
+              <label><AtSign size={16} /> Customer Source</label>
+              <input value={customer.sourceType} disabled />
             </div>
+            {(customer.sourceType === 'Facebook' || customer.sourceType === 'Instagram') && (
+              <div className="cvc-field-group">
+                <label><LinkIcon size={16} /> Social Media URL</label>
+                <input value={customer.socialMediaLink || 'N/A'} disabled />
+              </div>
+            )}
             <div className="cvc-field-group">
               <label><Tag size={16} /> Interested Categories</label>
               <div className="cvc-checkbox-grid-modern">
@@ -119,15 +125,11 @@ export default function ViewCustomerPage() {
             </div>
           );
         }
-        return ( // For Social Media users
+        return (
             <div className="cvc-tab-content">
                 <div className="cvc-field-group">
                     <label><Users size={16}/> User Type</label>
                     <input value="Social Media" disabled />
-                </div>
-                <div className="cvc-field-group">
-                    <label><AtSign size={16}/> Original Source</label>
-                    <input value={customer.source} disabled />
                 </div>
                 <div className="cvc-field-group">
                     <label><UserCircle size={16}/> Admin Creator</label>

@@ -1,152 +1,222 @@
 /* ============================================
-   ADMIN PROFILE PAGE - Modern Theme
+   ADMIN PROFILE PAGE - Professional Redesign
    ============================================ */
 
-.profile-page {
+.pro-profile-page {
   width: 100%;
-  padding: 0;
+  padding: clamp(1rem, 2vw, 1.5rem);
   box-sizing: border-box;
 }
 
-.profile-page-inner {
-  width: 100%;
-  max-width: 1800px;
-  margin: 0 auto;
-  padding: clamp(1rem, 2vw, 1.5rem);
-}
-
-.profile-header-section {
-  margin-bottom: 2rem;
-}
-
-.profile-header-section h1 {
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  font-weight: 700;
-  color: var(--text-primary, #f9fafb);
-  letter-spacing: -0.025em;
-  margin: 0 0 0.5rem 0;
-}
-
-.profile-header-section p {
-  font-size: clamp(0.875rem, 2vw, 1rem);
-  color: var(--text-secondary, #9ca3af);
-  margin: 0;
-}
-
-.profile-card {
-  background: var(--dark-bg-secondary, #1f2937);
-  border-radius: 12px;
-  border: 1px solid var(--border-color, #374151);
-  padding: 2rem;
-}
-
-.profile-card-header {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
+.pro-profile-page-inner {
+  display: grid;
+  grid-template-columns: 320px 1fr;
   gap: 2rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--border-color, #374151);
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.avatar-section {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
+/* --- Left Column: Profile Summary --- */
+.pro-profile-summary-card {
+  background: var(--dark-bg-secondary, #1f2937);
+  border: 1px solid var(--border-color, #374151);
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  align-self: flex-start;
 }
 
-.profile-avatar {
-  width: 80px;
-  height: 80px;
+.pro-profile-avatar-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 1.5rem auto;
+}
+
+.pro-profile-avatar {
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--brand-color, #f97316);
+  border: 4px solid var(--brand-color, #f97316);
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
 }
 
-.avatar-text h2 {
+.pro-status-indicator-online {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 20px;
+  height: 20px;
+  background-color: #4ade80;
+  border-radius: 50%;
+  border: 3px solid var(--dark-bg-secondary, #1f2937);
+}
+
+.pro-profile-name {
   font-size: 1.75rem;
   font-weight: 600;
   color: var(--text-primary, #f9fafb);
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 0.5rem 0;
 }
 
-.user-role {
+.pro-profile-role {
   font-size: 1rem;
   font-weight: 500;
-  color: var(--text-secondary, #9ca3af);
-  padding: 4px 12px;
-  border-radius: 12px;
-  background-color: var(--dark-bg-tertiary, #374151);
+  color: var(--brand-color, #f97316);
+  margin-bottom: 2rem;
 }
 
-.profile-actions {
+.pro-profile-main-actions {
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
 }
 
-.action-btn {
+.pro-action-btn {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 0.75rem;
   background: var(--dark-bg-tertiary, #374151);
   border: 1px solid var(--border-color, #374151);
   color: var(--text-primary, #f9fafb);
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem;
   border-radius: 8px;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.action-btn:hover {
+.pro-action-btn.pro-primary {
   background-color: var(--brand-color, #f97316);
   border-color: var(--brand-color, #f97316);
   color: #fff;
 }
-
-.profile-details {
-  padding-top: 2rem;
+.pro-action-btn.pro-primary:hover {
+  background-color: #ea580c;
+  border-color: #ea580c;
+}
+.pro-action-btn:not(.pro-primary):hover {
+  background-color: var(--border-color, #374151);
+}
+.pro-action-btn:focus {
+  outline: none;
 }
 
-.profile-details h3 {
+.pro-last-login-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary, #9ca3af);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color, #374151);
+}
+
+/* --- Right Column: Details --- */
+.pro-profile-details-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.pro-card {
+  background: var(--dark-bg-secondary, #1f2937);
+  border: 1px solid var(--border-color, #374151);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.pro-card h3 {
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--text-primary, #f9fafb);
   margin: 0 0 1.5rem 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color, #374151);
 }
 
-.details-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-}
-
-.detail-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background-color: var(--dark-bg-tertiary, #374151);
-  padding: 1.25rem;
-  border-radius: 8px;
-}
-
-.detail-icon {
+.pro-profile-bio {
   color: var(--text-secondary, #9ca3af);
-  flex-shrink: 0;
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
 }
 
-.detail-text label {
+.pro-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.pro-info-item label {
   display: block;
   font-size: 0.8rem;
   font-weight: 500;
   color: var(--text-secondary, #9ca3af);
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
-.detail-text span {
+.pro-info-item span {
   font-size: 1rem;
   font-weight: 500;
   color: var(--text-primary, #f9fafb);
+}
+
+/* --- Activity List --- */
+.pro-activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pro-activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.pro-activity-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--brand-color, #f97316);
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.pro-activity-text p {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary, #f9fafb);
+  margin: 0 0 0.25rem 0;
+}
+
+.pro-activity-text span {
+  font-size: 0.8rem;
+  color: var(--text-secondary, #9ca3af);
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 900px) {
+  .pro-profile-page-inner {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .pro-info-grid {
+    grid-template-columns: 1fr;
+  }
+  .pro-action-btn {
+    padding: 0.75rem;
+  }
+  .pro-profile-summary-card {
+    padding: 2rem 1.5rem;
+  }
 }

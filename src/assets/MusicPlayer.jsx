@@ -1,123 +1,171 @@
-import React, { useContext, useRef, useState } from 'react';
-import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Repeat, Repeat1, Shuffle, Music, ChevronsRight, ChevronsLeft } from 'lucide-react';
+import React, { useContext, useRef } from 'react';
+import {
+    Shuffle, SkipBack, PlayCircle, PauseCircle, SkipForward, Repeat, Repeat1,
+    Volume2, Upload, ListMusic
+} from 'lucide-react';
 import MusicContext from './MusicContext';
 import './MusicPlayer.css';
 
 const MusicPlayer = () => {
-  const {
-    isPlaying, duration, currentTime, volume, isMuted, currentTrack, playlist,
-    repeatMode, isShuffled, togglePlayPause, playNextTrack, playPrevTrack, 
-    playTrackById, handleSeek, setVolume, setIsMuted, setRepeatMode, setIsShuffled
-  } = useContext(MusicContext);
+    const {
+        isPlaying, duration, currentTime, volume, isMuted, currentTrack, playlist,
+        repeatMode, isShuffled, togglePlayPause, playNextTrack, playPrevTrack,
+        playTrackById, handleSeek, setVolume, setIsMuted, setRepeatMode, setIsShuffled,
+        addTracks
+    } = useContext(MusicContext);
 
-  const [isMiniMode, setIsMiniMode] = useState(false);
-  const progressBarRef = useRef(null);
+    const fileInputRef = useRef(null);
+    const progressBarRef = useRef(null);
+    const volumeBarRef = useRef(null);
 
-  if (!currentTrack) {
-    return <div className="loading-player">Loading Music Player...</div>;
-  }
+    const handleUploadClick = () => {
+        fileInputRef.current?.click();
+    };
 
-  const handleProgressChange = (e) => {
-    if (progressBarRef.current && duration > 0) {
-      const newTime = (e.nativeEvent.offsetX / progressBarRef.current.offsetWidth) * duration;
-      handleSeek(newTime);
+    const formatTime = (time) => {
+        if (isNaN(time) || time < 0) return '0:00';
+        const mins = Math.floor(time / 60);
+        const secs = Math.floor(time % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    };
+
+    const handleProgressClick = (e) => {
+        if (progressBarRef.current && duration > 0) {
+            const progressBar = progressBarRef.current;
+            const clickPositionX = e.clientX - progressBar.getBoundingClientRect().left;
+            const newTime = (clickPositionX / progressBar.offsetWidth) * duration;
+            handleSeek(newTime);
+        }
+    };
+    
+    const handleVolumeClick = (e) => {
+        if (volumeBarRef.current) {
+            const volumeBar = volumeBarRef.current;
+            const clickPositionX = e.clientX - volumeBar.getBoundingClientRect().left;
+            let newVolume = clickPositionX / volumeBar.offsetWidth;
+            newVolume = Math.max(0, Math.min(1, newVolume)); // Clamp between 0 and 1
+            setVolume(newVolume);
+            if (isMuted) setIsMuted(false);
+        }
+    };
+
+    const toggleRepeatMode = () => {
+        if (repeatMode === 'none') setRepeatMode('all');
+        else if (repeatMode === 'all') setRepeatMode('one');
+        else setRepeatMode('none');
+    };
+
+    if (!currentTrack) {
+        return (
+            <div className="loading-player-container">
+                <h2>No track selected</h2>
+                <p>Upload your local music to start listening.</p>
+                <button onClick={handleUploadClick} className="upload-initial-btn">
+                    <Upload size={18} /> Upload Music
+                </button>
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    multiple
+                    accept="audio/*"
+                    style={{ display: 'none' }}
+                    onChange={(e) => addTracks(e.target.files)}
+                />
+            </div>
+        );
     }
-  };
 
-  const handleVolumeChange = (e) => {
-    const newVolume = parseFloat(e.target.value);
-    setVolume(newVolume);
-    if (isMuted && newVolume > 0) setIsMuted(false);
-  };
-  
-  const toggleRepeatMode = () => {
-    if (repeatMode === 'none') setRepeatMode('all');
-    else if (repeatMode === 'all') setRepeatMode('one');
-    else setRepeatMode('none');
-  };
+    return (
+        <div className="music-player-wrapper">
+             <input
+                type="file"
+                ref={fileInputRef}
+                multiple
+                accept="audio/*"
+                style={{ display: 'none' }}
+                onChange={(e) => addTracks(e.target.files)}
+            />
 
-  const formatTime = (time) => {
-    if (isNaN(time) || time < 0) return '0:00';
-    const mins = Math.floor(time / 60);
-    const secs = Math.floor(time % 60);
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-  };
+            <div className="music-player-main-content">
+                <aside className="music-playlist-sidebar">
+                    <div className="library-header">
+                        <ListMusic />
+                        <p>Your Playlist</p>
+                    </div>
+                    <div className="playlist-list">
+                        {playlist.map(track => (
+                            <a 
+                                href="#" 
+                                key={track.id} 
+                                className={track.id === currentTrack.id ? 'active' : ''}
+                                onClick={(e) => { e.preventDefault(); playTrackById(track.id); }}
+                            >
+                                {track.title}
+                            </a>
+                        ))}
+                    </div>
+                     <button onClick={handleUploadClick} className="upload-sidebar-btn">
+                        <Upload size={16} /> Upload Music
+                    </button>
+                </aside>
 
-  return (
-    <div className={`player-layout ${isMiniMode ? 'mini-mode' : ''}`}>
-      <div className="music-player-container">
-        <div className="track-info">
-          <img src={currentTrack.artwork} alt="Album Art" className="album-art" />
-          <h2 className="track-title">{currentTrack.title}</h2>
-          <h3 className="track-artist">{currentTrack.artist}</h3>
-        </div>
-
-        <div className="progress-section">
-          <div className="progress-bar-container" onClick={handleProgressChange} ref={progressBarRef}>
-            <div className="progress-bar" style={{ width: duration > 0 ? `${(currentTime / duration) * 100}%` : '0%' }}></div>
-          </div>
-          <div className="time-display">
-            <span>{formatTime(currentTime)}</span>
-            <span>{formatTime(duration)}</span>
-          </div>
-        </div>
-
-        <div className="main-controls">
-          <button onClick={() => setIsShuffled(!isShuffled)} className={`control-btn mode-btn ${isShuffled ? 'active' : ''}`} title="Shuffle">
-            <Shuffle size={20} />
-          </button>
-          <button onClick={playPrevTrack} className="control-btn" title="Previous Track"><SkipBack size={28} /></button>
-          <button onClick={togglePlayPause} className="control-btn play-pause-btn" title={isPlaying ? "Pause" : "Play"}>
-            {isPlaying ? <Pause size={36} /> : <Play size={36} />}
-          </button>
-          <button onClick={playNextTrack} className="control-btn" title="Next Track"><SkipForward size={28} /></button>
-          <button onClick={toggleRepeatMode} className={`control-btn mode-btn ${repeatMode !== 'none' ? 'active' : ''}`} title={`Repeat: ${repeatMode}`}>
-            {repeatMode === 'one' ? <Repeat1 size={20} /> : <Repeat size={20} />}
-          </button>
-        </div>
-
-        <div className="volume-control">
-          <button onClick={() => setIsMuted(!isMuted)} className="control-btn mute-btn" title={isMuted ? "Unmute" : "Mute"}>
-            {isMuted || volume === 0 ? <VolumeX size={24} /> : <Volume2 size={24} />}
-          </button>
-          <input type="range" min="0" max="1" step="0.01" value={isMuted ? 0 : volume} onChange={handleVolumeChange} className="volume-slider" title={`Volume: ${Math.round(volume*100)}%`} />
-        </div>
-      </div>
-
-      <div className="playlist-container">
-        <div className="playlist-header">
-          <h3 className="playlist-title">Now Playing</h3>
-          <button className="control-btn mini-mode-toggle" onClick={() => setIsMiniMode(!isMiniMode)} title={isMiniMode ? "Show Playlist" : "Hide Playlist"}>
-            {isMiniMode ? <ChevronsLeft size={20} /> : <ChevronsRight size={20} />}
-          </button>
-        </div>
-        <ul className="playlist">
-          {playlist.map((track) => (
-            <li 
-              key={track.id} 
-              className={`playlist-item ${currentTrack.id === track.id ? 'active' : ''}`}
-              onClick={() => playTrackById(track.id)}
-            >
-              <img src={track.artwork} alt={track.title} className="playlist-item-artwork" />
-              <div className="playlist-item-info">
-                <span className="playlist-item-title">{track.title}</span>
-                <span className="playlist-item-artist">{track.artist}</span>
-              </div>
-              {currentTrack.id === track.id && (
-                <div className="playing-indicator">
-                  {isPlaying ? (
-                    <><span></span><span></span><span></span></>
-                  ) : (
-                    <Music size={16} />
-                  )}
+                <main className="music-cards-area">
+                    <header className="music-area-header">
+                        <h3>Now Playing</h3>
+                    </header>
+                    <div className="cards-grid">
+                        {playlist.map((track) => (
+                             <div 
+                                key={track.id} 
+                                className={`card ${track.id === currentTrack.id ? 'active' : ''}`}
+                                onClick={() => playTrackById(track.id)}
+                            >
+                                <img src={track.artwork} alt={`${track.title} cover`} />
+                                <p className="card-title">{track.title}</p>
+                                <p className="card-subtitle">{track.artist}</p>
+                            </div>
+                        ))}
+                    </div>
+                </main>
+            </div>
+            
+            <footer className="music-player-footer">
+                <div className="song-info">
+                    <img src={currentTrack.artwork} alt="Album Art" className="album-art" />
+                    <div className="song-details">
+                        <p className="song-title">{currentTrack.title}</p>
+                        <p className="song-artist">{currentTrack.artist}</p>
+                    </div>
                 </div>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
+                <div className="player-controls">
+                    <div className="controls">
+                        <button onClick={() => setIsShuffled(!isShuffled)} className={`control-btn ${isShuffled ? 'active' : ''}`}><Shuffle size={18} /></button>
+                        <button onClick={playPrevTrack} className="control-btn"><SkipBack size={20} /></button>
+                        <button onClick={togglePlayPause} className="play-pause-btn">
+                            {isPlaying ? <PauseCircle size={36} /> : <PlayCircle size={36} />}
+                        </button>
+                        <button onClick={playNextTrack} className="control-btn"><SkipForward size={20} /></button>
+                        <button onClick={toggleRepeatMode} className={`control-btn ${repeatMode !== 'none' ? 'active' : ''}`}>
+                            {repeatMode === 'one' ? <Repeat1 size={18} /> : <Repeat size={18} />}
+                        </button>
+                    </div>
+                    <div className="progress-bar-container">
+                        <span className="current-time">{formatTime(currentTime)}</span>
+                        <div className="progress-bar" onClick={handleProgressClick} ref={progressBarRef}>
+                            <div className="progress" style={{ width: `${(currentTime / duration) * 100}%` }}></div>
+                        </div>
+                        <span className="total-time">{formatTime(duration)}</span>
+                    </div>
+                </div>
+                <div className="volume-controls">
+                    <Volume2 />
+                    <div className="volume-bar" onClick={handleVolumeClick} ref={volumeBarRef}>
+                        <div className="volume-level" style={{ width: `${isMuted ? 0 : volume * 100}%` }}></div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    );
 };
 
 export default MusicPlayer;

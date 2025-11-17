@@ -99,11 +99,8 @@ function App() {
     if (!isLastTrack) {
         setCurrentTrackIndex(nextIndex);
     } else if (repeatMode === 'all') {
-        // For 'repeat all', go to the first track.
-        // This also works for a shuffled playlist because the activePlaylist is the shuffled one.
         setCurrentTrackIndex(0);
     } else {
-        // If it's the last track and repeat is 'none', stop playing.
         setIsPlaying(false);
     }
   }, [repeatMode, currentTrackIndex, activePlaylist]);
@@ -123,12 +120,11 @@ function App() {
         audio.src = newSrc;
     }
     
-    // Restore time only when track changes
     const lastTime = getInitialState('lastTime', 0);
     if (audio.currentTime !== lastTime) {
       audio.currentTime = lastTime;
     }
-    localStorage.setItem('lastTime', '0'); // Reset saved time for new track
+    localStorage.setItem('lastTime', '0');
 
     const setAudioData = () => setDuration(audio.duration);
     const setAudioTime = () => setCurrentTime(audio.currentTime);
@@ -277,6 +273,8 @@ function App() {
             <Route path="products/add" element={<Add_Products />} />
             <Route path="users" element={<AdminCustomersPage />} />
             <Route path="users/add" element={<AddCustomersPage />} />
+            {/* THIS IS THE NEW ROUTE FOR EDITING A CUSTOMER */}
+            <Route path="users/edit/:customerId" element={<AddCustomersPage />} />
             <Route path="orders" element={<Admin_Orders onAddNew={() => navigate('/orders/add')} />} />
             <Route path="orders/add" element={<Add_Orders onBack={() => navigate('/orders')} onCreated={() => navigate('/orders')} />} />
             <Route path="finance" element={<Finance />} />

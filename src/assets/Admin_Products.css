@@ -184,7 +184,7 @@
 .ap-product-grid-header {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
   color: var(--ap-text-secondary);
   text-transform: uppercase;
@@ -274,8 +274,32 @@
 .ap-no-results-full-page p { color: var(--ap-text-secondary); font-size: 1.1rem; font-weight: 500; }
 
 .ap-status-dropdown-wrapper { position: relative; }
-.ap-status-trigger { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--ap-border); color: var(--ap-text-primary); border: 1px solid transparent; padding: 0.25rem 0.75rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
+.ap-status-trigger { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--ap-border); color: var(--ap-text-primary); border: 1px solid transparent; padding: 0.25rem 0.75rem; border-radius: 8px; cursor: pointer; transition: all .2s; }
 .ap-status-swatch { width: 8px; height: 8px; border-radius: 50%; }
+.ap-status-swatch[data-status="Available"] { background-color: var(--ap-status-green); }
+.ap-status-swatch[data-status="Stock Out"] { background-color: var(--ap-status-red); }
+.ap-status-swatch[data-status="Re-Stock"] { background-color: var(--ap-status-amber); }
 .ap-status-dropdown-list { position: absolute; top: calc(100% + 4px); left: 0; background: #374151; border: 1px solid var(--ap-border); border-radius: 8px; padding: 0.5rem; z-index: 10; width: 100%; min-width: 150px; }
 .ap-status-option { display: flex; align-items: center; gap: 0.5rem; background: none; border: none; width: 100%; padding: 0.5rem; border-radius: 6px; color: var(--ap-text-primary); font-size: 0.9rem; text-align: left; cursor: pointer; }
 .ap-status-option:hover { background-color: var(--ap-border); }
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1200px) {
+  .ap-product-grid-header {
+    font-size: 8px;
+  }
+  
+  .ap-product-row {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 992px) {
+  .ap-product-grid-header {
+    font-size: 5px;
+  }
+  
+  .ap-product-row {
+    font-size: 5px;
+  }
+}

@@ -4,21 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import './Admin_Products.css';
 
 const initialProducts = [
-  { supplierNumber: 1, stockId: 'STK-A84B', name: 'Iron Man', productId: 'P_2025100001', category: 'Action Figure', orderQty: 2, inStock: 2, sold: 0, buyingCost: 500, totalCost: 550, sellingPrice: 900, status: 'Available', image: '/path/to/image.jpg' },
-  { supplierNumber: 1, stockId: 'STK-C3D9', name: 'Thanos', productId: 'P_2025100002', category: 'Action Figure', orderQty: 1, inStock: 1, sold: 0, buyingCost: 500, totalCost: 550, sellingPrice: 900, status: 'Available', image: '/path/to/image.jpg' },
-  { supplierNumber: 1, stockId: 'STK-F0A2', name: 'Captain America', productId: 'P_2025100003', category: 'Action Figure', orderQty: 1, inStock: 1, sold: 0, buyingCost: 500, totalCost: 560, sellingPrice: 910, status: 'Re-Stock', image: '/path/to/image.jpg' },
-  { supplierNumber: 2, stockId: 'STK-E5G7', name: 'Venom', productId: 'P_2025100004', category: 'Action Figure', orderQty: 1, inStock: 0, sold: 1, buyingCost: 480, totalCost: 510, sellingPrice: 899, status: 'Stock Out', image: '/path/to/image.jpg' },
-  { supplierNumber: 2, stockId: 'STK-H1I8', name: 'Luffy', productId: 'P_2025100005', category: 'Action Figure', orderQty: 5, inStock: 1, sold: 4, buyingCost: 670, totalCost: 720, sellingPrice: 1399, status: 'Available', image: '/path/to/image.jpg' },
+  { supplierNumber: 1, stockId: 'STK-A84B', name: 'Iron Man', productId: 'P_2025100001', category: 'Action Figure', orderQty: 2, inStock: 2, sold: 0, buyingCost: 500, totalCost: 550, sellingPrice: 900, status: 'Available', image: 'https://i.ibb.co/S7cxB4w/p-2025100001.png' },
+  { supplierNumber: 1, stockId: 'STK-C3D9', name: 'Thanos', productId: 'P_2025100002', category: 'Action Figure', orderQty: 1, inStock: 1, sold: 0, buyingCost: 500, totalCost: 550, sellingPrice: 900, status: 'Available', image: 'https://i.ibb.co/Js52Wz6/p-2025100002.png' },
+  { supplierNumber: 1, stockId: 'STK-F0A2', name: 'Captain America', productId: 'P_2025100003', category: 'Action Figure', orderQty: 1, inStock: 1, sold: 0, buyingCost: 500, totalCost: 560, sellingPrice: 950, status: 'Available', image: 'https://i.ibb.co/L8KL16b/p-2025100003.png' },
+  { supplierNumber: 2, stockId: 'STK-E5G7', name: 'Venom', productId: 'P_2025100004', category: 'Action Figure', orderQty: 1, inStock: 0, sold: 1, buyingCost: 480, totalCost: 510, sellingPrice: 899, status: 'Stock Out', image: 'https://i.ibb.co/hH2sW1t/p-2025100004.png' },
+  { supplierNumber: 2, stockId: 'STK-H1I8', name: 'Luffy', productId: 'P_2025100005', category: 'Action Figure', orderQty: 5, inStock: 1, sold: 4, buyingCost: 670, totalCost: 720, sellingPrice: 1399, status: 'Available', image: 'https://i.ibb.co/sW2n2p5/p-2025100005.png' },
 ];
 
 const categoryOptions = ['Action Figure', 'Small Action Figure', 'Bricks', 'Vehicle Figure', 'Cute Dolls', 'Small Cute Dolls', 'Decorations'];
 const STATUS_OPTIONS = ['Available', 'Stock Out', 'Re-Stock'];
-
-const statusTheme = {
-  'Available': { color: '#22c55e' }, // Green
-  'Stock Out': { color: '#ef4444' }, // Red
-  'Re-Stock':  { color: '#f59e0b' }  // Amber
-};
 
 function StatusDropdown({ value, onChange }) {
   const [open, setOpen] = useState(false);
@@ -42,14 +36,14 @@ function StatusDropdown({ value, onChange }) {
   return (
     <div className="ap-status-dropdown-wrapper" ref={wrapperRef}>
       <button type="button" className="ap-status-trigger" onClick={() => setOpen(o => !o)}>
-        <span className="ap-status-swatch" style={{ backgroundColor: statusTheme[value]?.color }}></span>
+        <span className="ap-status-swatch" data-status={value}></span>
         {value}
       </button>
       {open && (
         <div className="ap-status-dropdown-list">
           {STATUS_OPTIONS.map(opt => (
             <button key={opt} className="ap-status-option" onClick={() => onSelect(opt)}>
-              <span className="ap-status-swatch" style={{ backgroundColor: statusTheme[opt].color }}></span>
+              <span className="ap-status-swatch" data-status={opt}></span>
               {opt}
             </button>
           ))}

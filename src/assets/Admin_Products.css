@@ -36,7 +36,7 @@
   color: var(--ap-text-primary) !important;
 }
 
-.ap-header-controls { display: flex; align-items: center; gap: 1rem; }
+.ap-header-controls { display: flex; align-items: stretch; gap: 1rem; }
 
 .ap-search-box { position: relative; }
 .ap-search-box .ap-search-icon {
@@ -55,6 +55,8 @@
   font-size: 0.95rem;
   width: 300px;
   transition: all 0.2s;
+  height: 100%;
+  box-sizing: border-box;
 }
 .ap-search-box input:focus {
   outline: none;
@@ -72,6 +74,9 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .ap-add-product-btn:hover { background: var(--ap-accent-dark); }
 
@@ -136,7 +141,8 @@
 .ap-view-toggle {
   display: flex;
   align-items: center;
-  background-color: var(--ap-border);
+  background-color: var(--ap-card-bg);
+  border: 1px solid var(--ap-border);
   border-radius: 8px;
   padding: 4px;
 }
@@ -168,8 +174,8 @@
 
 .ap-product-grid-header, .ap-product-row {
   display: grid;
-  /* Name,Img,StockID,Cat,Qty,InStock,Sold,Buy,Total,Sell,Status */
-  grid-template-columns: 3fr 60px 1.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr 1.5fr;
+  /* Name,Img,Cat,Qty,InStock,Sold,Buy,Total,Sell,Status,Action */
+  grid-template-columns: 2.5fr 50px 1.2fr 0.8fr 0.8fr 0.8fr 0.8fr 0.8fr 0.8fr 1.2fr 0.8fr;
   align-items: center;
   gap: 1rem;
   padding: 0 1.5rem;
@@ -178,7 +184,7 @@
 .ap-product-grid-header {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
-  font-size: 0.8rem;
+  font-size: 12px;
   font-weight: 600;
   color: var(--ap-text-secondary);
   text-transform: uppercase;
@@ -196,8 +202,8 @@
 .ap-product-list-body .ap-product-row:last-child { border-bottom: none; }
 
 .ap-col-image img {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   object-fit: cover;
   border-radius: 6px;
 }
@@ -207,8 +213,25 @@
 .ap-product-id { font-size: 0.8rem; color: var(--ap-text-secondary); font-family: monospace; }
 .ap-col-stockid { font-family: monospace; color: var(--ap-text-secondary); font-size: 0.9rem; }
 .ap-col-qty, .ap-col-instock, .ap-col-sold, .ap-col-price { text-align: right; }
+.ap-col-action { text-align: center; }
 .ap-col-instock.ap-out-of-stock { color: var(--ap-status-red); font-weight: 700; }
 .ap-col-action { display: flex; justify-content: flex-end; gap: 0.5rem; }
+.ap-edit-btn {
+  background: none;
+  border: 1px solid var(--ap-border);
+  color: var(--ap-text-secondary);
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.ap-edit-btn:hover {
+  background-color: var(--ap-border);
+  color: var(--ap-text-primary);
+}
 
 
 /* --- Product Card Grid --- */
@@ -251,8 +274,8 @@
 .ap-no-results-full-page p { color: var(--ap-text-secondary); font-size: 1.1rem; font-weight: 500; }
 
 .ap-status-dropdown-wrapper { position: relative; }
-.ap-status-trigger { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--ap-border); color: var(--ap-text-primary); border: 1px solid transparent; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; width: 100%; }
+.ap-status-trigger { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--ap-border); color: var(--ap-text-primary); border: 1px solid transparent; padding: 0.25rem 0.75rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
 .ap-status-swatch { width: 8px; height: 8px; border-radius: 50%; }
-.ap-status-dropdown-list { position: absolute; top: calc(100% + 4px); left: 0; background: #374151; border: 1px solid var(--ap-border); border-radius: 8px; padding: 0.5rem; z-index: 10; width: 100%; min-width: 120px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-.ap-status-option { display: flex; align-items: center; gap: 0.5rem; background: none; border: none; width: 100%; padding: 0.5rem; border-radius: 6px; color: var(--ap-text-primary); font-size: 0.9rem; cursor: pointer; text-align: left; }
-.ap-status-option:hover { background: var(--ap-border); }
+.ap-status-dropdown-list { position: absolute; top: calc(100% + 4px); left: 0; background: #374151; border: 1px solid var(--ap-border); border-radius: 8px; padding: 0.5rem; z-index: 10; width: 100%; min-width: 150px; }
+.ap-status-option { display: flex; align-items: center; gap: 0.5rem; background: none; border: none; width: 100%; padding: 0.5rem; border-radius: 6px; color: var(--ap-text-primary); font-size: 0.9rem; text-align: left; cursor: pointer; }
+.ap-status-option:hover { background-color: var(--ap-border); }

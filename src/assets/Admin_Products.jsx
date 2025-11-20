@@ -1,14 +1,14 @@
 import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import { FiSearch, FiX, FiGrid, FiList } from 'react-icons/fi';
+import { FiSearch, FiX, FiGrid, FiList, FiEdit } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import './Admin_Products.css';
 
 const initialProducts = [
-  { supplierNumber: 1, stockId: 'STK-A84B', name: 'Iron Man', productId: 'P_2025100001', category: 'Action Figure', orderQty: 2, inStock: 2, sold: 0, buyingCost: 500, totalCost: 550, sellingPrice: 900, status: 'Available', image: 'https://i.ibb.co/6gBS2Jb/ Ironman.jpg' },
-  { supplierNumber: 1, stockId: 'STK-C3D9', name: 'Thanos', productId: 'P_2025100002', category: 'Action Figure', orderQty: 1, inStock: 1, sold: 0, buyingCost: 500, totalCost: 550, sellingPrice: 900, status: 'Available', image: 'https://i.ibb.co/PGrC1Tj/Thanos.jpg' },
-  { supplierNumber: 1, stockId: 'STK-F0A2', name: 'Captain America', productId: 'P_2025100003', category: 'Action Figure', orderQty: 1, inStock: 1, sold: 0, buyingCost: 500, totalCost: 560, sellingPrice: 900, status: 'Available', image: 'https://i.ibb.co/b3x151f/Captain-America.jpg' },
-  { supplierNumber: 2, stockId: 'STK-E5G7', name: 'Venom', productId: 'P_2025100004', category: 'Action Figure', orderQty: 1, inStock: 0, sold: 1, buyingCost: 480, totalCost: 510, sellingPrice: 899, status: 'Stock Out', image: 'https://i.ibb.co/y6chtM7/Venom.jpg' },
-  { supplierNumber: 2, stockId: 'STK-H1I8', name: 'Luffy', productId: 'P_2025100005', category: 'Action Figure', orderQty: 5, inStock: 1, sold: 4, buyingCost: 670, totalCost: 720, sellingPrice: 1399, status: 'Re-Stock', image: 'https://i.ibb.co/hH7DHz9/Luffy.jpg' },
+  { supplierNumber: 1, stockId: 'STK-A84B', name: 'Iron Man', productId: 'P_2025100001', category: 'Action Figure', orderQty: 2, inStock: 2, sold: 0, buyingCost: 500, totalCost: 550, sellingPrice: 900, status: 'Available', image: '/path/to/image.jpg' },
+  { supplierNumber: 1, stockId: 'STK-C3D9', name: 'Thanos', productId: 'P_2025100002', category: 'Action Figure', orderQty: 1, inStock: 1, sold: 0, buyingCost: 500, totalCost: 550, sellingPrice: 900, status: 'Available', image: '/path/to/image.jpg' },
+  { supplierNumber: 1, stockId: 'STK-F0A2', name: 'Captain America', productId: 'P_2025100003', category: 'Action Figure', orderQty: 1, inStock: 1, sold: 0, buyingCost: 500, totalCost: 560, sellingPrice: 910, status: 'Re-Stock', image: '/path/to/image.jpg' },
+  { supplierNumber: 2, stockId: 'STK-E5G7', name: 'Venom', productId: 'P_2025100004', category: 'Action Figure', orderQty: 1, inStock: 0, sold: 1, buyingCost: 480, totalCost: 510, sellingPrice: 899, status: 'Stock Out', image: '/path/to/image.jpg' },
+  { supplierNumber: 2, stockId: 'STK-H1I8', name: 'Luffy', productId: 'P_2025100005', category: 'Action Figure', orderQty: 5, inStock: 1, sold: 4, buyingCost: 670, totalCost: 720, sellingPrice: 1399, status: 'Available', image: '/path/to/image.jpg' },
 ];
 
 const categoryOptions = ['Action Figure', 'Small Action Figure', 'Bricks', 'Vehicle Figure', 'Cute Dolls', 'Small Cute Dolls', 'Decorations'];
@@ -42,7 +42,7 @@ function StatusDropdown({ value, onChange }) {
   return (
     <div className="ap-status-dropdown-wrapper" ref={wrapperRef}>
       <button type="button" className="ap-status-trigger" onClick={() => setOpen(o => !o)}>
-        <span className="ap-status-swatch" style={{ backgroundColor: statusTheme[value].color }}></span>
+        <span className="ap-status-swatch" style={{ backgroundColor: statusTheme[value]?.color }}></span>
         {value}
       </button>
       {open && (
@@ -103,6 +103,9 @@ function AdminProducts() {
             <FiSearch className="ap-search-icon" aria-hidden="true" />
             <input type="search" placeholder="Search by name or ID..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
           </div>
+          <button className="ap-add-product-btn" onClick={() => navigate('/products/add')}>
+            Add Product
+          </button>
           <div className="ap-view-toggle">
             <button className={`ap-toggle-btn ${viewMode === 'list' ? 'active' : ''}`} onClick={() => setViewMode('list')} title="List View">
               <FiList size={21} />
@@ -111,9 +114,6 @@ function AdminProducts() {
               <FiGrid size={21} />
             </button>
           </div>
-          <button className="ap-add-product-btn" onClick={() => navigate('/products/add')}>
-            Add Product
-          </button>
         </div>
       </header>
 
@@ -178,7 +178,6 @@ function AdminProducts() {
           <div className="ap-product-grid-header">
             <div className="ap-col-name">Product Name</div>
             <div className="ap-col-image">Image</div>
-            <div className="ap-col-stockid">Stock ID</div>
             <div className="ap-col-category">Category</div>
             <div className="ap-col-qty">Order Qty</div>
             <div className="ap-col-instock">In Stock</div>
@@ -187,6 +186,7 @@ function AdminProducts() {
             <div className="ap-col-price">Total Cost</div>
             <div className="ap-col-price">Selling Price</div>
             <div className="ap-col-status">Status</div>
+            <div className="ap-col-action">Action</div>
           </div>
           <div className="ap-product-list-body">
             {filteredProducts.map(prod => (
@@ -198,7 +198,6 @@ function AdminProducts() {
                 <div className="ap-col-image">
                   <img src={prod.image} alt={prod.name} />
                 </div>
-                <div className="ap-col-stockid">{prod.stockId}</div>
                 <div className="ap-col-category">{prod.category}</div>
                 <div className="ap-col-qty">{prod.orderQty}</div>
                 <div className={`ap-col-instock ${prod.inStock === 0 ? 'ap-out-of-stock' : ''}`}>{prod.inStock}</div>
@@ -211,6 +210,11 @@ function AdminProducts() {
                     value={prod.status}
                     onChange={(newStatus) => handleStatusChange(prod.productId, newStatus)}
                   />
+                </div>
+                <div className="ap-col-action">
+                  <button className="ap-edit-btn" onClick={() => navigate(`/products/edit/${prod.productId}`)}>
+                    <FiEdit size={14} />
+                  </button>
                 </div>
               </div>
             ))}

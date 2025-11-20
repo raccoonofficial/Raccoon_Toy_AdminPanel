@@ -1,14 +1,14 @@
 import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import { FiSearch, FiEdit2, FiTrash2, FiX } from 'react-icons/fi';
+import { FiSearch, FiX, FiGrid, FiList } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import './Admin_Products.css';
 
 const initialProducts = [
-  { supplierNumber: 1, stockId: 'STK-A84B', name: 'Iron Man', productId: 'P_2025100001', category: 'Action Figure', orderQty: 2, inStock: 2, sold: 0, buyingCost: 500, sellingPrice: 900, status: 'Available' },
-  { supplierNumber: 1, stockId: 'STK-C3D9', name: 'Thanos', productId: 'P_2025100002', category: 'Action Figure', orderQty: 1, inStock: 1, sold: 0, buyingCost: 500, sellingPrice: 900, status: 'Available' },
-  { supplierNumber: 1, stockId: 'STK-F0A2', name: 'Captain America', productId: 'P_2025100003', category: 'Action Figure', orderQty: 1, inStock: 1, sold: 0, buyingCost: 500, sellingPrice: 900, status: 'Available' },
-  { supplierNumber: 2, stockId: 'STK-E5G7', name: 'Venom', productId: 'P_2025100004', category: 'Action Figure', orderQty: 1, inStock: 0, sold: 1, buyingCost: 480, sellingPrice: 899, status: 'Stock Out' },
-  { supplierNumber: 2, stockId: 'STK-H1I8', name: 'Luffy', productId: 'P_2025100005', category: 'Action Figure', orderQty: 5, inStock: 1, sold: 4, buyingCost: 670, sellingPrice: 1399, status: 'Re-Stock' },
+  { supplierNumber: 1, stockId: 'STK-A84B', name: 'Iron Man', productId: 'P_2025100001', category: 'Action Figure', orderQty: 2, inStock: 2, sold: 0, buyingCost: 500, totalCost: 550, sellingPrice: 900, status: 'Available', image: 'https://i.ibb.co/6gBS2Jb/ Ironman.jpg' },
+  { supplierNumber: 1, stockId: 'STK-C3D9', name: 'Thanos', productId: 'P_2025100002', category: 'Action Figure', orderQty: 1, inStock: 1, sold: 0, buyingCost: 500, totalCost: 550, sellingPrice: 900, status: 'Available', image: 'https://i.ibb.co/PGrC1Tj/Thanos.jpg' },
+  { supplierNumber: 1, stockId: 'STK-F0A2', name: 'Captain America', productId: 'P_2025100003', category: 'Action Figure', orderQty: 1, inStock: 1, sold: 0, buyingCost: 500, totalCost: 560, sellingPrice: 900, status: 'Available', image: 'https://i.ibb.co/b3x151f/Captain-America.jpg' },
+  { supplierNumber: 2, stockId: 'STK-E5G7', name: 'Venom', productId: 'P_2025100004', category: 'Action Figure', orderQty: 1, inStock: 0, sold: 1, buyingCost: 480, totalCost: 510, sellingPrice: 899, status: 'Stock Out', image: 'https://i.ibb.co/y6chtM7/Venom.jpg' },
+  { supplierNumber: 2, stockId: 'STK-H1I8', name: 'Luffy', productId: 'P_2025100005', category: 'Action Figure', orderQty: 5, inStock: 1, sold: 4, buyingCost: 670, totalCost: 720, sellingPrice: 1399, status: 'Re-Stock', image: 'https://i.ibb.co/hH7DHz9/Luffy.jpg' },
 ];
 
 const categoryOptions = ['Action Figure', 'Small Action Figure', 'Bricks', 'Vehicle Figure', 'Cute Dolls', 'Small Cute Dolls', 'Decorations'];
@@ -63,6 +63,7 @@ function AdminProducts() {
   const navigate = useNavigate();
   const [products, setProducts] = useState(initialProducts);
   const [searchTerm, setSearchTerm] = useState('');
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [activeFilters, setActiveFilters] = useState({
     category: '',
     status: '',
@@ -102,6 +103,14 @@ function AdminProducts() {
             <FiSearch className="ap-search-icon" aria-hidden="true" />
             <input type="search" placeholder="Search by name or ID..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
           </div>
+          <div className="ap-view-toggle">
+            <button className={`ap-toggle-btn ${viewMode === 'list' ? 'active' : ''}`} onClick={() => setViewMode('list')} title="List View">
+              <FiList size={21} />
+            </button>
+            <button className={`ap-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`} onClick={() => setViewMode('grid')} title="Grid View">
+              <FiGrid size={21} />
+            </button>
+          </div>
           <button className="ap-add-product-btn" onClick={() => navigate('/products/add')}>
             Add Product
           </button>
@@ -128,30 +137,66 @@ function AdminProducts() {
         </button>
       </div>
 
-      <div className="ap-product-list-card">
-        <div className="ap-product-grid-header">
-          <div className="ap-col-name">Product Name</div>
-          <div className="ap-col-stockid">Stock ID</div>
-          <div className="ap-col-category">Category</div>
-          <div className="ap-col-qty">Order Qty</div>
-          <div className="ap-col-instock">In Stock</div>
-          <div className="ap-col-sold">Sold</div>
-          <div className="ap-col-price">Buying Cost</div>
-          <div className="ap-col-price">Selling Price</div>
-          <div className="ap-col-status">Status</div>
-          <div className="ap-col-action">Actions</div>
+      {filteredProducts.length === 0 ? (
+        <div className="ap-no-results-full-page">
+          <p>No products found for the selected filters.</p>
         </div>
-        <div className="ap-product-list-body">
-          {filteredProducts.length === 0 ? (
-            <div className="ap-no-results">
-              <p>No products found for the selected filters.</p>
+      ) : viewMode === 'grid' ? (
+        <div className="ap-product-card-grid">
+          {filteredProducts.map(prod => (
+            <div key={prod.productId} className="ap-product-card">
+              <div className="ap-card-image-container">
+                <img src={prod.image} alt={prod.name} className="ap-card-image" />
+                <div className="ap-card-stock-overlay">
+                  <span className={`ap-card-stock-level ${prod.inStock === 0 ? 'ap-out-of-stock' : ''}`}>
+                    In Stock: {prod.inStock}
+                  </span>
+                </div>
+              </div>
+              <div className="ap-card-content">
+                <h3 className="ap-card-name">{prod.name}</h3>
+                <div className="ap-card-price-list">
+                  <div className="ap-card-price-item">
+                    <span className="ap-card-price-label">Buying</span>
+                    <span className="ap-card-price-value">${prod.buyingCost.toFixed(2)}</span>
+                  </div>
+                  <div className="ap-card-price-item">
+                    <span className="ap-card-price-label">Total</span>
+                    <span className="ap-card-price-value">${prod.totalCost.toFixed(2)}</span>
+                  </div>
+                  <div className="ap-card-price-item">
+                    <span className="ap-card-price-label">Selling</span>
+                    <span className="ap-card-price-value ap-price-selling">${prod.sellingPrice.toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          ) : (
-            filteredProducts.map(prod => (
+          ))}
+        </div>
+      ) : (
+        <div className="ap-product-list-card">
+          <div className="ap-product-grid-header">
+            <div className="ap-col-name">Product Name</div>
+            <div className="ap-col-image">Image</div>
+            <div className="ap-col-stockid">Stock ID</div>
+            <div className="ap-col-category">Category</div>
+            <div className="ap-col-qty">Order Qty</div>
+            <div className="ap-col-instock">In Stock</div>
+            <div className="ap-col-sold">Sold</div>
+            <div className="ap-col-price">Buying Cost</div>
+            <div className="ap-col-price">Total Cost</div>
+            <div className="ap-col-price">Selling Price</div>
+            <div className="ap-col-status">Status</div>
+          </div>
+          <div className="ap-product-list-body">
+            {filteredProducts.map(prod => (
               <div key={prod.productId} className="ap-product-row">
                 <div className="ap-col-name">
                   <span className="ap-product-name">{prod.name}</span>
                   <span className="ap-product-id">{prod.productId}</span>
+                </div>
+                <div className="ap-col-image">
+                  <img src={prod.image} alt={prod.name} />
                 </div>
                 <div className="ap-col-stockid">{prod.stockId}</div>
                 <div className="ap-col-category">{prod.category}</div>
@@ -159,6 +204,7 @@ function AdminProducts() {
                 <div className={`ap-col-instock ${prod.inStock === 0 ? 'ap-out-of-stock' : ''}`}>{prod.inStock}</div>
                 <div className="ap-col-sold">{prod.sold}</div>
                 <div className="ap-col-price">${prod.buyingCost.toFixed(2)}</div>
+                <div className="ap-col-price">${prod.totalCost.toFixed(2)}</div>
                 <div className="ap-col-price">${prod.sellingPrice.toFixed(2)}</div>
                 <div className="ap-col-status">
                   <StatusDropdown
@@ -166,15 +212,11 @@ function AdminProducts() {
                     onChange={(newStatus) => handleStatusChange(prod.productId, newStatus)}
                   />
                 </div>
-                <div className="ap-col-action">
-                  <button className="ap-action-btn ap-edit-btn" title="Edit"><FiEdit2 size={16} /></button>
-                  <button className="ap-action-btn ap-delete-btn" title="Delete"><FiTrash2 size={16} /></button>
-                </div>
               </div>
-            ))
-          )}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

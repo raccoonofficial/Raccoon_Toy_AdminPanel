@@ -20,6 +20,7 @@ export default function AddProductsPage() {
   const [orderQty, setOrderQty] = useState(1);
   const [inStock, setInStock] = useState(1);
   const [buyingCost, setBuyingCost] = useState('');
+  const [totalCost, setTotalCost] = useState('');
   const [sellingPrice, setSellingPrice] = useState('');
   const [status, setStatus] = useState(statusOptions[0]);
   const [details, setDetails] = useState('');
@@ -38,8 +39,8 @@ export default function AddProductsPage() {
   
   const [errors, setErrors] = useState({});
 
-  const profit = useMemo(() => Number(sellingPrice) - Number(buyingCost), [sellingPrice, buyingCost]);
-  const marginPct = useMemo(() => (buyingCost > 0 ? (profit / Number(buyingCost)) * 100 : 0), [profit, buyingCost]);
+  const profit = useMemo(() => Number(sellingPrice) - Number(totalCost), [sellingPrice, totalCost]);
+  const marginPct = useMemo(() => (totalCost > 0 ? (profit / Number(totalCost)) * 100 : 0), [profit, totalCost]);
 
   function generateProductId() {
     const timestamp = Date.now().toString().slice(-8);
@@ -148,6 +149,10 @@ export default function AddProductsPage() {
               <div className="addp-field">
                 <label htmlFor="buyingCost"><FiDollarSign /> Buying Cost</label>
                 <input id="buyingCost" type="number" value={buyingCost} onChange={(e) => setBuyingCost(e.target.value)} placeholder="0.00" />
+              </div>
+              <div className="addp-field">
+                <label htmlFor="totalCost"><FiDollarSign /> Total Cost</label>
+                <input id="totalCost" type="number" value={totalCost} onChange={(e) => setTotalCost(e.target.value)} placeholder="0.00" />
               </div>
               <div className="addp-field">
                 <label htmlFor="sellingPrice"><FiDollarSign /> Selling Price</label>

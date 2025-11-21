@@ -33,6 +33,7 @@ const mockProduct = {
   showcasePreviewUrl: 'https://i.ibb.co/6n211ez/d55b8855-3373-4564-8849-0d351980f72c.png',
   showcaseImageUrl: 'https://i.ibb.co/6n211ez/d55b8855-3373-4564-8849-0d351980f72c.png',
   showcaseGifUrl: 'https://media.giphy.com/media/26gR1v0rIDY5pL32w/giphy.gif',
+  bannerImageUrl: 'https://i.ibb.co/yNbW2Yc/5b634863-75dc-45cf-a436-580bff579133.png',
 };
 
 const categoryOptions = ['Action Figure', 'Small Action Figure', 'Bricks', 'Vehicle Figure', 'Cute Dolls', 'Small Cute Dolls', 'Decorations'];
@@ -51,6 +52,7 @@ export default function ViewProductPage() {
   const showcasePreviewInputRef = useRef(null);
   const showcaseMainImageInputRef = useRef(null);
   const showcaseGifInputRef = useRef(null);
+  const bannerInputRef = useRef(null);
 
   const [supplierNumber, setSupplierNumber] = useState('');
   const [name, setName] = useState('');
@@ -81,6 +83,10 @@ export default function ViewProductPage() {
   const [discountPercent, setDiscountPercent] = useState('');
   const [discountStartDate, setDiscountStartDate] = useState('');
   const [discountEndDate, setDiscountEndDate] = useState('');
+  
+  // State for banner section
+  const [bannerImage, setBannerImage] = useState(null);
+  const [bannerImageUrl, setBannerImageUrl] = useState(null);
 
   const [specifications, setSpecifications] = useState({
     materials: '',
@@ -117,6 +123,7 @@ export default function ViewProductPage() {
     setShowcasePreviewUrl(productData.showcasePreviewUrl);
     setShowcaseImageUrl(productData.showcaseImageUrl);
     setShowcaseGifUrl(productData.showcaseGifUrl);
+    setBannerImageUrl(productData.bannerImageUrl);
     setDiscountPercent(productData.discountPercent);
     setDiscountStartDate(productData.discountStartDate);
     setDiscountEndDate(productData.discountEndDate);
@@ -174,6 +181,7 @@ export default function ViewProductPage() {
   const onShowcasePreviewChange = createUploadHandler(setShowcasePreview, setShowcasePreviewUrl);
   const onShowcaseImageChange = createUploadHandler(setShowcaseImage, setShowcaseImageUrl);
   const onShowcaseGifChange = createUploadHandler(setShowcaseGif, setShowcaseGifUrl);
+  const onBannerImageChange = createUploadHandler(setBannerImage, setBannerImageUrl);
   
   function handleSpecChange(e) {
     const { name, value } = e.target;
@@ -194,7 +202,7 @@ export default function ViewProductPage() {
     setErrors(v);
     if (Object.keys(v).length > 0) return;
 
-    console.log("Updating product:", { name, productId, images, gif, specifications, discountPercent, discountStartDate, discountEndDate });
+    console.log("Updating product:", { name, productId, images, gif, specifications, discountPercent, discountStartDate, discountEndDate, bannerImage });
     alert('Product updated successfully!');
     navigate('/products');
   }
@@ -447,6 +455,24 @@ export default function ViewProductPage() {
               </div>
             </div>
           </div>
+        </div>
+        
+        <div className="vp-separator"></div>
+
+        <div className="vp-card">
+            <h2 className="vp-card-title">Banner Section</h2>
+            <p className="vp-media-sub">Upload a wide banner image for promotional pages.</p>
+            <div className="vp-uploader vp-uploader-banner" onClick={() => bannerInputRef.current.click()}>
+                {bannerImageUrl ? (
+                <img src={bannerImageUrl} alt="Banner Preview" />
+                ) : (
+                <div className="vp-upload-placeholder">
+                    <FiUploadCloud size={32} />
+                    <span>Upload Banner Image</span>
+                </div>
+                )}
+            </div>
+            <input type="file" accept="image/*" ref={bannerInputRef} onChange={onBannerImageChange} hidden />
         </div>
       </form>
     </section>

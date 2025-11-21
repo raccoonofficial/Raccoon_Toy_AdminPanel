@@ -18,6 +18,7 @@ export default function AddProductsPage() {
   const showcasePreviewInputRef = useRef(null);
   const showcaseMainImageInputRef = useRef(null);
   const showcaseGifInputRef = useRef(null);
+  const bannerInputRef = useRef(null);
 
   const [supplierNumber, setSupplierNumber] = useState('');
   const [name, setName] = useState('');
@@ -48,6 +49,10 @@ export default function AddProductsPage() {
   const [discountPercent, setDiscountPercent] = useState('');
   const [discountStartDate, setDiscountStartDate] = useState('');
   const [discountEndDate, setDiscountEndDate] = useState('');
+  
+  // State for banner section
+  const [bannerImage, setBannerImage] = useState(null);
+  const [bannerImageUrl, setBannerImageUrl] = useState(null);
 
 
   const [specifications, setSpecifications] = useState({
@@ -116,6 +121,7 @@ export default function AddProductsPage() {
   const onShowcasePreviewChange = createUploadHandler(setShowcasePreview, setShowcasePreviewUrl);
   const onShowcaseImageChange = createUploadHandler(setShowcaseImage, setShowcaseImageUrl);
   const onShowcaseGifChange = createUploadHandler(setShowcaseGif, setShowcaseGifUrl);
+  const onBannerImageChange = createUploadHandler(setBannerImage, setBannerImageUrl);
   
   function handleSpecChange(e) {
     const { name, value } = e.target;
@@ -136,7 +142,7 @@ export default function AddProductsPage() {
     setErrors(v);
     if (Object.keys(v).length > 0) return;
 
-    console.log("Creating product:", { name, productId, images, gif, specifications, discountPercent, discountStartDate, discountEndDate });
+    console.log("Creating product:", { name, productId, images, gif, specifications, discountPercent, discountStartDate, discountEndDate, bannerImage });
     alert('Product created successfully!');
     navigate('/products');
   }
@@ -391,6 +397,24 @@ export default function AddProductsPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="addp-separator"></div>
+
+        <div className="addp-card">
+            <h2 className="addp-card-title">Banner Section</h2>
+            <p className="addp-media-sub">Upload a wide banner image for promotional pages.</p>
+            <div className="addp-uploader addp-uploader-banner" onClick={() => bannerInputRef.current.click()}>
+                {bannerImageUrl ? (
+                <img src={bannerImageUrl} alt="Banner Preview" />
+                ) : (
+                <div className="addp-upload-placeholder">
+                    <FiUploadCloud size={32} />
+                    <span>Upload Banner Image</span>
+                </div>
+                )}
+            </div>
+            <input type="file" accept="image/*" ref={bannerInputRef} onChange={onBannerImageChange} hidden />
         </div>
       </form>
     </section>

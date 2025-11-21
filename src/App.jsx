@@ -14,6 +14,7 @@ import ViewCustomerPage from './assets/View_Customer'; // IMPORT THE VIEW PAGE
 import Admin_Orders from './assets/Admin_Orders';
 import Finance from './assets/Finance';
 import Add_Products from './assets/Add_Products';
+import ViewProductPage from './assets/View_Product'; // Import the new page
 import Add_Orders from './assets/Add_Orders';
 import MusicPlayer from './assets/MusicPlayer';
 import Admin_Profile from './assets/Admin_Profile';
@@ -272,6 +273,7 @@ function App() {
             <Route path="dashboard" element={<AdminDashboard userName={userName} date={currentDate} />} />
             <Route path="products" element={<AdminProducts />} />
             <Route path="products/add" element={<Add_Products />} />
+            <Route path="products/edit/:productId" element={<ViewProductPage />} />
             <Route path="users" element={<AdminCustomersPage />} />
             <Route path="users/add" element={<AddCustomersPage />} />
             

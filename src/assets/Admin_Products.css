@@ -73,7 +73,6 @@
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -182,7 +181,6 @@
 .ap-product-grid-header {
   padding-top: 0.3rem;
   padding-bottom: 0.3rem;
-  font-size: 8px !important;
   font-weight: 700;
   color: var(--ap-accent);
   text-transform: uppercase;
@@ -196,7 +194,6 @@
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
   border-bottom: 1px solid var(--ap-border);
-  font-size: 8px !important;
   background: transparent;
   transition: background 0.14s;
 }
@@ -215,32 +212,32 @@
 .ap-col-name {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px; /* Increased gap for better spacing */
+  align-items: flex-start; /* Align items to the start */
 }
 .ap-product-name {
   font-weight: 600;
   color: var(--ap-text-primary);
-  font-size: 8px !important;
+  /* Base font size will be inherited from .ap-product-row */
 }
 
-/* --- Product ID highlight for strong visibility --- */
+/* --- Product ID highlight --- */
 .ap-product-id {
-  font-size: 7px;
-  color: #fff;
   font-family: monospace;
-  background: #444d63; /* dark blue-gray for solid contrast */
+  background-color: var(--ap-border); /* Lite color background */
+  color: var(--ap-text-secondary); /* Lighter text color */
   border-radius: 4px;
-  padding: 0 4px 0 4px;
-  font-weight: 900;
-  letter-spacing: 0.01em;
-  display: inline-block;
-  margin-top: 1px;
-  border: 1px solid var(--ap-accent);
+  padding: 2px 6px; /* Adjusted padding */
+  font-weight: 600; /* Reduced font weight */
+  display: inline-block; /* Ensure it only takes content width */
+  border: none; /* Removed the border */
+  font-size: 0.9em; 
 }
 
-.ap-col-category { font-size: 7.5px; }
-.ap-col-stockid { font-family: monospace; color: var(--ap-text-secondary); font-size: 7.2px; }
-.ap-col-qty, .ap-col-instock, .ap-col-sold, .ap-col-price { text-align: right; font-size: 7.6px; }
+
+.ap-col-category { /* font-size set in responsive section */ }
+.ap-col-stockid { font-family: monospace; color: var(--ap-text-secondary); }
+.ap-col-qty, .ap-col-instock, .ap-col-sold, .ap-col-price { text-align: right; }
 .ap-col-action { text-align: center; }
 .ap-col-instock.ap-out-of-stock { color: var(--ap-status-red); font-weight: 700; }
 .ap-col-action { display: flex; justify-content: flex-end; gap: 0.3rem; }
@@ -256,7 +253,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
-  font-size: 8px !important;
+  /* font-size will be inherited */
 }
 .ap-edit-btn:hover {
   background-color: var(--ap-border);
@@ -266,70 +263,107 @@
 /* --- Product Card Grid --- */
 .ap-product-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Card is more compact */
-  gap: 0.6rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Increased min-width */
+  gap: 1.25rem; /* Increased gap */
 }
 
 .ap-product-card {
   background: var(--ap-card-bg);
   border: 1px solid var(--ap-border);
-  border-radius: 10px;
+  border-radius: 12px; /* Slightly larger radius */
   overflow: hidden;
   display: flex;
   flex-direction: column;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  min-width: 0;
-  min-height: 0;
-  max-width: 170px;
-  padding: 0.45rem 0.45rem 0.9rem 0.45rem;
+  padding: 0; /* Remove padding here, add to content */
 }
 .ap-product-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  transform: translateY(-5px); /* Increased hover effect */
+  box-shadow: 0 8px 15px rgba(0,0,0,0.25);
 }
 
-.ap-card-image-container { position: relative; width: 100%; padding-top: 90%; overflow: hidden; }
+.ap-card-image-container { 
+  position: relative; 
+  width: 100%; 
+  padding-top: 100%; /* Changed to 1:1 aspect ratio */
+  overflow: hidden; 
+}
 .ap-card-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
-.ap-card-stock-overlay { position: absolute; top: 0.35rem; right: 0.35rem; }
-.ap-card-stock-level { background: rgba(0,0,0,0.7); color: var(--ap-text-primary); padding: 0.15rem 0.55rem; border-radius: 20px; font-size: 6.5px; font-weight: 600; }
+.ap-card-stock-overlay { position: absolute; top: 0.5rem; right: 0.5rem; }
+.ap-card-stock-level { background: rgba(0,0,0,0.7); color: var(--ap-text-primary); padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 11px; font-weight: 600; }
 .ap-card-stock-level.ap-out-of-stock { color: var(--ap-status-red); }
-.ap-card-content { padding: 0.45rem 0 0 0; display: flex; flex-direction: column; gap: 0.4rem; }
-.ap-card-name { font-size: 9.2px; font-weight: 700; color: var(--ap-text-primary); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ap-card-price-list { display: flex; justify-content: space-between; gap: 0.25rem; border-top: 1px solid var(--ap-border); padding-top: 0.5rem; }
-.ap-card-price-item { display: flex; flex-direction: column; align-items: center; gap: 0.11rem; }
-.ap-card-price-label { font-size: 6px; font-weight: 600; color: var(--ap-text-secondary); text-transform: uppercase; }
-.ap-card-price-value { font-size: 7px; font-weight: 700; color: var(--ap-text-primary); }
-.ap-price-selling { color: var(--ap-accent); font-size: 7.2px; }
+
+.ap-card-content { 
+  padding: 1rem; /* Added padding here */
+  display: flex; 
+  flex-direction: column; 
+  gap: 0.75rem; /* Increased gap */
+}
+.ap-card-name { 
+  font-size: 16px; /* Increased font size */
+  font-weight: 700; 
+  color: var(--ap-text-primary); 
+  margin: 0; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+}
+.ap-card-price-list { 
+  display: flex; 
+  justify-content: space-between; 
+  gap: 0.5rem; 
+  border-top: 1px solid var(--ap-border); 
+  padding-top: 0.75rem; 
+}
+.ap-card-price-item { 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  gap: 0.2rem; 
+}
+.ap-card-price-label { 
+  font-size: 10px; /* Increased font size */
+  font-weight: 600; 
+  color: var(--ap-text-secondary); 
+  text-transform: uppercase; 
+}
+.ap-card-price-value { 
+  font-size: 13px; /* Increased font size */
+  font-weight: 700; 
+  color: var(--ap-text-primary); 
+}
+.ap-price-selling { 
+  color: var(--ap-accent); 
+  font-size: 14px; /* Increased font size */
+}
+
 
 /* --- No Results & Status Dropdown --- */
 .ap-no-results-full-page { text-align: center; padding: 4rem; }
 .ap-no-results-full-page p { color: var(--ap-text-secondary); font-size: 1.1rem; font-weight: 500; }
 
 .ap-status-dropdown-wrapper { position: relative; }
-.ap-status-trigger { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--ap-border); color: var(--ap-text-primary); border: 1px solid transparent; padding: 0.25rem 0.75rem; border-radius: 6px; font-size: 8px !important;}
+.ap-status-trigger { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--ap-border); color: var(--ap-text-primary); border: 1px solid transparent; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; cursor: pointer; width: 100%; }
 .ap-status-swatch { width: 8px; height: 8px; border-radius: 50%; }
 .ap-status-swatch[data-status="Available"] { background-color: var(--ap-status-green); }
 .ap-status-swatch[data-status="Stock Out"] { background-color: var(--ap-status-red); }
 .ap-status-swatch[data-status="Re-Stock"] { background-color: var(--ap-status-amber); }
-.ap-status-dropdown-list { position: absolute; top: calc(100% + 4px); left: 0; background: #374151; border: 1px solid var(--ap-border); border-radius: 8px; padding: 0.5rem; z-index: 10; width: 100%; min-width: 100px;}
-.ap-status-option { display: flex; align-items: center; gap: 0.5rem; background: none; border: none; width: 100%; padding: 0.5rem; border-radius: 6px; color: var(--ap-text-primary); font-size: 8px !important;}
+.ap-status-dropdown-list { position: absolute; top: calc(100% + 4px); left: 0; background: #374151; border: 1px solid var(--ap-border); border-radius: 8px; padding: 0.5rem; z-index: 10; width: 100%; min-width: 120px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+.ap-status-option { display: flex; align-items: center; gap: 0.5rem; background: none; border: none; width: 100%; padding: 0.5rem; border-radius: 6px; color: var(--ap-text-primary); cursor: pointer; text-align: left; }
 .ap-status-option:hover { background-color: var(--ap-border); }
 
-/* --- Responsive Adjustments --- */
-@media (max-width: 1200px) {
-  .ap-product-grid-header {
-    font-size: 7px !important;
-  }
-  .ap-product-row {
-    font-size: 7px !important;
-  }
+/* --- Responsive Adjustments for Table Font Size --- */
+.ap-product-grid-header,
+.ap-product-row {
+  /* 
+    Fluid font size using clamp()
+    - Minimum size: 8px
+    - Responsive size: scales with viewport width (vw)
+    - Maximum size: 12px
+  */
+  font-size: clamp(8px, calc(4px + 0.5vw), 12px);
 }
 
-@media (max-width: 992px) {
-  .ap-product-grid-header {
-    font-size: 6px !important;
-  }
-  .ap-product-row {
-    font-size: 6px !important;
-  }
+.ap-status-option {
+  font-size: clamp(8px, calc(4px + 0.5vw), 12px);
 }

@@ -1,70 +1,43 @@
 /* ====================================================
-   MODERN ADMIN PRODUCTS - BLACK, ORANGE & WHITE THEME
+   ADD NEW PRODUCT PAGE STYLES
    ==================================================== */
 :root {
-  --ap-bg: #000000; /* Pure black background */
+  /* Using the same theme variables from Admin_Products.css */
+  --ap-bg: #000000;
   --ap-card-bg: #1f2937;
   --ap-border: #374151;
-  --ap-text-primary: #FFFFFF; /* Pure white */
+  --ap-text-primary: #FFFFFF;
   --ap-text-secondary: #9ca3af;
   --ap-accent: #f97316;
   --ap-accent-dark: #ea580c;
-  --ap-accent-light: rgba(249, 115, 22, 0.1);
-  --ap-status-green: #22c55e;
   --ap-status-red: #ef4444;
-  --ap-status-amber: #f59e0b;
 }
 
-.ap-admin-products {
+.addp-page {
   background-color: var(--ap-bg);
   color: var(--ap-text-primary);
   padding: 1.5rem;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
-/* --- Header & Controls --- */
-.ap-header {
+.addp-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.5rem; /* Adjusted margin */
-  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 2rem;
 }
-.ap-admin-products .ap-header h1 {
+
+.addp-header h1 {
   font-size: 2.25rem;
   font-weight: 700;
-  color: var(--ap-text-primary) !important;
 }
 
-.ap-header-controls { display: flex; align-items: center; gap: 1rem; }
-
-.ap-search-box { position: relative; }
-.ap-search-box .ap-search-icon {
-  position: absolute;
-  left: 0.85rem; top: 50%;
-  transform: translateY(-50%);
-  color: var(--ap-text-secondary);
-  pointer-events: none;
-}
-.ap-search-box input {
-  background: var(--ap-card-bg);
-  border: 1px solid var(--ap-border);
-  border-radius: 8px;
-  color: var(--ap-text-primary);
-  padding: 0.6rem 1rem 0.6rem 2.5rem;
-  font-size: 0.95rem;
-  width: 300px;
-  transition: all 0.2s;
-}
-.ap-search-box input:focus {
-  outline: none;
-  border-color: var(--ap-accent);
-  box-shadow: 0 0 0 3px var(--ap-accent-light);
+.addp-header-actions {
+  display: flex;
+  gap: 1rem;
 }
 
-.ap-add-product-btn {
-  background: var(--ap-accent);
-  color: white;
+.addp-btn {
   border: none;
   border-radius: 8px;
   padding: 0.7rem 1.25rem;
@@ -73,163 +46,236 @@
   cursor: pointer;
   transition: background-color 0.2s;
 }
-.ap-add-product-btn:hover { background: var(--ap-accent-dark); }
 
-/* --- Filter Bar --- */
-.ap-filter-bar {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-  padding: 1rem 1.5rem;
+.addp-btn-primary {
+  background-color: var(--ap-accent);
+  color: white;
+}
+.addp-btn-primary:hover {
+  background-color: var(--ap-accent-dark);
+}
+
+.addp-btn-muted {
   background-color: var(--ap-card-bg);
-  border-radius: 12px;
-  margin-bottom: 2rem;
+  color: var(--ap-text-primary);
   border: 1px solid var(--ap-border);
 }
+.addp-btn-muted:hover {
+  background-color: #374151;
+}
 
-.ap-filter-group {
+.addp-form-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.addp-left-panel, .addp-right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.addp-card {
+  background-color: var(--ap-card-bg);
+  border: 1px solid var(--ap-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.addp-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--ap-border);
+}
+
+.addp-field {
+  margin-bottom: 1.25rem;
+}
+
+.addp-field label {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-}
-
-.ap-filter-group label {
+  gap: 0.5rem;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ap-text-secondary);
+  margin-bottom: 0.5rem;
 }
 
-.ap-filter-bar select {
-  background: var(--ap-border);
+.addp-field input,
+.addp-field select,
+.addp-field textarea {
+  width: 100%;
+  background: var(--ap-bg);
   border: 1px solid var(--ap-border);
   border-radius: 8px;
   color: var(--ap-text-primary);
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  cursor: pointer;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  box-sizing: border-box; /* Added for consistent sizing */
 }
-.ap-filter-bar select:focus {
+.addp-field input:focus,
+.addp-field select:focus,
+.addp-field textarea:focus {
   outline: none;
   border-color: var(--ap-accent);
 }
 
-.ap-clear-filters-btn {
+.addp-field-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.addp-input-with-btn {
+  display: flex;
+  gap: 0.5rem; /* Added gap */
+  align-items: center;
+}
+
+.addp-input-with-btn button {
+  border: 1px solid var(--ap-accent);
+  background: var(--ap-accent);
+  color: white;
+  padding: 0.75rem 1rem; /* Matched padding with input */
+  border-radius: 8px; /* Restored border-radius */
+  cursor: pointer;
+  white-space: nowrap; /* Prevents button text from wrapping */
+}
+.addp-input-with-btn button:hover {
+  background: var(--ap-accent-dark);
+}
+
+.addp-metrics {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--ap-border);
+  padding-top: 1rem;
+}
+
+.addp-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  margin-left: auto;
-  background: none;
-  border: none;
-  color: var(--ap-text-secondary);
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
+  gap: 0.5rem;
+  background: var(--ap-border);
   padding: 0.5rem 1rem;
-  border-radius: 8px;
-  transition: all 0.2s;
-}
-.ap-clear-filters-btn:hover {
-  background: var(--ap-border);
-  color: var(--ap-text-primary);
-}
-
-
-/* --- Product List Layout --- */
-.ap-product-list-card {
-  background: var(--ap-card-bg);
-  border: 1px solid var(--ap-border);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-/* --- Product Grid --- */
-.ap-product-grid-header, .ap-product-row {
-  display: grid;
-  /* Adjusted grid for new "Total Cost" column */
-  grid-template-columns: 3fr 1.5fr 2fr 1fr 1fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr 1fr;
-  align-items: center;
-  gap: 1rem;
-  padding: 0 1.5rem;
-}
-
-.ap-product-grid-header {
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--ap-text-secondary);
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--ap-border);
-}
-
-.ap-product-list-body {
-  max-height: 70vh;
-  overflow-y: auto;
-}
-
-.ap-product-row {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--ap-border);
-  font-size: 10px;
-}
-.ap-product-list-body .ap-product-row:last-child {
-  border-bottom: none;
-}
-
-/* --- Column Styling --- */
-.ap-col-name { display: flex; flex-direction: column; }
-.ap-product-name { font-weight: 600; color: var(--ap-text-primary); }
-.ap-product-id { font-size: 0.8rem; color: var(--ap-text-secondary); font-family: monospace; }
-.ap-col-stockid { font-family: monospace; color: var(--ap-text-secondary); font-size: 0.9rem; }
-
-
-.ap-col-qty, .ap-col-instock, .ap-col-sold, .ap-col-price { text-align: right; }
-.ap-col-instock.ap-out-of-stock { color: var(--ap-status-red); font-weight: 700; }
-
-.ap-action-btn { background: none; border: none; color: var(--ap-text-secondary); cursor: pointer; padding: 0.25rem; border-radius: 4px; }
-.ap-action-btn:hover { background: var(--ap-border); color: var(--ap-text-primary); }
-.ap-col-action { display: flex; justify-content: flex-end; gap: 0.5rem; }
-
-
-/* --- Modern Status Dropdown --- */
-.ap-status-dropdown-wrapper { position: relative; }
-.ap-status-trigger {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  background: var(--ap-border);
-  color: var(--ap-text-primary);
-  border: 1px solid transparent;
-  padding: 0.25rem 0.75rem;
   border-radius: 20px;
-  font-size: 0.85rem; font-weight: 600;
-  cursor: pointer; width: 100%;
+  font-size: 0.9rem;
 }
-.ap-status-swatch { width: 8px; height: 8px; border-radius: 50%; }
+.addp-chip strong {
+  color: var(--ap-text-primary);
+}
 
-.ap-status-dropdown-list {
-  position: absolute; top: calc(100% + 4px); left: 0;
-  background: #374151; /* Slightly different bg for dropdown */
-  border: 1px solid var(--ap-border);
+.addp-spec-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.addp-media-sub {
+  font-size: 0.9rem;
+  color: var(--ap-text-secondary);
+  margin: -1rem 0 1.5rem;
+}
+
+.addp-uploader {
+  border: 2px dashed var(--ap-border);
   border-radius: 8px;
-  padding: 0.5rem;
-  z-index: 10;
-  width: 100%;
-  min-width: 120px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: border-color 0.2s;
+  overflow: hidden;
+  position: relative;
 }
-.ap-status-option {
-  display: flex; align-items: center; gap: 0.5rem;
-  background: none; border: none; width: 100%;
-  padding: 0.5rem;
-  border-radius: 6px;
-  color: var(--ap-text-primary); font-size: 0.9rem;
-  cursor: pointer; text-align: left;
+.addp-uploader:hover {
+  border-color: var(--ap-accent);
 }
-.ap-status-option:hover { background: var(--ap-border); }
 
-/* --- No Results --- */
-.ap-no-results {
-  text-align: center;
-  padding: 4rem;
+.addp-uploader-primary {
+  width: 100%;
+  aspect-ratio: 4/3;
+  margin-bottom: 1rem;
 }
-.ap-no-results p { color: var(--ap-text-secondary); font-size: 1.1rem; font-weight: 500; }
+
+.addp-uploader-gif {
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+
+.addp-uploader img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.addp-upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--ap-text-secondary);
+  width: 100%;
+  height: 100%;
+}
+
+.addp-secondary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.addp-uploader-secondary {
+  aspect-ratio: 1/1;
+}
+
+.addp-upload-placeholder-small {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--ap-text-secondary);
+  width: 100%;
+  height: 100%;
+  font-size: 0.8rem;
+}
+
+.addp-err {
+  color: var(--ap-status-red, #ef4444);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+/* --- SEPARATOR --- */
+.addp-separator {
+  height: 1px;
+  background-color: var(--ap-border);
+  border: none;
+  margin: 1.5rem 0; /* Added margin */
+}
+
+/* --- BOTTOM GRID: Showcase & Discount --- */
+.addp-bottom-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.addp-showcase-upload-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.addp-showcase-upload-grid .addp-field {
+  margin-bottom: 0;
+}

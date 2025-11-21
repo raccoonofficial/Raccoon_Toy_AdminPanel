@@ -235,7 +235,7 @@
 }
 
 
-.ap-col-category { /* font-size set in responsive section */ }
+
 .ap-col-stockid { font-family: monospace; color: var(--ap-text-secondary); }
 .ap-col-qty, .ap-col-instock, .ap-col-sold, .ap-col-price { text-align: right; }
 .ap-col-action { text-align: center; }
@@ -263,29 +263,29 @@
 /* --- Product Card Grid --- */
 .ap-product-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Increased min-width */
-  gap: 1.25rem; /* Increased gap */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+  gap: 1.25rem;
 }
 
 .ap-product-card {
   background: var(--ap-card-bg);
   border: 1px solid var(--ap-border);
-  border-radius: 12px; /* Slightly larger radius */
+  border-radius: 12px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  padding: 0; /* Remove padding here, add to content */
+  padding: 0;
 }
 .ap-product-card:hover {
-  transform: translateY(-5px); /* Increased hover effect */
+  transform: translateY(-5px);
   box-shadow: 0 8px 15px rgba(0,0,0,0.25);
 }
 
 .ap-card-image-container { 
   position: relative; 
   width: 100%; 
-  padding-top: 100%; /* Changed to 1:1 aspect ratio */
+  padding-top: 80%; /* Reduced from 100% to make it shorter */
   overflow: hidden; 
 }
 .ap-card-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -293,14 +293,32 @@
 .ap-card-stock-level { background: rgba(0,0,0,0.7); color: var(--ap-text-primary); padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 11px; font-weight: 600; }
 .ap-card-stock-level.ap-out-of-stock { color: var(--ap-status-red); }
 
+.ap-card-edit-btn {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 2;
+}
+.ap-product-card:hover .ap-card-edit-btn {
+  opacity: 1;
+}
+
 .ap-card-content { 
-  padding: 1rem; /* Added padding here */
+  padding: 1rem;
   display: flex; 
   flex-direction: column; 
-  gap: 0.75rem; /* Increased gap */
+  gap: 0.75rem;
 }
 .ap-card-name { 
-  font-size: 16px; /* Increased font size */
+  font-size: 16px;
   font-weight: 700; 
   color: var(--ap-text-primary); 
   margin: 0; 
@@ -322,19 +340,19 @@
   gap: 0.2rem; 
 }
 .ap-card-price-label { 
-  font-size: 10px; /* Increased font size */
+  font-size: 10px;
   font-weight: 600; 
   color: var(--ap-text-secondary); 
   text-transform: uppercase; 
 }
 .ap-card-price-value { 
-  font-size: 13px; /* Increased font size */
+  font-size: 13px;
   font-weight: 700; 
   color: var(--ap-text-primary); 
 }
 .ap-price-selling { 
   color: var(--ap-accent); 
-  font-size: 14px; /* Increased font size */
+  font-size: 14px;
 }
 
 

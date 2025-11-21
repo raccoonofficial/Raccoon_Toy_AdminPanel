@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiPackage, FiHash, FiTag, FiClipboard, FiDollarSign, FiBarChart2, FiUploadCloud, FiPaperclip, FiMaximize, FiDroplet, FiArchive, FiGift, FiBox, FiCpu, FiPercent, FiCalendar } from 'react-icons/fi';
+import { FiPackage, FiHash, FiTag, FiClipboard, FiDollarSign, FiBarChart2, FiUploadCloud, FiPaperclip, FiMaximize, FiDroplet, FiArchive, FiGift, FiBox, FiCpu, FiPercent, FiCalendar, FiStar, FiTrash2, FiArrowUp, FiArrowDown, FiHelpCircle, FiCheckCircle, FiSend, FiEdit } from 'react-icons/fi';
 import './View_Product.css'; // Using a new CSS file for this component
 
 // Mock data for a product that would normally be fetched from an API
@@ -27,28 +27,55 @@ const mockProduct = {
   discountPercent: '10',
   discountStartDate: '2025-12-01',
   discountEndDate: '2025-12-25',
-  // URLs would be fetched from your backend
   imagePreviews: ['https://i.ibb.co/6n211ez/d55b8855-3373-4564-8849-0d351980f72c.png', null, null, null, null],
   gifPreview: 'https://media.giphy.com/media/26gR1v0rIDY5pL32w/giphy.gif',
   showcasePreviewUrl: 'https://i.ibb.co/6n211ez/d55b8855-3373-4564-8849-0d351980f72c.png',
   showcaseImageUrl: 'https://i.ibb.co/6n211ez/d55b8855-3373-4564-8849-0d351980f72c.png',
   showcaseGifUrl: 'https://media.giphy.com/media/26gR1v0rIDY5pL32w/giphy.gif',
   bannerImageUrl: 'https://i.ibb.co/yNbW2Yc/5b634863-75dc-45cf-a436-580bff579133.png',
+  reviews: [
+    { 
+      id: 1, user: 'Alice', avatar: 'https://i.pravatar.cc/150?u=alice', rating: 5, 
+      text: 'Absolutely amazing! The quality is top-notch.', date: new Date('2025-10-15T14:30:00Z'),
+      images: ['https://i.ibb.co/b3sVz6k/05f69045-538d-4a8e-a249-160a7e73d66c.png', 'https://i.ibb.co/yNbW2Yc/5b634863-75dc-45cf-a436-580bff579133.png']
+    },
+    { id: 2, user: 'Bob', avatar: 'https://i.pravatar.cc/150?u=bob', rating: 4, text: 'Great product, my son loves it.', date: new Date('2025-10-12T09:05:00Z'), images: [] },
+  ],
+  qna: [
+      { id: 1, user: 'David', avatar: 'https://i.pravatar.cc/150?u=david', question: 'Is the arc reactor removable?', answer: 'No, the arc reactor is integrated into the chest piece and is not removable.', date: new Date('2025-10-10T11:00:00Z') },
+      { id: 2, user: 'Eve', avatar: 'https://i.pravatar.cc/150?u=eve', question: 'Does it come with any other accessories?', answer: null, date: new Date('2025-10-09T15:20:00Z') }
+  ]
 };
 
 const categoryOptions = ['Action Figure', 'Small Action Figure', 'Bricks', 'Vehicle Figure', 'Cute Dolls', 'Small Cute Dolls', 'Decorations'];
 const statusOptions = ['Available', 'Stock Out', 'Re-Stock'];
 const MAX_IMAGES = 5;
 
+// Star Rating Component
+const StarRating = ({ rating }) => (
+  <div className="vp-star-rating">
+    {[...Array(5)].map((_, index) => (
+      <FiStar key={index} className={index < rating ? 'filled' : ''} />
+    ))}
+  </div>
+);
+
+// Function to format the date and time
+const formatReviewDate = (date) => {
+    return date.toLocaleString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric',
+        hour: 'numeric', minute: '2-digit', hour12: true,
+    });
+};
+
 export default function ViewProductPage() {
   const navigate = useNavigate();
-  const { productId: urlProductId } = useParams(); // Get product ID from URL
+  const { productId: urlProductId } = useParams();
   
   const fileInputRef = useRef(null);
   const gifInputRef = useRef(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  // Showcase-specific refs
   const showcasePreviewInputRef = useRef(null);
   const showcaseMainImageInputRef = useRef(null);
   const showcaseGifInputRef = useRef(null);
@@ -71,7 +98,6 @@ export default function ViewProductPage() {
   const [gif, setGif] = useState(null);
   const [gifPreview, setGifPreview] = useState(null);
 
-  // State for new showcase section
   const [showcasePreview, setShowcasePreview] = useState(null);
   const [showcasePreviewUrl, setShowcasePreviewUrl] = useState(null);
   const [showcaseImage, setShowcaseImage] = useState(null);
@@ -79,31 +105,26 @@ export default function ViewProductPage() {
   const [showcaseGif, setShowcaseGif] = useState(null);
   const [showcaseGifUrl, setShowcaseGifUrl] = useState(null);
 
-  // State for discount section
   const [discountPercent, setDiscountPercent] = useState('');
   const [discountStartDate, setDiscountStartDate] = useState('');
   const [discountEndDate, setDiscountEndDate] = useState('');
   
-  // State for banner section
   const [bannerImage, setBannerImage] = useState(null);
   const [bannerImageUrl, setBannerImageUrl] = useState(null);
+  
+  const [reviews, setReviews] = useState([]);
+  const [qna, setQna] = useState([]);
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [newAnswer, setNewAnswer] = useState('');
 
   const [specifications, setSpecifications] = useState({
-    materials: '',
-    dimensions: '',
-    color: '',
-    weight: '',
-    ageRange: '',
-    brand: 'RaccoonToy',
+    materials: '', dimensions: '', color: '', weight: '', ageRange: '', brand: 'RaccoonToy',
   });
   
   const [errors, setErrors] = useState({});
 
-  // Effect to fetch and populate product data on component mount
   useEffect(() => {
     console.log("Fetching product with ID:", urlProductId);
-    // In a real app, you would fetch data from your API here
-    // For now, we'll use the mock data
     const productData = mockProduct;
     
     setSupplierNumber(productData.supplierNumber);
@@ -127,6 +148,8 @@ export default function ViewProductPage() {
     setDiscountPercent(productData.discountPercent);
     setDiscountStartDate(productData.discountStartDate);
     setDiscountEndDate(productData.discountEndDate);
+    setReviews(productData.reviews);
+    setQna(productData.qna);
 
   }, [urlProductId]);
 
@@ -142,15 +165,12 @@ export default function ViewProductPage() {
   function onImageChange(e) {
     const file = e.target.files?.[0];
     if (!file) return;
-
     const newImages = [...images];
     newImages[activeImageIndex] = file;
     setImages(newImages);
-
     const newImagePreviews = [...imagePreviews];
     newImagePreviews[activeImageIndex] = URL.createObjectURL(file);
     setImagePreviews(newImagePreviews);
-    
     e.target.value = '';
   }
 
@@ -160,11 +180,7 @@ export default function ViewProductPage() {
 
   function onGifChange(e) {
     const file = e.target.files?.[0];
-    if (!file) return;
-    if (!file.type.includes('gif')) {
-      alert('Please select a GIF file.');
-      return;
-    }
+    if (!file || !file.type.includes('gif')) return;
     setGif(file);
     setGifPreview(URL.createObjectURL(file));
     e.target.value = '';
@@ -188,6 +204,31 @@ export default function ViewProductPage() {
     setSpecifications(prev => ({ ...prev, [name]: value }));
   }
 
+  function handleDeleteReview(reviewId) {
+    setReviews(prev => prev.filter(r => r.id !== reviewId));
+  }
+
+  function handleMoveReview(index, direction) {
+    const newReviews = [...reviews];
+    const item = newReviews[index];
+    const swapIndex = direction === 'up' ? index - 1 : index + 1;
+    if (swapIndex < 0 || swapIndex >= newReviews.length) return;
+    newReviews[index] = newReviews[swapIndex];
+    newReviews[swapIndex] = item;
+    setReviews(newReviews);
+  }
+
+  function handleDeleteQuestion(qnaId) {
+      setQna(prev => prev.filter(q => q.id !== qnaId));
+  }
+
+  function handleReplySubmit(qnaId) {
+      if (!newAnswer.trim()) return;
+      setQna(prev => prev.map(q => q.id === qnaId ? {...q, answer: newAnswer} : q));
+      setReplyingTo(null);
+      setNewAnswer('');
+  }
+
   function validate() {
     const next = {};
     if (!name.trim()) next.name = 'Product name is required';
@@ -202,7 +243,7 @@ export default function ViewProductPage() {
     setErrors(v);
     if (Object.keys(v).length > 0) return;
 
-    console.log("Updating product:", { name, productId, images, gif, specifications, discountPercent, discountStartDate, discountEndDate, bannerImage });
+    console.log("Updating product:", { name, productId, images, gif, specifications, discountPercent, discountStartDate, discountEndDate, bannerImage, reviews, qna });
     alert('Product updated successfully!');
     navigate('/products');
   }
@@ -473,6 +514,88 @@ export default function ViewProductPage() {
                 )}
             </div>
             <input type="file" accept="image/*" ref={bannerInputRef} onChange={onBannerImageChange} hidden />
+        </div>
+        
+        <div className="vp-separator"></div>
+
+        <div className="vp-card">
+            <h2 className="vp-card-title">Manage Reviews</h2>
+            <div className="vp-reviews-list">
+                {reviews.map((review, index) => (
+                    <div key={review.id} className="vp-review-item">
+                        <div className="vp-review-header">
+                            <img src={review.avatar} alt={review.user} className="vp-review-avatar" />
+                            <div className="vp-review-user-info">
+                                <span className="vp-review-user-name">{review.user}</span>
+                                <StarRating rating={review.rating} />
+                                <span className="vp-review-date">{formatReviewDate(review.date)}</span>
+                            </div>
+                        </div>
+                        <p className="vp-review-text">{review.text}</p>
+                        {review.images && review.images.length > 0 && (
+                            <div className="vp-review-images">
+                                {review.images.map((img, imgIndex) => (
+                                    <img key={imgIndex} src={img} alt={`Review image ${imgIndex + 1}`} className="vp-review-image" />
+                                ))}
+                            </div>
+                        )}
+                        <div className="vp-review-actions">
+                            <button type="button" className="vp-review-action-btn" onClick={() => handleMoveReview(index, 'up')} disabled={index === 0}>
+                                <FiArrowUp />
+                            </button>
+                            <button type="button" className="vp-review-action-btn" onClick={() => handleMoveReview(index, 'down')} disabled={index === reviews.length - 1}>
+                                <FiArrowDown />
+                            </button>
+                            <button type="button" className="vp-review-action-btn delete" onClick={() => handleDeleteReview(review.id)}>
+                                <FiTrash2 />
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+
+        <div className="vp-separator"></div>
+
+        <div className="vp-card">
+            <h2 className="vp-card-title">Questions & Answers</h2>
+            <div className="vp-qna-list">
+                {qna.map(item => (
+                    <div key={item.id} className="vp-qna-item">
+                        <div className="vp-qna-header">
+                            <img src={item.avatar} alt={item.user} className="vp-qna-avatar" />
+                            <div className="vp-qna-user-info">
+                                <span className="vp-qna-user-name">{item.user}</span>
+                                <span className="vp-qna-date">{formatReviewDate(item.date)}</span>
+                            </div>
+                            <button type="button" className="vp-qna-delete-btn" onClick={() => handleDeleteQuestion(item.id)}><FiTrash2/></button>
+                        </div>
+                        <p className="vp-qna-question"><FiHelpCircle/> {item.question}</p>
+                        
+                        {replyingTo === item.id ? (
+                            <div className="vp-qna-reply-section">
+                                <div className="vp-qna-reply-form">
+                                    <textarea value={newAnswer} onChange={e => setNewAnswer(e.target.value)} placeholder="Type your answer..."/>
+                                    <button type="button" onClick={() => handleReplySubmit(item.id)}><FiSend/> Submit</button>
+                                </div>
+                            </div>
+                        ) : item.answer ? (
+                            <div className="vp-qna-answered-block">
+                                <p className="vp-qna-answer"><FiCheckCircle/> {item.answer}</p>
+                                <button type="button" className="vp-qna-edit-btn" onClick={() => { setReplyingTo(item.id); setNewAnswer(item.answer); }}>
+                                    <FiEdit/> Edit
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="vp-qna-reply-section">
+                                <button type="button" className="vp-qna-reply-btn" onClick={() => { setReplyingTo(item.id); setNewAnswer(''); }}>
+                                    Reply
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </div>
         </div>
       </form>
     </section>

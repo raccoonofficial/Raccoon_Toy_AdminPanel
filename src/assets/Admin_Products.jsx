@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import './Admin_Products.css';
 
 const initialProducts = [
-  { supplierNumber: 1, stockId: 'STK-A84B', name: 'Iron Man', productId: 'P_2025100001', category: 'Action Figure', orderQty: 2, inStock: 2, sold: 0, buyingCost: 500, totalCost: 550, sellingPrice: 900, status: 'Available', image: 'https://i.ibb.co/S7cxB4w/p-2025100001.png' },
-  { supplierNumber: 1, stockId: 'STK-C3D9', name: 'Thanos', productId: 'P_2025100002', category: 'Action Figure', orderQty: 1, inStock: 1, sold: 0, buyingCost: 500, totalCost: 550, sellingPrice: 900, status: 'Available', image: 'https://i.ibb.co/Js52Wz6/p-2025100002.png' },
-  { supplierNumber: 1, stockId: 'STK-F0A2', name: 'Captain America', productId: 'P_2025100003', category: 'Action Figure', orderQty: 1, inStock: 1, sold: 0, buyingCost: 500, totalCost: 560, sellingPrice: 950, status: 'Available', image: 'https://i.ibb.co/L8KL16b/p-2025100003.png' },
-  { supplierNumber: 2, stockId: 'STK-E5G7', name: 'Venom', productId: 'P_2025100004', category: 'Action Figure', orderQty: 1, inStock: 0, sold: 1, buyingCost: 480, totalCost: 510, sellingPrice: 899, status: 'Stock Out', image: 'https://i.ibb.co/hH2sW1t/p-2025100004.png' },
-  { supplierNumber: 2, stockId: 'STK-H1I8', name: 'Luffy', productId: 'P_2025100005', category: 'Action Figure', orderQty: 5, inStock: 1, sold: 4, buyingCost: 670, totalCost: 720, sellingPrice: 1399, status: 'Available', image: 'https://i.ibb.co/sW2n2p5/p-2025100005.png' },
+  { supplierNumber: 1, stockId: 'STK-A84B', name: 'Iron Man', productId: 'P_2025100001', category: 'Action Figure', orderQty: 2, inStock: 2, sold: 0, buyingCost: 500, totalCost: 550, sellingPrice: 900, status: 'Available', image: '/api/placeholder/200/200' },
+  { supplierNumber: 1, stockId: 'STK-C3D9', name: 'Thanos', productId: 'P_2025100002', category: 'Action Figure', orderQty: 1, inStock: 1, sold: 0, buyingCost: 500, totalCost: 550, sellingPrice: 900, status: 'Available', image: '/api/placeholder/200/200' },
+  { supplierNumber: 1, stockId: 'STK-F0A2', name: 'Captain America', productId: 'P_2025100003', category: 'Action Figure', orderQty: 1, inStock: 1, sold: 0, buyingCost: 500, totalCost: 560, sellingPrice: 900, status: 'Available', image: '/api/placeholder/200/200' },
+  { supplierNumber: 2, stockId: 'STK-E5G7', name: 'Venom', productId: 'P_2025100004', category: 'Action Figure', orderQty: 1, inStock: 0, sold: 1, buyingCost: 480, totalCost: 510, sellingPrice: 899, status: 'Stock Out', image: '/api/placeholder/200/200' },
+  { supplierNumber: 2, stockId: 'STK-H1I8', name: 'Luffy', productId: 'P_2025100005', category: 'Action Figure', orderQty: 5, inStock: 1, sold: 4, buyingCost: 670, totalCost: 720, sellingPrice: 1399, status: 'Re-Stock', image: '/api/placeholder/200/200' },
 ];
 
 const categoryOptions = ['Action Figure', 'Small Action Figure', 'Bricks', 'Vehicle Figure', 'Cute Dolls', 'Small Cute Dolls', 'Decorations'];
@@ -184,7 +184,7 @@ function AdminProducts() {
           </div>
           <div className="ap-product-list-body">
             {filteredProducts.map(prod => (
-              <div key={prod.productId} className="ap-product-row">
+              <div key={prod.productId} className={`ap-product-row ap-row-status-${prod.status.toLowerCase().replace(' ', '-')}`}>
                 <div className="ap-col-name">
                   <span className="ap-product-name">{prod.name}</span>
                   <span className="ap-product-id">{prod.productId}</span>

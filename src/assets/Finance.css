@@ -123,6 +123,7 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.85rem; /* Smaller font */
+  table-layout: fixed; /* Fixes width issue on edit */
 }
 .tm-table th,
 .tm-table td {
@@ -279,8 +280,14 @@
   width: 100%;
   font-size: 0.85rem; /* Smaller font */
 }
-.cc-table { min-width: 900px; }
-.mt-table { min-width: 700px; }
+.cc-table { 
+    min-width: 900px;
+    table-layout: fixed; /* Fixes width issue on edit */
+}
+.mt-table { 
+    min-width: 700px;
+    table-layout: fixed; /* Fixes the width issue */
+}
 
 
 .cc-table th, .cc-table td,
@@ -329,6 +336,7 @@
   font-weight: 700;
   text-align:left;
   color: var(--finance-text-primary);
+  width: 120px; /* Give the first column a fixed width */
 }
 .mt-cell.sales { background: var(--finance-accent-primary-light); }
 .mt-cell.main { background: none; }
@@ -347,10 +355,12 @@
 .editable-button:focus { outline: none; }
 
 .editable-input {
-  display: block; width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box;
+  width: 100%; /* Make input take full cell width */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
   background: var(--finance-bg); border: 1px solid var(--finance-border-color); color: var(--finance-text-primary);
   border-radius: 6px; padding: 0.4rem; font-size: 0.85rem;
-  height: auto;
+  font-family: inherit; /* Ensure font matches */
+  font-weight: inherit; /* Ensure font weight matches */
 }
 .editable-input.number { text-align: right; }
 .editable-input.text { text-align: left; }
